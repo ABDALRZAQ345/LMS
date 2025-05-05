@@ -12,7 +12,6 @@
         "php": "^8.2",
         "ezyang/htmlpurifier": "^4.18",
         "laravel/framework": "^12.0",
-        "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.18",
         "laravel/telescope": "^5.7",

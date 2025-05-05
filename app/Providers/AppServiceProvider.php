@@ -2,15 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\Habit;
-use App\Models\User;
-use App\Observers\HabitObserver;
-use App\Observers\UserObserver;
-use App\Policies\HabitLogPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -25,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-       // \URL::forceScheme('https');
+        // \URL::forceScheme('https');
         $this->observers();
         $this->rateLimiters();
         $this->GatesAndPolicies();
@@ -34,16 +28,9 @@ class AppServiceProvider extends ServiceProvider
         $this->PassWordConfigurations();
     }
 
-    public function GatesAndPolicies()
-    {
+    public function GatesAndPolicies() {}
 
-
-    }
-
-    private function observers(): void
-    {
-
-    }
+    private function observers(): void {}
 
     private function rateLimiters(): void
     {

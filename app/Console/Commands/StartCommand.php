@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Habit;
 use App\Services\HabitLogService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class StartCommand extends Command
 {
@@ -16,9 +14,5 @@ class StartCommand extends Command
     /**
      * @throws \Throwable
      */
-    public function handle(HabitLogService $habitLogService): void
-    {
-
-
-    }
+    public function handle(HabitLogService $habitLogService): void {}
 }
