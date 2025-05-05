@@ -1,0 +1,46 @@
+
+services:
+    mysql:
+        image: mysql:latest
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: habitly
+            MYSQL_USER: habitlyroot
+            MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: secret
+        volumes:
+            - mysql-data:/var/lib/mysql
+
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel-app
+        volumes:
+            - .:/var/www
+        ports:
+            - 8000:8000
+        depends_on:
+            - mysql
+        environment:
+            - DB_HOST=mysql
+            - DB_PORT=3306
+            - DB_DATABASE=habitly
+            - DB_USERNAME=habitlyroot
+            - DB_PASSWORD=secret
+
+
+    queue:
+        build:
+            context: .
+        container_name: queue-worker
+        depends_on:
+            - app
+        command: php artisan queue:work
+        volumes:
+            - .:/var/www
+
+volumes:
+    mysql-data:
