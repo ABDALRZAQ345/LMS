@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Course;
+use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,12 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_courses', function (Blueprint $table) {
+        Schema::create('student_course', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('paid');
-            $table->enum('status', ['finished', 'unfinished']);
-            $table->foreignId('student_id')->constrained('students');
-            $table->foreignId('course_id')->constrained('courses');
+            $table->unsignedInteger('paid')->comment("how much student paid that course");
+            $table->enum('status', ['finished', 'unfinished', 'watch_later']);
+            $table->foreignIdFor(Student::class, 'student_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Course::class, 'course_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

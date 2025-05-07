@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->unsignedInteger('order');
-            $table->boolean('is_final');
-            $table->foreignId('course_id')->constrained('courses');
+            $table->boolean('is_final')->default(false);
+            $table->foreignIdFor(Course::class, 'course_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

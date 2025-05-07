@@ -4,7 +4,4 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Achivment extends Model
-{
-
-}
+class Achivment extends Model {}

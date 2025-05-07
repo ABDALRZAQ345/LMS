@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('gitHub_account')->nullable();
             $table->string('bio')->nullable();
+            $table->string('google_id')->nullable()->unique();
             $table->timestamps();
         });
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Teacher;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,13 +15,13 @@ return new class extends Migration
         Schema::create('contests', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('time');
-            $table->text('description');
-            $table->unsignedInteger('level');
-            $table->enum('status', ['active', 'ended','coming soon'])->default('coming soon');
+            $table->integer('time')->comment('period of time of the contest');
+            $table->text('description')->nullable();
+            $table->unsignedInteger('level')->default(0);
+            $table->enum('status', ['active', 'ended', 'coming'])->default('coming');
             $table->dateTime('start_at');
-            $table->foreignId('teacher_id')->constrained('teachers');
-            $table->string('verified');
+            $table->foreignIdFor(Teacher::class, 'teacher_id')->constrained()->cascadeOnDelete();
+            $table->boolean('verified')->default(false);
 
             $table->timestamps();
         });
