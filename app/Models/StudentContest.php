@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class StudentContest extends Model
+class StudentContest extends Pivot
 {
-    //
+    use HasFactory;
+    protected $guarded = [];
+    protected $table = 'student_contests';
+
 }
