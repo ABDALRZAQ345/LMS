@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Teacher;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,10 +17,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('image')->nullable();
             $table->string('description')->nullable();
-            $table->foreignId('teacher_id')->constrained('teachers');
+            $table->foreignIdFor(Teacher::class, 'teacher_id')->constrained()->cascadeOnDelete();
             $table->integer('price')->default(0);
-            $table->string('verified');
-
+            $table->boolean('verified')->default(false);
             $table->timestamps();
         });
     }

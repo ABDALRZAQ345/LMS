@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('gitHub_account')->nullable();
             $table->string('bio')->nullable();
             $table->integer('points')->default(0);
-            $table->date('last_online');
+            $table->dateTime('last_online')->nullable();
+            $table->string('google_id')->nullable()->unique();
             $table->timestamps();
         });
     }

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->text('description');
             $table->unsignedInteger('order');
             $table->string('url');
-            $table->smallInteger('free');
+            $table->boolean('free')->default(true);
             $table->foreignId('course_id')->constrained('courses');
             $table->timestamps();
         });

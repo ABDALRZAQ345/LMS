@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Course;
+use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->string('comment');
+            $table->string('comment')->nullable();
             $table->unsignedTinyInteger('rate');
-            $table->foreignId('course_id')->constrained('courses');
-            $table->foreignId('student_id')->constrained('students');
-
+            $table->foreignIdFor(Course::class, 'course_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Student::class, 'student_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

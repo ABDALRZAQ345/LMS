@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Days;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -46,6 +44,4 @@ class UserService
 
         return $user;
     }
-
-
 }
