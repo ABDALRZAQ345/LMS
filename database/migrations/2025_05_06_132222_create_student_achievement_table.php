@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Course;
+use App\Models\Achievement;
+use App\Models\Achivment;
 use App\Models\Student;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,12 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('student_course', function (Blueprint $table) {
+        Schema::create('student_achievement', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('paid')->comment("how much student paid that course");
-            $table->enum('status', ['finished', 'unfinished', 'watch_later']);
+            $table->foreignIdFor(Achievement::class, 'achievement_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Student::class, 'student_id')->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Course::class, 'course_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_courses');
+        Schema::dropIfExists('student_achievement');
     }
 };

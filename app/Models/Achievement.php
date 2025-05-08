@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Achievement extends Model
 {
+    protected $table = 'achievements';
     use HasFactory;
+
     protected $guarded = [];
 
-    public function students(){
-        return $this->belongsToMany(Student::class)->using(StudentAchivment::class);
+    public function students()
+    {
+        return $this->belongsToMany(Student::class,'student_achievement')
+            ->using(StudentAchievement::class);
 
     }
-
 }
