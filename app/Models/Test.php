@@ -11,8 +11,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Test extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
+    protected $guarded=[
+        'id'
+    ];
 
     public function course(): BelongsTo
     {
@@ -27,7 +28,7 @@ class Test extends Model
 
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'student_test')
+        return $this->belongsToMany(User::class, 'test_user')
             ->withPivot('start_time', 'end_time', 'correct_answers');
     }
 }

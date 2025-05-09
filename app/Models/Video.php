@@ -11,8 +11,9 @@ class Video extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
+    protected $guarded=[
+        'id'
+    ];
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

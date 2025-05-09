@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Achievement extends Model
 {
     protected $table = 'achievements';
+
     use HasFactory;
 
-    protected $guarded = [];
-
-    public function students()
+    protected $guarded=[
+        'id'
+    ];
+    public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class,'student_achievement')
-            ->using(StudentAchievement::class);
+        return $this->belongsToMany(User::class,'achievement_user');
 
     }
 }

@@ -10,7 +10,9 @@ class Review extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded=[
+        'id'
+    ];
 
     public function course(): BelongsTo
     {
@@ -19,6 +21,6 @@ class Review extends Model
 
     public function student(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(User::class);
     }
 }

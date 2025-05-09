@@ -16,10 +16,8 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         // creating the admin for example
-        User::create([
-            'name' => 'name',
-            'email' => 'jmalj@gmail.com',
-            'password' => \Hash::make('123B4e$$'),
-        ]);
+       $this->call(UserSeeder::class);
+       $this->call(AchievementsSeeder::class);
+       $this->call(CourseSeeder::class);
     }
 }

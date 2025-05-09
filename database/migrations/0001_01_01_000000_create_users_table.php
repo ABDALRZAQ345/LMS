@@ -16,10 +16,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('google_id')->nullable()->unique();
             $table->string('fcm_token')->nullable();
-            $table->string('photo', 500)->nullable();
-            $table->string('timezone')->default('UTC');
+            $table->string('image')->nullable();
+            $table->string('gitHub_account')->nullable();
+            $table->string('bio')->nullable();
+            $table->integer('points')->default(0);
+            $table->dateTime('last_online')->nullable();
+            $table->string('google_id')->nullable()->unique();
+            $table->enum('role', ['admin', 'student','teacher'])->default('student');
             $table->rememberToken();
             $table->timestamps();
         });

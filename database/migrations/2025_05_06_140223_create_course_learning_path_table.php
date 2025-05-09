@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('learning_path_course', function (Blueprint $table) {
+        Schema::create('course_learning_path', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('order');
-            $table->foreignIdFor(Course::class, 'course_id')->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(LearningPath::class, 'learning_path_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(LearningPath::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('learning_path_course');
+        Schema::dropIfExists('course_learning_path');
     }
 };

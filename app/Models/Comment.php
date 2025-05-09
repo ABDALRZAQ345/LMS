@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class comment extends Model
+class Comment extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded=[
+        'id'
+    ];
 
-    public function student(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(User::class);
     }
 
     public function comment(): BelongsTo

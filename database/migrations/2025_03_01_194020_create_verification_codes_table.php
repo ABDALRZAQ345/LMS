@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('code')->unique();
+            $table->boolean('registration')->default(true);
             $table->timestamps();
             $table->timestamp('expires_at')->nullable();
             $table->date('verified_at')->nullable();

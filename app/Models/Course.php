@@ -11,18 +11,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Course extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
-
+    protected $guarded=[
+        'id'
+    ];
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(User::class);
     }
 
     public function learningPaths(): BelongsToMany
     {
-        return $this->BelongsToMany(LearningPath::class, 'learning_path_course')
-            ->using(LearningPathCourse::class);
+        return $this->BelongsToMany(LearningPath::class, 'course_learning_path');
     }
 
     public function reviews(): HasMany
@@ -32,10 +31,9 @@ class Course extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'student_course')
+        return $this->belongsToMany(User::class, 'course_user')
             ->withPivot('paid', 'status')
-            ->withTimestamps()
-            ->using(StudentCourse::class);
+            ->withTimestamps();
     }
 
 
@@ -43,10 +41,10 @@ class Course extends Model
     {
         return $this->hasMany(Video::class)->orderBy('order');
     }
-    public function freeVideos()
+    public function freeVideos(): HasMany
     {
         if($this->price ==0 || $this->price==null){
-            return $this->videos()->orderBy('order');
+            return $this->hasMany(Video::class)->orderBy('order');
         }
         else {
             return $this->hasMany(Video::class)->where('free', true)->orderBy('order');

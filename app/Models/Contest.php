@@ -11,11 +11,13 @@ class Contest extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded=[
+        'id'
+    ];
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class, 'teacher_id');
+        return $this->belongsTo(User::class);
     }
 
     public function questions(): MorphMany
@@ -25,8 +27,7 @@ class Contest extends Model
 
     public function students()
     {
-        return $this->belongsToMany(Student::class, 'student_contest')
-            ->using(StudentContest::class)
+        return $this->belongsToMany(User::class, 'contest_user')
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank')
             ->withTimestamps();
     }
