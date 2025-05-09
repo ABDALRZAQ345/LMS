@@ -25,13 +25,13 @@ class SignupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:50'],
+            'name' => ['required', 'string'],
             'password' => ['required', 'confirmed', Password::defaults(), 'max:40'],
             'email' => ['required',  'email:dns', 'unique:users,email'],
-            'photo' => ['nullable', 'image', 'max:512'],
-            'code' => ['required', 'numeric', 'digits:6'],
+            'image' => ['nullable', 'image', 'max:512'],
             'fcm_token' => ['nullable', 'string'],
-            'timezone' => ['required', 'string', 'timezone'],
+            'gitHub_account' => ['nullable', 'string'],
+            'bio' => ['nullable', 'string'],
         ];
     }
 

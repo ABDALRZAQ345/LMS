@@ -15,8 +15,12 @@ class UserService
             'password' => Hash::make($data['password']),
             'fcm_token' => $data['fcm_token'] ?? null,
             'email' => $data['email'],
-            'photo' => isset($data['photo']) ? NewPublicPhoto($data['photo'], 'profiles') : null,
+            'image' => isset($data['photo']) ? NewPublicPhoto($data['image'], 'profiles') : null,
             'timezone' => $data['timezone'],
+            'gitHub_account' => $data['gitHub_account'] ?? null,
+            'bio' => $data['bio'] ?? null,
+            'role' => $data['role'] ?? 'student',
+            'email_verified' => $data['email_verified'] ?? false,
         ]);
     }
 

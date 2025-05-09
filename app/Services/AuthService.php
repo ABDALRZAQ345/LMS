@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\UNAuthorizedException;
 use App\Exceptions\VerificationCodeException;
+use App\Jobs\SendVerificationCode;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\DB;
@@ -22,18 +23,19 @@ class AuthService
      * @throws AuthenticationException
      * @throws \Throwable
      */
-    public function attemptLogin(array $credentials, array $validated): string
+    public function attemptLogin(array $credentials, array $validated): array
     {
-        if (! $token = JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             throw new UNAuthorizedException('Invalid email or password');
         }
+        $user = User::where('email', $validated['email'])->first();
+        $user->fcm_token = $validated['fcm_token'] ?? null ;
+        $user->save();
 
-        User::where('email', $validated['email'])->update([
-            'fcm_token' => $validated['fcm_token'] ?? null,
-            'timezone' => $validated['timezone'],
-        ]);
-
-        return $token;
+        return [
+            'token' => $token,
+            'role' => $user->role
+        ];
     }
 
     /**
@@ -45,8 +47,8 @@ class AuthService
 
         return
             DB::transaction(function () use ($validated) {
-                $this->verificationCodeService->Check($validated['email'], $validated['code']);
-                $this->verificationCodeService->delete($validated['email']);
+                $this->verificationCodeService->delete($validated['email'],true);
+                SendVerificationCode::dispatch($validated['email'],true);
 
                 return UserService::createUser($validated);
             });

@@ -29,7 +29,7 @@ class VerificationCodeController extends BaseController
         $validated = $request->validated();
         try {
 
-            SendVerificationCode::dispatch($validated['email']);
+            SendVerificationCode::dispatch($validated['email'],$validated['registration']);
 
             return response()->json([
                 'status' => true,
@@ -48,12 +48,9 @@ class VerificationCodeController extends BaseController
     {
         $validated = $request->validated();
 
-        $this->verificationCodeService->Check($validated['email'], $validated['code']);
+        $data=$this->verificationCodeService->CheckAndHandle($validated['email'], $validated['code'],$validated['registration'] ?? true);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Verification code is valid ',
-        ]);
+        return  $data;
 
     }
 }

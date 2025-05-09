@@ -11,6 +11,7 @@ use App\Responses\LogedOutResponse;
 use App\Services\AuthService;
 use App\Services\VerificationCodeService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends BaseController
@@ -37,7 +38,11 @@ class AuthController extends BaseController
 
         $user = $this->authService->attemptRegister($validated);
 
-        return LogedInResponse::response(JWTAuth::fromUser($user));
+        return  response()->json([
+            'status' => true,
+            'message' => 'verification code sent successfully',
+        ]);
+
 
     }
 
@@ -50,9 +55,9 @@ class AuthController extends BaseController
 
         $credentials = $request->only('email', 'password');
 
-        $token = $this->authService->attemptLogin($credentials, $request->validated());
+        $data = $this->authService->attemptLogin($credentials, $request->validated());
 
-        return LogedInResponse::response($token);
+        return LogedInResponse::response($data);
 
     }
 
@@ -77,5 +82,14 @@ class AuthController extends BaseController
 
         return LogedInResponse::response($token);
 
+    }
+
+    public function profile(): JsonResponse
+    {
+        $user = Auth::user();
+        return  response()->json([
+            'status' => true,
+            'user' => $user,
+            ]);
     }
 }

@@ -15,13 +15,14 @@ class SendVerificationCode implements ShouldQueue
      * Create a new job instance.
      */
     protected $email;
-
+    protected $registration;
     protected $verification_code_service;
 
-    public function __construct($email)
+    public function __construct($email,$registration)
     {
         $this->email = $email;
         $this->verification_code_service = new VerificationCodeService;
+        $this->registration = $registration;
     }
 
     /**
@@ -31,7 +32,7 @@ class SendVerificationCode implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->verification_code_service->delete($this->email);
-        $this->verification_code_service->Send($this->email);
+        $this->verification_code_service->delete($this->email,$this->registration);
+        $this->verification_code_service->Send($this->email,$this->registration);
     }
 }

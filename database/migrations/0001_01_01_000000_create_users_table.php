@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->integer('points')->default(0);
             $table->dateTime('last_online')->nullable();
+            $table->boolean('email_verified')->default(false);
             $table->string('google_id')->nullable()->unique();
             $table->enum('role', ['admin', 'student','teacher'])->default('student');
             $table->rememberToken();

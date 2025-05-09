@@ -14,8 +14,7 @@ class UserProfileResponse
             'status' => true,
             'user' => UserResource::make($user),
             'achievements' => 0, // todo coming soon
-            'longest_streak' => $user->habits()->get()->map->LongestStreak()->max() ?? 0,
-            'habits_completion' => $userService->ComplementInAWeek($user),
+
         ]);
     }
 }

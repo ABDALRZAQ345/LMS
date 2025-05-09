@@ -30,6 +30,7 @@ class CheckVerificationCode extends FormRequest
                 ['exists:users,email']
             ),  ],
             'code' => ['required', 'numeric', 'digits:6'],
+            'registration' => ['nullable', 'in:1,0,true,false'],
         ];
     }
 

@@ -36,14 +36,14 @@ class PasswordController extends BaseController
     {
         $validated = $request->validated();
 
-        $this->verificationCodeService->Check($validated['email'], $validated['code']);
+        $this->verificationCodeService->Check($validated['email'], $validated['code'],false);
 
         try {
             DB::beginTransaction();
             $user = User::where('email', $validated['email'])->firstOrFail();
             UserService::updatePassword($user, $validated['password']);
 
-            $this->verificationCodeService->delete($validated['email']);
+            $this->verificationCodeService->delete($validated['email'],false);
             DB::commit();
 
             return LogedInResponse::response(JWTAuth::fromUser($user));
