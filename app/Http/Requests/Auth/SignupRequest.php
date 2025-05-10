@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\ValidGitHubAccount;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -30,7 +31,7 @@ class SignupRequest extends FormRequest
             'email' => ['required',  'email:dns', 'unique:users,email'],
             'image' => ['nullable', 'image', 'max:512'],
             'fcm_token' => ['nullable', 'string'],
-            'gitHub_account' => ['nullable', 'string'],
+            'gitHub_account' => ['nullable', 'string', new ValidGitHubAccount],
             'bio' => ['nullable', 'string'],
         ];
     }

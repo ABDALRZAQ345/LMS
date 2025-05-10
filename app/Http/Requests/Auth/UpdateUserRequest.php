@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\ValidGitHubAccount;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -24,8 +25,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:50'],
-            'photo' => ['nullable', 'image', 'max:512'],
+            'name' => ['required'],
+            'image' => ['nullable', 'image'],
+            'bio' => ['nullable'],
+            'gitHub_account' => ['nullable', 'string', new ValidGitHubAccount],
         ];
     }
 

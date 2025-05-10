@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class GoogleAuthController extends BaseController
 {
@@ -37,10 +36,9 @@ class GoogleAuthController extends BaseController
                 'password' => Hash::make(str()->random(24)),
             ]);
 
-            $token = JWTAuth::fromUser($user);
             DB::commit();
 
-            return LogedInResponse::response($token);
+            return LogedInResponse::response($user);
 
         } catch (\Exception $e) {
             DB::rollBack();

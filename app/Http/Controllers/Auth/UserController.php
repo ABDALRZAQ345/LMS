@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Auth\TimeZoneRequest;
 use App\Http\Requests\Auth\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Responses\UserProfileResponse;
@@ -33,7 +32,7 @@ class UserController extends BaseController
         try {
             $user = Auth::user();
 
-            return UserProfileResponse::response($user, $this->userService);
+            return UserProfileResponse::response($user);
 
         } catch (Exception $e) {
             throw new ServerErrorException($e->getMessage());
@@ -55,28 +54,6 @@ class UserController extends BaseController
             return response()->json([
                 'status' => true,
                 'user' => UserResource::make($user),
-            ]);
-        } catch (Exception $e) {
-            throw new ServerErrorException($e->getMessage());
-        }
-
-    }
-
-    /**
-     * @throws ServerErrorException
-     */
-    public function timezone(TimeZoneRequest $request): JsonResponse
-    {
-        $validated = $request->validated();
-        try {
-            $user = Auth::user();
-            $user->update([
-                'timezone' => $validated['timezone'],
-            ]);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'timezone updated successfully',
             ]);
         } catch (Exception $e) {
             throw new ServerErrorException($e->getMessage());

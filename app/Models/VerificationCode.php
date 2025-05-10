@@ -10,8 +10,8 @@ class VerificationCode extends Model
     /** @use HasFactory<\Database\Factories\VerificationCodeFactory> */
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
 
     protected $hidden = ['created_at', 'updated_at'];

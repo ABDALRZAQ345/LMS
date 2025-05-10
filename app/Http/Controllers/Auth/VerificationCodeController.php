@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Exceptions\ServerErrorException;
 use App\Exceptions\VerificationCodeException;
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\VerificationCode\CheckVerificationCode;
+use App\Http\Requests\VerificationCode\CheckVerificationCodeRequest;
 use App\Http\Requests\VerificationCode\SendVerificationCodeRequest;
 use App\Jobs\SendVerificationCode;
 use App\Services\VerificationCodeService;
@@ -29,7 +29,7 @@ class VerificationCodeController extends BaseController
         $validated = $request->validated();
         try {
 
-            SendVerificationCode::dispatch($validated['email'],$validated['registration']);
+            SendVerificationCode::dispatch($validated['email'], $validated['registration']);
 
             return response()->json([
                 'status' => true,
@@ -44,13 +44,13 @@ class VerificationCodeController extends BaseController
     /**
      * @throws VerificationCodeException
      */
-    public function Check(CheckVerificationCode $request): JsonResponse
+    public function Check(CheckVerificationCodeRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
-        $data=$this->verificationCodeService->CheckAndHandle($validated['email'], $validated['code'],$validated['registration'] ?? true);
+        $data = $this->verificationCodeService->CheckAndHandle($validated['email'], $validated['code'], $validated['registration'] ?? true);
 
-        return  $data;
+        return $data;
 
     }
 }

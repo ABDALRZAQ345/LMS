@@ -11,9 +11,10 @@ class Video extends Model
 {
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
+
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
@@ -23,6 +24,7 @@ class Video extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
     public function directComments(): HasMany
     {
         return $this->HasMany(Comment::class)->whereNull('comment_id');

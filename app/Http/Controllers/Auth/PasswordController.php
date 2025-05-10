@@ -16,7 +16,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PasswordController extends BaseController
 {
@@ -36,17 +35,17 @@ class PasswordController extends BaseController
     {
         $validated = $request->validated();
 
-        $this->verificationCodeService->Check($validated['email'], $validated['code'],false);
+        $this->verificationCodeService->Check($validated['email'], $validated['code'], false);
 
         try {
             DB::beginTransaction();
             $user = User::where('email', $validated['email'])->firstOrFail();
             UserService::updatePassword($user, $validated['password']);
 
-            $this->verificationCodeService->delete($validated['email'],false);
+            $this->verificationCodeService->delete($validated['email'], false);
             DB::commit();
 
-            return LogedInResponse::response(JWTAuth::fromUser($user));
+            return LogedInResponse::response($user);
 
         } catch (\Exception $e) {
             DB::rollBack();

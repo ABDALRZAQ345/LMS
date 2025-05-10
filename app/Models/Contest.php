@@ -11,8 +11,8 @@ class Contest extends Model
 {
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
 
     public function teacher(): BelongsTo
@@ -31,5 +31,4 @@ class Contest extends Model
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank')
             ->withTimestamps();
     }
-
 }

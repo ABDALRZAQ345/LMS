@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Comment;
-use App\Models\Student;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Migrations\Migration;

@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Course extends Model
 {
     use HasFactory;
-    protected $guarded=[
-        'id'
+
+    protected $guarded = [
+        'id',
     ];
+
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -36,29 +38,29 @@ class Course extends Model
             ->withTimestamps();
     }
 
-
     public function videos(): HasMany
     {
         return $this->hasMany(Video::class)->orderBy('order');
     }
+
     public function freeVideos(): HasMany
     {
-        if($this->price ==0 || $this->price==null){
+        if ($this->price == 0 || $this->price == null) {
             return $this->hasMany(Video::class)->orderBy('order');
-        }
-        else {
+        } else {
             return $this->hasMany(Video::class)->where('free', true)->orderBy('order');
         }
     }
+
     public function unFreeVideos(): HasMany
     {
-        return  $this->hasMany(Video::class)->where('free', false)->orderBy('order');
+        return $this->hasMany(Video::class)->where('free', false)->orderBy('order');
     }
+
     public function tests(): HasMany
     {
         return $this->hasMany(Test::class)->orderBy('order');
     }
-
 
     public function FinalTest()
     {
@@ -69,7 +71,6 @@ class Course extends Model
     {
 
         $videos = $this->videos()->orderBy('order')->get();
-
 
         $tests = $this->tests()->orderBy('order')->get();
 

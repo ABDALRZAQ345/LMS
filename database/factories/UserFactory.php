@@ -26,7 +26,7 @@ class UserFactory extends Factory
             'bio' => $this->faker->text(),
             'points' => $this->faker->randomNumber(),
             'last_online' => $this->faker->dateTime(),
-            'role' => $this->faker->randomElement(['admin', 'student','teacher']),
+            'role' => $this->faker->randomElement(['admin', 'student', 'teacher']),
 
         ];
     }

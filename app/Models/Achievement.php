@@ -12,12 +12,13 @@ class Achievement extends Model
 
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
+
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,'achievement_user');
+        return $this->belongsToMany(User::class, 'achievement_user');
 
     }
 }

@@ -3,11 +3,9 @@
 namespace App\Http\Requests\VerificationCode;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
 
-class CheckVerificationCode extends FormRequest
+class CheckVerificationCodeRequest extends VerificationCodeRequests
 {
     public function authorize(): bool
     {
@@ -24,13 +22,9 @@ class CheckVerificationCode extends FormRequest
         $isRegistration = filter_var($this->input('registration'), FILTER_VALIDATE_BOOLEAN);
 
         return [
-            'email' => ['required', 'email:dns', Rule::when(
-                $isRegistration,
-                ['unique:users,email'],
-                ['exists:users,email']
-            ),  ],
+            'email' => ['required', 'email:dns'],
             'code' => ['required', 'numeric', 'digits:6'],
-            'registration' => ['nullable', 'in:1,0,true,false'],
+            'registration' => ['required', 'in:1,0,true,false'],
         ];
     }
 

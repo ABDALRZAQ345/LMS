@@ -19,8 +19,8 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var list<string>
      */
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
 
     /**
@@ -54,9 +54,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    public function achievements() : belongsToMany
+
+    public function achievements(): belongsToMany
     {
-        return $this->belongsToMany(Achievement::class,'achievement_user');
+        return $this->belongsToMany(Achievement::class, 'achievement_user');
 
     }
 
@@ -76,12 +77,14 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('paid', 'status');
 
     }
+
     public function paidCourses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_user')
             ->wherePivot('paid', true)
             ->withPivot('paid', 'status');
     }
+
     public function unPaidCourses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_user')
@@ -109,10 +112,11 @@ class User extends Authenticatable implements JWTSubject
             ->wherePivot('status', 'watch_later')
             ->withPivot('paid', 'status');
     }
+
     public function tests(): BelongsToMany
     {
-        return $this->belongsToMany(Test::class,'test_user')
-            ->withPivot('start_time', 'end_time','correct_answers');
+        return $this->belongsToMany(Test::class, 'test_user')
+            ->withPivot('start_time', 'end_time', 'correct_answers');
     }
 
     public function contests(): BelongsToMany
@@ -120,7 +124,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Contest::class, 'contest_user')
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank');
     }
-
 
     public function friends(): BelongsToMany
     {
@@ -131,6 +134,7 @@ class User extends Authenticatable implements JWTSubject
             'friend_id'
         );
     }
+
     public function createdCourses(): HasMany
     {
         return $this->hasMany(Course::class);
@@ -156,7 +160,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Course::class)->where('paid', false);
     }
 
-
     public function learningPaths(): HasMany
     {
         return $this->hasMany(LearningPath::class);
@@ -166,8 +169,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(LearningPath::class)->where('verified', true);
     }
-    public function unVerifiedLearningPaths(): HasMany{
+
+    public function unVerifiedLearningPaths(): HasMany
+    {
         return $this->hasMany(LearningPath::class)->where('verified', false);
     }
-
 }

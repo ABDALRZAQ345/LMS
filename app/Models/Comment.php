@@ -10,8 +10,8 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
 
     public function user(): BelongsTo
@@ -23,8 +23,6 @@ class Comment extends Model
     {
         return $this->belongsTo(Comment::class);
     }
-
-
 
     public function video(): BelongsTo
     {

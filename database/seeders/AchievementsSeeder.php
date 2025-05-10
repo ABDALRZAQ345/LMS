@@ -3,11 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Achievement;
-use App\Models\Student;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class AchievementsSeeder extends Seeder
 {
@@ -28,14 +25,12 @@ class AchievementsSeeder extends Seeder
             ['name' => 'Night Coder', 'description' => 'Studied after midnight.'],
             ['name' => 'Bug Whisperer', 'description' => 'Fixed a tricky bug. '],
 
-
             ['name' => 'Retry Addict', 'description' => 'Failed the same quiz 5 times. '],
             ['name' => 'Donkey Award', 'description' => 'Failed miserably and tried again.'],
             ['name' => 'Procrastination Pro', 'description' => 'Logged in but didn’t study. '],
             ['name' => 'Almost Genius', 'description' => 'Got 59% in a quiz. So close! '],
             ['name' => 'Oops Again', 'description' => 'Retook a test 3 times. '],
             ['name' => 'Silent Observer', 'description' => 'Watched videos without answering any questions.'],
-
 
             ['name' => 'Track Starter', 'description' => 'Enrolled in a learning track.'],
             ['name' => 'Quiz Champ', 'description' => 'Passed 10 quizzes. '],
@@ -57,9 +52,11 @@ class AchievementsSeeder extends Seeder
             Achievement::create($achievement);
         }
         $achievementIds = Achievement::pluck('id')->toArray();
-        for($i=1;$i<=100;$i++){
-            $student=User::find($i);
-            if (!$student) continue;
+        for ($i = 1; $i <= 100; $i++) {
+            $student = User::find($i);
+            if (! $student) {
+                continue;
+            }
 
             $randomCount = rand(1, 10);
             $randomAchievements = collect($achievementIds)->random($randomCount)->toArray();

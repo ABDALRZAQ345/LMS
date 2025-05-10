@@ -4,11 +4,10 @@ namespace App\Responses;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Services\UserService;
 
 class UserProfileResponse
 {
-    public static function response(User $user, UserService $userService): \Illuminate\Http\JsonResponse
+    public static function response(User $user): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'status' => true,

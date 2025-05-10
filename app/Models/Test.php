@@ -11,8 +11,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Test extends Model
 {
     use HasFactory;
-    protected $guarded=[
-        'id'
+
+    protected $guarded = [
+        'id',
     ];
 
     public function course(): BelongsTo
@@ -20,11 +21,10 @@ class Test extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function questions():MorphMany
+    public function questions(): MorphMany
     {
         return $this->morphMany(Question::class, 'questionable');
     }
-
 
     public function students(): BelongsToMany
     {

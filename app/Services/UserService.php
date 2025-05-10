@@ -16,7 +16,6 @@ class UserService
             'fcm_token' => $data['fcm_token'] ?? null,
             'email' => $data['email'],
             'image' => isset($data['photo']) ? NewPublicPhoto($data['image'], 'profiles') : null,
-            'timezone' => $data['timezone'],
             'gitHub_account' => $data['gitHub_account'] ?? null,
             'bio' => $data['bio'] ?? null,
             'role' => $data['role'] ?? 'student',
@@ -34,16 +33,18 @@ class UserService
     public static function updateUser($data): User
     {
         $user = Auth::user();
-        if (isset($data['photo']) && $data['photo'] != null) {
-            if ($user->photo) {
-                DeletePublicPhoto($user->photo);
+        if (isset($data['image']) && $data['image'] != null) {
+            if ($user->image) {
+                DeletePublicPhoto($user->image);
             }
-            $data['photo'] = NewPublicPhoto($data['photo'], 'profiles');
+            $data['image'] = NewPublicPhoto($data['image']);
         }
 
         $user->update([
             'name' => $data['name'],
-            'photo' => $data['photo'] ?? $user->photo,
+            'image' => $data['image'] ?? null,
+            'bio' => $data['bio'] ?? null,
+            'gitHub_account' => $data['gitHub_account'] ?? null,
         ]);
 
         return $user;

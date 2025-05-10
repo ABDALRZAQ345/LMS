@@ -11,9 +11,10 @@ class LearningPath extends Model
 {
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
+
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -21,7 +22,7 @@ class LearningPath extends Model
 
     public function courses(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class,'course_learning_path')
+        return $this->belongsToMany(Course::class, 'course_learning_path')
             ->orderByPivot('order');
     }
 }

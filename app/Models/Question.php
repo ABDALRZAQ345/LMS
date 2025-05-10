@@ -11,19 +11,22 @@ class Question extends Model
 {
     use HasFactory;
 
-    protected $guarded=[
-        'id'
+    protected $guarded = [
+        'id',
     ];
 
     public function questionable(): MorphTo
     {
         return $this->morphTo();
     }
+
     public function options(): HasMany
     {
         return $this->hasMany(Option::class);
     }
-    public function correctOption(){
-        return $this->options()->where('is_correct',1)->first();
+
+    public function correctOption()
+    {
+        return $this->options()->where('is_correct', 1)->first();
     }
 }

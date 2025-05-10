@@ -25,7 +25,7 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
         Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('/send_fcm', [FcmTokenController::class, 'send'])->name('fcm.send');
-        Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('throttle:rare')->name('refresh');
+        Route::post('/token/refresh', [AuthController::class, 'refresh'])->middleware('throttle:rare')->name('refresh');
     });
 
 });

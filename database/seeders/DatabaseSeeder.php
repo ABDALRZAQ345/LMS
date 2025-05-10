@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         // creating the admin for example
-       $this->call(UserSeeder::class);
-       $this->call(AchievementsSeeder::class);
-       $this->call(CourseSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(AchievementsSeeder::class);
+        $this->call(CourseSeeder::class);
     }
 }

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->dateTime('last_online')->nullable();
             $table->boolean('email_verified')->default(false);
             $table->string('google_id')->nullable()->unique();
-            $table->enum('role', ['admin', 'student','teacher'])->default('student');
+            $table->enum('role', ['admin', 'student', 'teacher'])->default('student');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('NewPublicPhoto')) {
-    function NewPublicPhoto($photo, $folder = 'photos'): string
+    function NewPublicPhoto($photo, $folder = 'images'): string
     {
         $photoPath = $photo->store($folder, 'public');
         $photoPath = env('APP_URL').'/storage/'.$photoPath;
