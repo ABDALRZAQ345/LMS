@@ -8,7 +8,7 @@ php artisan package:discover --ansi
 php artisan key:generate
 
 
-php artisan migrate --force
+php artisan migrate:fresh --seed
 php artisan queue:table
 
 
