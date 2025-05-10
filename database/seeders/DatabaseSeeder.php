@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +11,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // creating the admin for example
-       $this->call(UserSeeder::class);
-       $this->call(AchievementsSeeder::class);
-       $this->call(CourseSeeder::class);
+        $this->call([
+            UserSeeder::class,           // First create users
+            LearningPathSeeder::class,   // Then create learning paths and courses
+            VideoSeeder::class,          // Then create videos for courses
+            TestSeeder::class,           // Then create tests for courses
+            QuestionSeeder::class,       // Then create questions for tests
+            OptionSeeder::class,         // Then create options for questions
+            ReviewSeeder::class,         // Then create reviews for courses
+            CommentSeeder::class,        // Then create comments for videos
+            ContestSeeder::class,        // Then create contests
+            AchievementSeeder::class,    // Then create achievements
+            FriendSeeder::class,         // Then create friend relationships
+            CourseUserSeeder::class,     // Then create course enrollments
+            TestUserSeeder::class,       // Then create test attempts
+            ContestUserSeeder::class,    // Finally create contest participations
+        ]);
     }
 }

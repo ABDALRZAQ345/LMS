@@ -29,13 +29,12 @@ class Course extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function students()
+    public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'course_user')
             ->withPivot('paid', 'status')
             ->withTimestamps();
     }
-
 
     public function videos(): HasMany
     {
@@ -59,7 +58,6 @@ class Course extends Model
         return $this->hasMany(Test::class)->orderBy('order');
     }
 
-
     public function FinalTest()
     {
         return $this->tests()->where('is_final', true)->first();
@@ -67,14 +65,9 @@ class Course extends Model
 
     public function content()
     {
-
         $videos = $this->videos()->orderBy('order')->get();
-
-
         $tests = $this->tests()->orderBy('order')->get();
-
         $all = $videos->merge($tests)->sortBy('order');
-
         return $all;
     }
 }
