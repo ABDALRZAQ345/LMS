@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('image')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->foreignIdFor(User::class)
                 ->comment('teacher id (creator)')
                 ->constrained()->cascadeOnDelete();

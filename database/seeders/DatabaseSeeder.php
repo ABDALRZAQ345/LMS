@@ -13,11 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // creating the admin for example
-        $this->call(UserSeeder::class);
-        $this->call(AchievementsSeeder::class);
-        $this->call(CourseSeeder::class);
+        $this->call([
+            UserSeeder::class,
+            LearningPathSeeder::class,
+            VideoSeeder::class,
+            TestSeeder::class,
+            QuestionSeeder::class,
+            OptionSeeder::class,
+            ReviewSeeder::class,
+            CommentSeeder::class,
+            ContestSeeder::class,
+            AchievementSeeder::class,
+            FriendSeeder::class,
+            CourseUserSeeder::class,
+            TestUserSeeder::class,
+            ContestUserSeeder::class,
+        ]);
     }
 }

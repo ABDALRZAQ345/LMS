@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Student;
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -20,13 +22,16 @@ class UserSeeder extends Seeder
             'role' => 'teacher',
             'email_verified' => true,
         ]);
-        User::create([
+        User::firstOrCreate([
+            'email' => 'admin@admin.com'
+        ], [
             'name' => 'admin',
             'email' => 'admin@admin.com',
             'password' => \Hash::make('1234/*-+Asa'),
             'email_verified' => true,
             'role' => 'admin',
         ]);
+
 
     }
 }
