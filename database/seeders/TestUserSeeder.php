@@ -24,17 +24,17 @@ class TestUserSeeder extends Seeder
         foreach ($students as $student) {
             $numTests = rand(2, 4);
             $randomTests = $tests->random($numTests);
-            
+
             foreach ($randomTests as $test) {
                 $startTime = Carbon::now()->subHours(rand(1, 24));
                 $endTime = $startTime->copy()->addMinutes(rand(15, 60));
-                
+
                 $student->tests()->attach($test->id, [
-                    'correct_answers' => rand(0, 10),
+                    'correct_answers' => rand(0, $test->questions()->count()),
                     'start_time' => $startTime,
                     'end_time' => $endTime
                 ]);
             }
         }
     }
-} 
+}

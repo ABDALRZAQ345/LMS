@@ -20,6 +20,9 @@ return new class extends Migration
             $table->foreignIdFor(User::class)
                 ->comment('teacher id (creator)')
                 ->constrained()->cascadeOnDelete();
+            $table->enum('level',['beginner','intermediate','advanced','expert'])
+                ->nullable()
+                ->default('beginner');
             $table->integer('price')->default(0);
             $table->boolean('verified')->default(false);
             $table->timestamps();

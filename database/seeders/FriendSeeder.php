@@ -20,19 +20,14 @@ class FriendSeeder extends Seeder
         foreach ($students as $student) {
             $numFriends = rand(2, 5);
             $potentialFriends = $students->where('id', '!=', $student->id);
-            
+
             // Get random friends that aren't already friends
             $friends = $potentialFriends->random(min($numFriends, $potentialFriends->count()));
-            
+
             foreach ($friends as $friend) {
-                // Check if friendship already exists in either direction
-                $exists = $student->friends()->where('friend_id', $friend->id)->exists() ||
-                         $friend->friends()->where('friend_id', $student->id)->exists();
-                
-                if (!$exists) {
+
                     $student->friends()->attach($friend->id);
-                }
             }
         }
     }
-} 
+}

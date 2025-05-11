@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Contest;
 use App\Models\Question;
 use App\Models\Test;
 use Illuminate\Database\Seeder;
@@ -23,5 +24,12 @@ class QuestionSeeder extends Seeder
                 'questionable_id' => $test->id
             ]);
         }
+        $contests = Contest::all();
+        foreach ($contests as $contest) {
+            Question::factory(rand(5, 10))->create([
+                'questionable_type' => Contest::class,
+                'questionable_id' => $contest->id
+            ]);
+        }
     }
-} 
+}

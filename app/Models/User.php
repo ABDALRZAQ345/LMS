@@ -128,6 +128,11 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank');
     }
 
+    public function createdContests(): HasMany
+    {
+      return $this->hasMany(Contest::class);
+  }
+
     public function friends(): BelongsToMany
     {
         return $this->belongsToMany(

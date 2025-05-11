@@ -14,16 +14,16 @@ class LearningPathSeeder extends Seeder
     public function run(): void
     {
         // Create 3 learning paths
-        $learningPaths = LearningPath::factory(3)->create();
+        $learningPaths = LearningPath::factory(4)->create();
 
         // For each learning path, create 5 courses and attach them
         foreach ($learningPaths as $index => $learningPath) {
             $courses = Course::factory(5)->create();
-            
+
             // Attach courses to learning path with order
             foreach ($courses as $order => $course) {
                 $learningPath->courses()->attach($course->id, ['order' => $order + 1]);
             }
         }
     }
-} 
+}

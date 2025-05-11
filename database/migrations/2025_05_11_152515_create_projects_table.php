@@ -1,8 +1,7 @@
 <?php
 
-use App\Models\Comment;
+use App\Models\Tag;
 use App\Models\User;
-use App\Models\Video;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,13 +13,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
-            $table->integer('likes')->default(0);
+            $table->string('title');
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Video::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Comment::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->text('description')->nullable();
+            $table->json('technologies')->nullable();
+            $table->string('gitHub_url')->nullable();
+            $table->string('url')->nullable();
+            $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('projects');
     }
 };
