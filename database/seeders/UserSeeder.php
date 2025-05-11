@@ -14,14 +14,17 @@ class UserSeeder extends Seeder
     {
         User::factory()->count(100)->create([
             'role' => 'student',
+            'email_verified' => true,
         ]);
         User::factory()->count(10)->create([
             'role' => 'teacher',
+            'email_verified' => true,
         ]);
         User::create([
             'name' => 'admin',
             'email' => 'admin@admin.com',
             'password' => \Hash::make('1234/*-+Asa'),
+            'email_verified' => true,
             'role' => 'admin',
         ]);
 

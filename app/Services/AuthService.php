@@ -25,10 +25,14 @@ class AuthService
      */
     public function attemptLogin(array $credentials, array $validated): array
     {
-        if (! $token = JWTAuth::attempt($credentials)) {
+        $user = User::where('email', $validated['email'])
+            ->where( 'email_verified', true)
+            ->first();
+
+        if ((! $token = JWTAuth::attempt($credentials) ) || (!$user)) {
             throw new UNAuthorizedException('Invalid email or password');
         }
-        $user = User::where('email', $validated['email'])->first();
+
         $user->fcm_token = $validated['fcm_token'] ?? null;
         $user->save();
 
@@ -47,6 +51,7 @@ class AuthService
 
         return
             DB::transaction(function () use ($validated) {
+                UserService::deleteUnVerifiedUser($validated['email']);
                 $this->verificationCodeService->delete($validated['email'], true);
                 SendVerificationCode::dispatch($validated['email'], true);
 

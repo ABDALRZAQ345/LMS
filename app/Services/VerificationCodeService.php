@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\UNAuthorizedException;
 use App\Exceptions\VerificationCodeException;
 use App\Mail\SendEmail;
 use App\Models\User;
@@ -72,12 +73,15 @@ class VerificationCodeService
     public static function handle($registration, $email, $verificationCode): \Illuminate\Http\JsonResponse
     {
         if ($registration) {
-            $verificationCode->delete();
-            $user = User::where('email', $email)->first();
+
+            $user = User::where('email', $email)
+                ->where('email_verified',false)
+                ->first();
+
             $user->email_verified = true;
             $user->save();
             $data = ['token' => JWTAuth::fromUser($user), 'role' => $user->role];
-
+            $verificationCode->delete();
             return LogedInResponse::response($data);
         } else {
             return response()->json(['message' => 'verification code is true ']);

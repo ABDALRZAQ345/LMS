@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class LoginRequest extends FormRequest
@@ -26,7 +27,10 @@ class LoginRequest extends FormRequest
     {
         return [
             'password' => ['required',  Password::defaults()],
-            'email' => ['required', 'email:dns', 'exists:users,email'],
+            'email' => ['required', 'email:dns',
+                Rule::exists('users', 'email')->where(function ($query) {
+                $query->where('email_verified', true);
+            }),],
             'fcm_token' => ['nullable', 'string'],
         ];
     }

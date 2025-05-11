@@ -5,6 +5,7 @@ namespace App\Http\Requests\Password;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class ForgetPasswordRequest extends FormRequest
@@ -25,7 +26,9 @@ class ForgetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email:dns', 'exists:users,email'],
+            'email' => ['required', 'email:dns', Rule::exists('users', 'email')->where(function ($query) {
+                $query->where('email_verified', true);
+            }),],
             'password' => ['required', Password::defaults(), 'confirmed'],
             'code' => ['required', 'numeric', 'digits:6'],
         ];
