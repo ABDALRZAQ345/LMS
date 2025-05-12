@@ -2,8 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
+use function Laravel\Prompts\table;
 
 class UserResource extends JsonResource
 {
@@ -14,6 +17,11 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $data= parent::toArray($request);
+        $data['last_online']=Carbon::parse($data['last_online'])->diffForHumans();
+        $data['joined'] = Carbon::parse($data['created_at'])->format('Y-m-d');
+        unset($data['created_at']);
+        $data['course_completed']=db::table('course_user')->where('user_id',$data['id'])->where('status','finished')->count();
+        return $data;
     }
 }

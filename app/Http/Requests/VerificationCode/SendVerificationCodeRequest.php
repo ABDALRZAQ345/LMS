@@ -22,7 +22,7 @@ class SendVerificationCodeRequest extends VerificationCodeRequests
         $isRegistration = filter_var($this->input('registration'), FILTER_VALIDATE_BOOLEAN);
 
         return [
-            'email' => ['required', 'email:dns'],
+            'email' => ['required'],
             'registration' => ['required', 'in:1,0,true,false'],
         ];
 

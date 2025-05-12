@@ -29,7 +29,7 @@ class SignupRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'password' => ['required', 'confirmed', Password::defaults(), 'max:40'],
-            'email' => ['required',  'email:dns',new SignupEmail() ],
+            'email' => ['required',new SignupEmail() ],
             'image' => ['nullable', 'image', 'max:512'],
             'fcm_token' => ['nullable', 'string'],
             'gitHub_account' => ['nullable', 'string', new ValidGitHubAccount],

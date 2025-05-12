@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\FcmTokenController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\VerificationCodeController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,6 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
     });
     Route::middleware('auth:api')->group(function () {
         Route::post('password/reset', [PasswordController::class, 'reset'])->name('password.reset');
-        Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('/send_fcm', [FcmTokenController::class, 'send'])->name('fcm.send');
         Route::post('/token/refresh', [AuthController::class, 'refresh'])->middleware('throttle:rare')->name('refresh');

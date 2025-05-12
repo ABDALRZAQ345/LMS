@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
             TestUserSeeder::class,
             ContestUserSeeder::class,
             TagSeeder::class,
-            ProjectTags::class
+            ProjectSeeder::class,
+            CertificateSeeder::class
         ]);
     }
 }

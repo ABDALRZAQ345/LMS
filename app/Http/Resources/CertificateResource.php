@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HabitLogResource extends JsonResource
+class CertificateResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,9 @@ class HabitLogResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = parent::toArray($request);
-        $data['day_of_week'] = Carbon::parse($data['date'])->translatedFormat('l');
-
+        $data=parent::toArray($request);
+        $data['obtain_date']=Carbon::parse($data['created_at'])->format('Y-m-d');
+        unset($data['created_at']);
         return $data;
     }
 }

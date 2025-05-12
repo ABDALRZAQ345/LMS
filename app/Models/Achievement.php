@@ -15,7 +15,9 @@ class Achievement extends Model
     protected $guarded = [
         'id',
     ];
-
+    protected $hidden=[
+        'updated_at','id','pivot',
+    ];
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'achievement_user');

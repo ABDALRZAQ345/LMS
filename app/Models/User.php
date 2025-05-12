@@ -32,7 +32,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $hidden = [
-
+        'password','fcm_token','email_verified','remember_token','updated_at','google_id'
     ];
 
     /**
@@ -45,6 +45,7 @@ class User extends Authenticatable implements JWTSubject
         return [
 
             'password' => 'hashed',
+            'created_at' => 'date',
         ];
     }
 
@@ -181,5 +182,10 @@ class User extends Authenticatable implements JWTSubject
     public function unVerifiedLearningPaths(): HasMany
     {
         return $this->hasMany(LearningPath::class)->where('verified', false);
+    }
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(Certificate::class);
     }
 }

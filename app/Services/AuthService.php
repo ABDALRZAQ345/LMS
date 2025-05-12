@@ -23,7 +23,7 @@ class AuthService
      * @throws AuthenticationException
      * @throws \Throwable
      */
-    public function attemptLogin(array $credentials, array $validated): array
+    public function attemptLogin(array $credentials, array $validated) : User
     {
         $user = User::where('email', $validated['email'])
             ->where( 'email_verified', true)
@@ -36,10 +36,7 @@ class AuthService
         $user->fcm_token = $validated['fcm_token'] ?? null;
         $user->save();
 
-        return [
-            'token' => $token,
-            'role' => $user->role,
-        ];
+       return  $user;
     }
 
     /**

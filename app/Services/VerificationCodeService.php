@@ -15,6 +15,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VerificationCodeService
 {
+    protected StreakService  $streakService;
+    public function __construct(StreakService $streakService)
+    {
+        $this->streakService = $streakService;
+    }
     public static function Send($email, $registration): void
     {
         $code = rand(100000, 999999);
@@ -80,13 +85,14 @@ class VerificationCodeService
 
             $user->email_verified = true;
             $user->save();
-            $data = ['token' => JWTAuth::fromUser($user), 'role' => $user->role];
             $verificationCode->delete();
-            return LogedInResponse::response($data);
+            $this->streakService->C
+            return LogedInResponse::response($user);
         } else {
             return response()->json(['message' => 'verification code is true ']);
         }
     }
+
 
     /**
      * @throws VerificationCodeException

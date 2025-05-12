@@ -53,9 +53,9 @@ class AuthController extends BaseController
 
         $credentials = $request->only('email', 'password');
 
-        $data = $this->authService->attemptLogin($credentials, $request->validated());
+        $user = $this->authService->attemptLogin($credentials, $request->validated());
 
-        return LogedInResponse::response($data);
+        return LogedInResponse::response($user);
 
     }
 
@@ -79,17 +79,9 @@ class AuthController extends BaseController
         $user = Auth::user();
         $token = auth()->refresh();
 
-        return LogedInResponse::response(['token' => $token, 'role' => $user->role]);
+        return LogedInResponse::response(['user_id' => $user->id,'token' => $token, 'role' => $user->role]);
 
     }
 
-    public function profile(): JsonResponse
-    {
-        $user = Auth::user();
 
-        return response()->json([
-            'status' => true,
-            'user' => $user,
-        ]);
-    }
 }
