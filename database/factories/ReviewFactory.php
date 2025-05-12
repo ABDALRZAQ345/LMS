@@ -25,4 +25,4 @@ class ReviewFactory extends Factory
             'user_id' => User::factory()->state(['role' => 'student']),
         ];
     }
-} 
+}

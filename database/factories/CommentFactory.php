@@ -25,4 +25,4 @@ class CommentFactory extends Factory
             'comment_id' => null,
         ];
     }
-} 
+}

@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Test;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TestUserSeeder extends Seeder
 {
@@ -32,7 +31,7 @@ class TestUserSeeder extends Seeder
                 $student->tests()->attach($test->id, [
                     'correct_answers' => rand(0, $test->questions()->count()),
                     'start_time' => $startTime,
-                    'end_time' => $endTime
+                    'end_time' => $endTime,
                 ]);
             }
         }

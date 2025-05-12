@@ -21,9 +21,9 @@ class VideoFactory extends Factory
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(2),
             'order' => 1, // This will be set in the seeder
-            'url' => 'https://www.youtube.com/watch?v=' . $this->faker->regexify('[A-Za-z0-9]{11}'),
+            'url' => 'https://www.youtube.com/watch?v='.$this->faker->regexify('[A-Za-z0-9]{11}'),
             'free' => $this->faker->boolean(30),
             'course_id' => Course::factory(),
         ];
     }
-} 
+}

@@ -13,7 +13,6 @@ use App\Models\User;
 use App\Responses\UserProfileResponse;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Mockery\Exception;
 
 class UserController extends BaseController
@@ -47,7 +46,7 @@ class UserController extends BaseController
      * @throws ServerErrorException
      * @throws \Throwable
      */
-    public function update(UpdateUserRequest $request,User $user): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $validated = $request->validated();
         try {
@@ -95,7 +94,6 @@ class UserController extends BaseController
             throw new ServerErrorException($e->getMessage());
         }
 
-
     }
 
     /**
@@ -105,10 +103,11 @@ class UserController extends BaseController
     {
         try {
             $user->load('contests');
+
             return response()->json([
                 'status' => true,
                 'contests_count' => $user->contests()->count(),
-                'total_points' =>   $user->points,
+                'total_points' => $user->points,
                 'contests' => UserContestResource::collection($user->contests()->get()),
             ]);
         } catch (Exception $e) {

@@ -23,4 +23,4 @@ class OptionFactory extends Factory
             'question_id' => Question::factory(),
         ];
     }
-} 
+}

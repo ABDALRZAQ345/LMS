@@ -2,18 +2,27 @@
 
 namespace App\Services;
 
-use App\Exceptions\UNAuthorizedException;
-use App\Exceptions\VerificationCodeException;
-use App\Jobs\SendVerificationCode;
+use App\Models\Streak;
 use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StreakService
 {
-    public static function CreateStreakLogs(User $user)
+    public static function CreateStreakLogs(User $user): void
     {
+        $startOfYear = now()->startOfYear();
+        $endOfYear = now()->endOfYear();
+
+        $date = $startOfYear->copy();
+
+        while ($date <= $endOfYear) {
+            Streak::create([
+                'user_id' => $user->id,
+                'date' => $date->toDateString(),
+                'status' => 0,
+            ]);
+
+            $date->addDay();
+        }
 
     }
 }

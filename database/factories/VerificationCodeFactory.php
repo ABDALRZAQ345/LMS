@@ -24,4 +24,4 @@ class VerificationCodeFactory extends Factory
             'verified_at' => null,
         ];
     }
-} 
+}

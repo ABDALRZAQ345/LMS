@@ -29,10 +29,8 @@ class Contest extends Model
     {
         return $this->belongsToMany(User::class, 'contest_user')
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank')
-            ->orderByPivot('correct_answers','desc')
-            ->orderByPivot('end_time','asc')
+            ->orderByPivot('correct_answers', 'desc')
+            ->orderByPivot('end_time', 'asc')
             ->withTimestamps();
     }
-
-
 }

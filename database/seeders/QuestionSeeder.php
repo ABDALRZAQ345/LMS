@@ -21,14 +21,14 @@ class QuestionSeeder extends Seeder
         foreach ($tests as $test) {
             Question::factory(rand(5, 10))->create([
                 'questionable_type' => Test::class,
-                'questionable_id' => $test->id
+                'questionable_id' => $test->id,
             ]);
         }
         $contests = Contest::all();
         foreach ($contests as $contest) {
             Question::factory(rand(5, 10))->create([
                 'questionable_type' => Contest::class,
-                'questionable_id' => $contest->id
+                'questionable_id' => $contest->id,
             ]);
         }
     }

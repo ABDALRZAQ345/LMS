@@ -22,4 +22,4 @@ class FriendFactory extends Factory
             'friend_id' => User::factory(),
         ];
     }
-} 
+}

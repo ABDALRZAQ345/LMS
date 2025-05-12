@@ -25,9 +25,9 @@ class ReviewSeeder extends Seeder
             for ($i = 0; $i < $numReviews; $i++) {
                 Review::factory()->create([
                     'course_id' => $course->id,
-                    'user_id' => $students->random()->id
+                    'user_id' => $students->random()->id,
                 ]);
             }
         }
     }
-} 
+}

@@ -21,14 +21,14 @@ class OptionSeeder extends Seeder
             // Create 3 incorrect options
             Option::factory(3)->create([
                 'question_id' => $question->id,
-                'is_correct' => false
+                'is_correct' => false,
             ]);
 
             // Create 1 correct option
             Option::factory()->create([
                 'question_id' => $question->id,
-                'is_correct' => true
+                'is_correct' => true,
             ]);
         }
     }
-} 
+}

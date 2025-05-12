@@ -25,9 +25,9 @@ class CommentSeeder extends Seeder
             for ($i = 0; $i < $numComments; $i++) {
                 Comment::factory()->create([
                     'video_id' => $video->id,
-                    'user_id' => $users->random()->id
+                    'user_id' => $users->random()->id,
                 ]);
             }
         }
     }
-} 
+}

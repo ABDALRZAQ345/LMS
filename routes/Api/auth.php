@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\FcmTokenController;
 use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\VerificationCodeController;
 use Illuminate\Support\Facades\Route;
 

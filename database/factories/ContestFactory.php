@@ -18,6 +18,7 @@ class ContestFactory extends Factory
     public function definition(): array
     {
         $startAt = $this->faker->dateTimeBetween('now', '+2 months');
+
         return [
             'name' => $this->faker->sentence(3),
             'time' => $this->faker->numberBetween(30, 180),
@@ -29,4 +30,4 @@ class ContestFactory extends Factory
             'verified' => $this->faker->boolean(80),
         ];
     }
-} 
+}

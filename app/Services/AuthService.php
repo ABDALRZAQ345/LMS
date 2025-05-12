@@ -23,20 +23,20 @@ class AuthService
      * @throws AuthenticationException
      * @throws \Throwable
      */
-    public function attemptLogin(array $credentials, array $validated) : User
+    public function attemptLogin(array $credentials, array $validated): User
     {
         $user = User::where('email', $validated['email'])
-            ->where( 'email_verified', true)
+            ->where('email_verified', true)
             ->first();
 
-        if ((! $token = JWTAuth::attempt($credentials) ) || (!$user)) {
+        if ((! $token = JWTAuth::attempt($credentials)) || (! $user)) {
             throw new UNAuthorizedException('Invalid email or password');
         }
 
         $user->fcm_token = $validated['fcm_token'] ?? null;
         $user->save();
 
-       return  $user;
+        return $user;
     }
 
     /**

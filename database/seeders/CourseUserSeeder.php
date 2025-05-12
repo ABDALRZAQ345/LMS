@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Seeder;
 
 class CourseUserSeeder extends Seeder
@@ -24,13 +23,13 @@ class CourseUserSeeder extends Seeder
         foreach ($students as $student) {
             $numCourses = rand(2, 5);
             $randomCourses = $courses->random($numCourses);
-            
+
             foreach ($randomCourses as $course) {
                 $course->students()->attach($student->id, [
                     'paid' => $course->price,
-                    'status' => $faker->randomElement(['finished', 'enrolled', 'watch_later'])
+                    'status' => $faker->randomElement(['finished', 'enrolled', 'watch_later']),
                 ]);
             }
         }
     }
-} 
+}

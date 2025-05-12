@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Tag;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
@@ -13,13 +12,13 @@ class TagSeeder extends Seeder
      */
     public function run(): void
     {
-        $tags=[
-            'web development','mobile development','Data','Game development ','Desktop Applications',
-            'Artificial intelligent ','DevOps','Other'
+        $tags = [
+            'web development', 'mobile development', 'Data', 'Game development ', 'Desktop Applications',
+            'Artificial intelligent ', 'DevOps', 'Other',
         ];
         foreach ($tags as $tag) {
             Tag::create([
-                'name' => $tag
+                'name' => $tag,
             ]);
         }
     }

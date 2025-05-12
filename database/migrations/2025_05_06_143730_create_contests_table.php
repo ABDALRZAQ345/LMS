@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('time')->comment('period of time of the contest');
             $table->text('description')->nullable();
-            $table->enum('type',['quiz','programming'])->default('quiz');
+            $table->enum('type', ['quiz', 'programming'])->default('quiz');
             $table->unsignedInteger('level')->default(0);
             $table->enum('status', ['active', 'ended', 'coming'])->default('coming');
             $table->dateTime('start_at');

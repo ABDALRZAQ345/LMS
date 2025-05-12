@@ -22,7 +22,7 @@ class VideoSeeder extends Seeder
             for ($i = 1; $i <= 3; $i++) {
                 Video::factory()->create([
                     'course_id' => $course->id,
-                    'order' => $i
+                    'order' => $i,
                 ]);
             }
 
@@ -30,9 +30,9 @@ class VideoSeeder extends Seeder
             for ($i = 5; $i <= 7; $i++) {
                 Video::factory()->create([
                     'course_id' => $course->id,
-                    'order' => $i
+                    'order' => $i,
                 ]);
             }
         }
     }
-} 
+}

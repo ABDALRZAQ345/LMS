@@ -28,7 +28,7 @@ class ForgetPasswordRequest extends FormRequest
         return [
             'email' => ['required', Rule::exists('users', 'email')->where(function ($query) {
                 $query->where('email_verified', true);
-            }),],
+            }), ],
             'password' => ['required', Password::defaults(), 'confirmed'],
             'code' => ['required', 'numeric', 'digits:6'],
         ];

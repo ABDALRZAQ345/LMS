@@ -24,4 +24,4 @@ class TestFactory extends Factory
             'course_id' => Course::factory(),
         ];
     }
-} 
+}

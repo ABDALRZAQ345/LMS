@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\ProjectTags;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -31,7 +29,8 @@ class DatabaseSeeder extends Seeder
             ContestUserSeeder::class,
             TagSeeder::class,
             ProjectSeeder::class,
-            CertificateSeeder::class
+            CertificateSeeder::class,
+            StreakSeeder::class,
         ]);
     }
 }

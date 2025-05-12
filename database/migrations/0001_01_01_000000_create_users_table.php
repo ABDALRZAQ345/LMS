@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('points')->default(0);
             $table->dateTime('last_online')->nullable();
             $table->boolean('email_verified')->default(false);
-            $table->enum('level',['beginner','intermediate','advanced','expert'])
+            $table->enum('level', ['beginner', 'intermediate', 'advanced', 'expert'])
                 ->nullable()
                 ->default('beginner');
             $table->string('google_id')->nullable()->unique();

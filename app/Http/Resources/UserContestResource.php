@@ -14,15 +14,16 @@ class UserContestResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data=parent::toArray($request);
-        $returned=[
+        $data = parent::toArray($request);
+        $returned = [
             'id' => $data['id'],
             'name' => $data['name'],
             'data' => $data['start_at'],
             'rank' => $data['pivot']['rank'],
             'points' => $data['pivot']['gained_points'],
-            'type' => $data['type']
+            'type' => $data['type'],
         ];
+
         return $returned;
     }
 }

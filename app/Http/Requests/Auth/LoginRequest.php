@@ -29,8 +29,8 @@ class LoginRequest extends FormRequest
             'password' => ['required',  Password::defaults()],
             'email' => ['required',
                 Rule::exists('users', 'email')->where(function ($query) {
-                $query->where('email_verified', true);
-            }),],
+                    $query->where('email_verified', true);
+                }), ],
             'fcm_token' => ['nullable', 'string'],
         ];
     }

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Seeder;
 
 class FriendSeeder extends Seeder
@@ -26,7 +25,7 @@ class FriendSeeder extends Seeder
 
             foreach ($friends as $friend) {
 
-                    $student->friends()->attach($friend->id);
+                $student->friends()->attach($friend->id);
             }
         }
     }

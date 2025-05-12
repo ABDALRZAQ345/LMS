@@ -52,8 +52,8 @@ class UserService
 
     public static function deleteUnVerifiedUser($email): true
     {
-        $user=User::where('email', $email)
-            ->where('email_verified',false)
+        $user = User::where('email', $email)
+            ->where('email_verified', false)
             ->delete();
 
         return true;

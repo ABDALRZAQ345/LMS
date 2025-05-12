@@ -21,4 +21,4 @@ class AchievementFactory extends Factory
             'description' => $this->faker->sentence(6),
         ];
     }
-} 
+}

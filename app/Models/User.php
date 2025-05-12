@@ -20,8 +20,9 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'name','email','image','bio','role','password','fcm_token','gitHub_account','points','last_online','email_verified'
+        'name', 'email', 'image', 'bio', 'role', 'password', 'fcm_token', 'gitHub_account', 'points', 'last_online', 'email_verified',
     ];
+
     protected $guarded = [
         'id',
     ];
@@ -32,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $hidden = [
-        'password','fcm_token','email_verified','remember_token','updated_at','google_id'
+        'password', 'fcm_token', 'email_verified', 'remember_token', 'updated_at', 'google_id',
     ];
 
     /**
@@ -131,8 +132,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function createdContests(): HasMany
     {
-      return $this->hasMany(Contest::class);
-  }
+        return $this->hasMany(Contest::class);
+    }
 
     public function friends(): BelongsToMany
     {

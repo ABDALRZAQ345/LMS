@@ -16,9 +16,10 @@ class AchievementResource extends JsonResource
     public function toArray(Request $request): array
     {
 
-       $data=parent::toArray($request);
-        $data['achieve_date']=Carbon::parse($data['created_at'])->format('Y-m-d');
-             unset($data['created_at']);
+        $data = parent::toArray($request);
+        $data['achieve_date'] = Carbon::parse($data['created_at'])->format('Y-m-d');
+        unset($data['created_at']);
+
         return $data;
     }
 }

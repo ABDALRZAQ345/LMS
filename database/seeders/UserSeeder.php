@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Student;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -23,7 +21,7 @@ class UserSeeder extends Seeder
             'email_verified' => true,
         ]);
         User::firstOrCreate([
-            'email' => 'admin@admin.com'
+            'email' => 'admin@admin.com',
         ], [
             'name' => 'admin',
             'email' => 'admin@admin.com',
@@ -31,7 +29,6 @@ class UserSeeder extends Seeder
             'email_verified' => true,
             'role' => 'admin',
         ]);
-
 
     }
 }

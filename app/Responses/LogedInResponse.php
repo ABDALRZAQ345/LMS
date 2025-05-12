@@ -10,11 +10,11 @@ class LogedInResponse
     public static function response($data): \Illuminate\Http\JsonResponse
     {
         if ($data instanceof User) {
-            $userId=$data['id'];
+            $userId = $data['id'];
             $token = JWTAuth::fromUser($data);
             $role = $data['role'];
         } else {
-            $userId= $data['user_id'];
+            $userId = $data['user_id'];
             $token = $data['token'];
             $role = $data['role'];
         }

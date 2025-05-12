@@ -25,4 +25,4 @@ class LearningPathFactory extends Factory
             'verified' => $this->faker->boolean(80),
         ];
     }
-} 
+}

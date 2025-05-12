@@ -20,8 +20,8 @@ class ContestSeeder extends Seeder
         $numContests = rand(5, 10);
         for ($i = 0; $i < $numContests; $i++) {
             Contest::factory()->create([
-                'user_id' => $teachers->random()->id
+                'user_id' => $teachers->random()->id,
             ]);
         }
     }
-} 
+}
