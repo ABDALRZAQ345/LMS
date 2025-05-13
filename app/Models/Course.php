@@ -16,7 +16,7 @@ class Course extends Model
     ];
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
 
     public function learningPaths(): BelongsToMany
@@ -74,4 +74,16 @@ class Course extends Model
         $all = $videos->merge($tests)->sortBy('order');
         return $all;
     }
+
+
+    public function rate()
+    {
+        $count=$this->reviews()->count();
+        if($count==0){
+            return 0;
+        }
+        return $this->reviews()->sum('rate')/$count;
+    }
+
+
 }

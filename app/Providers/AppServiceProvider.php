@@ -68,6 +68,9 @@ class AppServiceProvider extends ServiceProvider
             'auth.php',
             'user.php',
             'googleAuth.php',
+            'course.php',
+            'learningPath.php',
+
 
         ];
         foreach ($apiRouteFiles as $routeFile) {

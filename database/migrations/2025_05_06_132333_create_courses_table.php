@@ -22,6 +22,7 @@ return new class extends Migration
                 ->constrained()->cascadeOnDelete();
             $table->integer('price')->default(0);
             $table->boolean('verified')->default(false);
+            $table->integer('rate')->default(0);
             $table->timestamps();
         });
     }
