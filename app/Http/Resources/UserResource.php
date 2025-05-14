@@ -21,6 +21,10 @@ class UserResource extends JsonResource
         $data['joined'] = Carbon::parse($data['created_at'])->format('Y-m-d');
         unset($data['created_at']);
         $data['course_completed'] = db::table('course_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
+        if ($data['role'] == 'teacher') {
+            unset($data['level']);
+            unset($data['points']);
+        }
 
         return $data;
     }

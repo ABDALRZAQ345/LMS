@@ -7,17 +7,18 @@ use App\Mail\SendEmail;
 use App\Models\User;
 use App\Models\VerificationCode;
 use App\Responses\LogedInResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class VerificationCodeService
 {
-    protected StreakService $streakService;
+    protected static StreakService $streakService;
 
     public function __construct(StreakService $streakService)
     {
-        $this->streakService = $streakService;
+        self::$streakService = $streakService;
     }
 
     public static function Send($email, $registration): void
@@ -58,7 +59,7 @@ class VerificationCodeService
     /**
      * @throws VerificationCodeException
      */
-    public static function CheckAndHandle($email, $code, $registration): \Illuminate\Http\JsonResponse
+    public static function CheckAndHandle($email, $code, $registration): JsonResponse
     {
         $verificationCode = VerificationCode::where('email', $email)
             ->where('registration', $registration)
@@ -75,7 +76,7 @@ class VerificationCodeService
 
     }
 
-    public function handle($registration, $email, $verificationCode): \Illuminate\Http\JsonResponse
+    public static function handle($registration, $email, $verificationCode): JsonResponse
     {
         if ($registration) {
 
@@ -86,7 +87,7 @@ class VerificationCodeService
             $user->email_verified = true;
             $user->save();
             $verificationCode->delete();
-            $this->streakService->CreateStreakLogs($user);
+            self::$streakService->CreateStreakLogs($user);
 
             return LogedInResponse::response($user);
         } else {

@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsStudent;
+use App\Http\Middleware\EnsureUserIsTeacher;
 use App\Http\Middleware\LocaleMiddleware;
+use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\XssProtection;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
@@ -23,6 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'locale' => LocaleMiddleware::class,
             'xss' => XssProtection::class,
+            'role' => RoleMiddleware::class,
+            'student.user' => EnsureUserIsStudent::class,
+            'teacher.user' => EnsureUserIsTeacher::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

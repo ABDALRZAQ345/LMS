@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $hidden = [
-        'password', 'fcm_token', 'email_verified', 'remember_token', 'updated_at', 'google_id',
+        'password', 'fcm_token', 'email_verified', 'remember_token', 'updated_at', 'google_id', 'pivot',
     ];
 
     /**
@@ -188,5 +188,23 @@ class User extends Authenticatable implements JWTSubject
     public function certificates(): HasMany
     {
         return $this->hasMany(Certificate::class);
+    }
+
+    public function streaks(): HasMany
+    {
+        return $this->hasMany(Streak::class)
+            ->orderBy('date');
+    }
+
+    public function LongestStreak()
+    {
+        return $this->streaks()->max('current_streak');
+    }
+
+    public function CurrentStreak()
+    {
+        $streak = $this->streaks()->where('date', now()->toDateString())->first();
+
+        return $streak ? $streak->current_streak : 0;
     }
 }

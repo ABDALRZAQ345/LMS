@@ -1,12 +1,28 @@
 <?php
 
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::post('/profile/update', [UserController::class, 'update'])->name('profile.update');
-    Route::get('/users/{user}/achievements', [UserController::class, 'achievements'])->name('user.achievements');
-    Route::get('/users/{user}/certificates', [UserController::class, 'certificates'])->name('user.certificates');
-    Route::get('/users/{user}/contests', [UserController::class, 'contests'])->name('user.contests');
+    Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');
+
+    Route::group(['middleware' => ['student.user']], function () {
+        Route::get('/users/{user}/achievements', [StudentController::class, 'achievements'])->name('user.achievements');
+        Route::get('/users/{user}/certificates', [StudentController::class, 'certificates'])->name('user.certificates');
+        Route::get('/users/{user}/contests', [StudentController::class, 'contests'])->name('user.contests');
+        Route::get('/users/{user}/streaks', [StudentController::class, 'streaks'])->name('user.streaks');
+        Route::get('/users/{user}/statistics', [StudentController::class, 'statistics'])->name('user.statistics');
+    });
+    // todo
+    Route::group(['middleware' => ['teacher.user']], function () {
+        Route::get('/users/{user}/created_courses', [TeacherController::class, 'courses']);
+        Route::get('/users/{user}/created_learning_paths', [TeacherController::class, 'learningPaths']);
+    });
+
+    Route::get('/me/courses', [UserController::class, 'courses']);
+    Route::get('/me/learning_paths', [UserController::class, 'learning_paths']);
 });

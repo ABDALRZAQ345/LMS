@@ -22,10 +22,14 @@ class StreakSeeder extends Seeder
             $streaks = [];
 
             while ($date <= $endOfYear) {
+                $status = 0;
+                if ($date < now()) {
+                    $status = rand(0, 3);
+                }
                 $streaks[] = [
                     'user_id' => $user->id,
                     'date' => $date->toDateString(),
-                    'status' => 0,
+                    'status' => $status,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

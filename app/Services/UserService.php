@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -57,6 +58,23 @@ class UserService
             ->delete();
 
         return true;
+
+    }
+
+    public function GetUsers($friends = 0, $role = 'student', $search = '', $orderBy = 'points', $direction = 'desc')
+    {
+
+        $user = Auth::user();
+
+        if ($friends) {
+            $users = $user->friends()->where('role', $role)->orderBy($orderBy, $direction)
+                ->where('name', 'like', '%'.$search.'%')
+                ->paginate(20);
+        } else {
+            $users = User::where('role', $role)->where('name', 'like', '%'.$search.'%')->orderBy($orderBy, $direction)->paginate(20);
+        }
+
+        return UserResource::collection($users);
 
     }
 }
