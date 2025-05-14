@@ -10,16 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class LearningPath extends Model
 {
     use HasFactory;
-
+    protected $table = 'learning_paths';
     protected $guarded = [
         'id',
     ];
 
     public function teacher(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
-
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_learning_path')
