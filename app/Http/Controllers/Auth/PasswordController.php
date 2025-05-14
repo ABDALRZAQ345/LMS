@@ -37,20 +37,15 @@ class PasswordController extends BaseController
 
         $this->verificationCodeService->Check($validated['email'], $validated['code'], false);
 
-        try {
-            DB::beginTransaction();
-            $user = User::where('email', $validated['email'])->firstOrFail();
-            UserService::updatePassword($user, $validated['password']);
+        DB::beginTransaction();
+        $user = User::where('email', $validated['email'])->firstOrFail();
+        UserService::updatePassword($user, $validated['password']);
 
-            $this->verificationCodeService->delete($validated['email'], false);
-            DB::commit();
+        $this->verificationCodeService->delete($validated['email'], false);
+        DB::commit();
 
-            return LogedInResponse::response($user);
+        return LogedInResponse::response($user);
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new ServerErrorException($e->getMessage());
-        }
     }
 
     /**

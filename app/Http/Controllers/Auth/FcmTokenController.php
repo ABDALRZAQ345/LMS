@@ -16,21 +16,17 @@ class FcmTokenController extends BaseController
     public function send(FcmTokenRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        try {
 
-            $user = Auth::user();
+        $user = Auth::user();
 
-            $user->update([
-                'fcm_token' => $validated['fcm_token'],
-            ]);
+        $user->update([
+            'fcm_token' => $validated['fcm_token'],
+        ]);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'token send successfully',
-            ]);
-        } catch (\Exception $exception) {
-            throw new ServerErrorException($exception->getMessage());
-        }
+        return response()->json([
+            'status' => true,
+            'message' => 'token send successfully',
+        ]);
 
     }
 }

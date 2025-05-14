@@ -71,7 +71,6 @@ class AppServiceProvider extends ServiceProvider
             'course.php',
             'learningPath.php',
 
-
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

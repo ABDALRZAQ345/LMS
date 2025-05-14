@@ -23,6 +23,4 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function
         Route::get('/users/{user}/created_learning_paths', [TeacherController::class, 'learningPaths']);
     });
 
-    Route::get('/me/courses', [UserController::class, 'courses']);
-    Route::get('/me/learning_paths', [UserController::class, 'learning_paths']);
 });

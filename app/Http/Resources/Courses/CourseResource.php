@@ -33,8 +33,8 @@ class CourseResource extends JsonResource
             'description_of_course' => $this->description,
             'rate' => $this->rate,
             'image_of_course' => $imageUrl,
-            'number_of_video'=>$this->videos_count,
-            'number_of_test'=>$this->tests_count,
+            'number_of_video' => $this->videos_count,
+            'number_of_test' => $this->tests_count,
             'price' => $this->price,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
@@ -51,11 +51,12 @@ class CourseResource extends JsonResource
                             ? (str_starts_with($path->image, 'https://via.placeholder.com')
                                 ? $path->image
                                 : config('app.url').'/storage/'.$path->image)
-                            : null
+                            : null,
                     ];
                 });
             });
         }
+
         return $data;
     }
 }

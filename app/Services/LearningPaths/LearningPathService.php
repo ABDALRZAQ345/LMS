@@ -16,11 +16,12 @@ class LearningPathService
         $this->learningPathRepository = $learningPathRepository;
     }
 
-    public function getAllLearningPaths(Request $request) {
+    public function getAllLearningPaths(Request $request)
+    {
         $items = $request->query('items', 20);
         $direction = $request->query('direction', 'asc');
 
-        $learningPaths = $this->learningPathRepository->getAllLearningPaths($items , $direction);
+        $learningPaths = $this->learningPathRepository->getAllLearningPaths($items, $direction);
 
         $data = [
             'learningPaths' => LearningPathResource::collection($learningPaths),
@@ -29,13 +30,14 @@ class LearningPathService
             'hasMorePages' => $learningPaths->hasMorePages(),
         ];
 
-        return ResponseHelper::jsonResponse($data,'get all learning paths successfully');
+        return ResponseHelper::jsonResponse($data, 'get all learning paths successfully');
     }
 
-    public function showLearningPath($id){
+    public function showLearningPath($id)
+    {
         $learningPath = $this->learningPathRepository->showLearningPath($id);
-        return ResponseHelper::jsonResponse(LearningPathResource::make($learningPath)
-            ,'get learning path successfully');
+
+        return ResponseHelper::jsonResponse(LearningPathResource::make($learningPath), 'get learning path successfully');
 
     }
 }

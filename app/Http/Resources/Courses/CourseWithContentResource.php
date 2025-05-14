@@ -22,13 +22,14 @@ class CourseWithContentResource extends JsonResource
                 ? $this->teacher->image
                 : config('app.url').'/storage/'.$this->teacher->image)
             : null;
+
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'rate'=>$this->rate,
+            'rate' => $this->rate,
             'image' => $this->image,
-            'price' => $this->price == 0 ? 'free':$this->price,
+            'price' => $this->price == 0 ? 'free' : $this->price,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
@@ -41,13 +42,12 @@ class CourseWithContentResource extends JsonResource
                     'order' => $item->order,
                 ];
 
-
                 if ($item instanceof \App\Models\Video) {
-                    $contentItem['is_free'] = (bool)$item->free;
+                    $contentItem['is_free'] = (bool) $item->free;
                 }
 
                 if ($item instanceof \App\Models\Test) {
-                    $contentItem['is_final'] = (bool)$item->is_final;
+                    $contentItem['is_final'] = (bool) $item->is_final;
                 }
 
                 return $contentItem;

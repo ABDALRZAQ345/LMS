@@ -20,30 +20,25 @@ class GoogleAuthController extends BaseController
      */
     public function handleGoogleUser($idToken): JsonResponse
     {
-        try {
-            DB::beginTransaction();
-            $googleUser = Http::get("https://oauth2.googleapis.com/tokeninfo?id_token={$idToken}")->json();
 
-            if (! isset($googleUser['email'])) {
-                return response()->json(['error' => 'Invalid Google ID token'], 401);
-            }
+        DB::beginTransaction();
+        $googleUser = Http::get("https://oauth2.googleapis.com/tokeninfo?id_token={$idToken}")->json();
 
-            $user = User::firstOrCreate([
-                'email' => $googleUser['email'],
-            ], [
-                'name' => $googleUser['name'],
-                'google_id' => $googleUser['sub'],
-                'password' => Hash::make(str()->random(24)),
-            ]);
-
-            DB::commit();
-
-            return LogedInResponse::response($user);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new ServerErrorException($e->getMessage());
+        if (! isset($googleUser['email'])) {
+            return response()->json(['error' => 'Invalid Google ID token'], 401);
         }
+
+        $user = User::firstOrCreate([
+            'email' => $googleUser['email'],
+        ], [
+            'name' => $googleUser['name'],
+            'google_id' => $googleUser['sub'],
+            'password' => Hash::make(str()->random(24)),
+        ]);
+
+        DB::commit();
+
+        return LogedInResponse::response($user);
 
     }
 
@@ -55,16 +50,11 @@ class GoogleAuthController extends BaseController
     {
         $idToken = $request->input('id_token');
 
-        try {
-            if (! $idToken) {
-                return response()->json(['error' => 'No token provided'], 400);
-            }
-
-            return $this->handleGoogleUser($idToken);
-
-        } catch (\Exception $e) {
-            throw new ServerErrorException($e->getMessage());
+        if (! $idToken) {
+            return response()->json(['error' => 'No token provided'], 400);
         }
+
+        return $this->handleGoogleUser($idToken);
 
     }
 }

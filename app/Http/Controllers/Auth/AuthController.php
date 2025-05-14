@@ -64,14 +64,11 @@ class AuthController extends BaseController
      */
     public function logout(): JsonResponse
     {
-        try {
-            auth()->logout();
 
-            return LogedOutResponse::response();
+        auth()->logout();
 
-        } catch (\Exception $e) {
-            throw new ServerErrorException($e->getMessage());
-        }
+        return LogedOutResponse::response();
+
     }
 
     public function refresh(): JsonResponse

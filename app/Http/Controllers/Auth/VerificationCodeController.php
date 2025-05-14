@@ -27,17 +27,13 @@ class VerificationCodeController extends BaseController
     public function send(SendVerificationCodeRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        try {
 
-            SendVerificationCode::dispatch($validated['email'], $validated['registration']);
+        SendVerificationCode::dispatch($validated['email'], $validated['registration']);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Verification code send successfully to '.$validated['email'],
-            ]);
-        } catch (\Exception $exception) {
-            throw new ServerErrorException($exception->getMessage());
-        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Verification code send successfully to '.$validated['email'],
+        ]);
 
     }
 

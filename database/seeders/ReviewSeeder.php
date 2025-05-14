@@ -20,18 +20,18 @@ class ReviewSeeder extends Seeder
         $students = User::where('role', 'student')->get();
 
         // For each course, create 3-8 reviews
-        $rate=0;
+        $rate = 0;
         foreach ($courses as $course) {
             $numReviews = 5;
             for ($i = 0; $i < $numReviews; $i++) {
-                $review=Review::factory()->create([
+                $review = Review::factory()->create([
                     'course_id' => $course->id,
                     'user_id' => $students->random()->id,
                 ]);
-                $rate+=$review->rate;
+                $rate += $review->rate;
             }
-            $rate/=5;
-            $course->rate=$rate;
+            $rate /= 5;
+            $course->rate = $rate;
         }
 
     }

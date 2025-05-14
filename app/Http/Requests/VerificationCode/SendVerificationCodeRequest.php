@@ -2,16 +2,36 @@
 
 namespace App\Http\Requests\VerificationCode;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class SendVerificationCodeRequest extends VerificationCodeRequests
+class SendVerificationCodeRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
     }
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $isRegistration = filter_var($this->input('registration'), FILTER_VALIDATE_BOOLEAN);
+            $email = $this->input('email');
 
+            $user = User::where('email', $email)->first();
+
+            if ($isRegistration) {
+                if ($user && $user->email_verified) {
+                    $validator->errors()->add('email', 'This user is already verified.');
+                }
+            } else {
+                if (! $user || ! $user->email_verified) {
+                    $validator->errors()->add('email', 'This email is not registered or not verified.');
+                }
+            }
+        });
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,14 +46,6 @@ class SendVerificationCodeRequest extends VerificationCodeRequests
             'registration' => ['required', 'in:1,0,true,false'],
         ];
 
-    }
-
-    public function messages(): array
-    {
-        return [
-            'email.exists' => 'there no account with this email',
-            'email.unique' => 'there is already an account with this email',
-        ];
     }
 
     public function failedValidation(Validator $validator)

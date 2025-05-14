@@ -22,10 +22,10 @@ class GetUsersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'friends' => [ 'in:0,1'],
-            'role' => [ 'in:student,teacher'],
-            'search' => [ 'string'],
-            'orderBy' => [ 'string', 'in:points,name'],
+            'friends' => ['in:0,1'],
+            'role' => ['in:student,teacher'],
+            'search' => ['string'],
+            'orderBy' => ['string', 'in:points,name'],
             'direction' => ['string', 'in:asc,desc'],
         ];
     }
@@ -33,11 +33,11 @@ class GetUsersRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $this->merge([
-        'friends' => $this->filled('friends') ? $this->input('friends') : 0,
-        'role' => $this->filled('role') ? $this->input('role') : 'student',
-        'search' => $this->filled('search') ? $this->input('search') : '',
-        'orderBy' => $this->filled('orderBy') ? $this->input('orderBy') : 'points',
-        'direction' => $this->filled('direction') ? $this->input('direction') : 'desc',
-    ]);
+            'friends' => $this->filled('friends') ? $this->input('friends') : 0,
+            'role' => $this->filled('role') ? $this->input('role') : 'student',
+            'search' => $this->filled('search') ? $this->input('search') : '',
+            'orderBy' => $this->filled('orderBy') ? $this->input('orderBy') : 'points',
+            'direction' => $this->filled('direction') ? $this->input('direction') : 'desc',
+        ]);
     }
 }

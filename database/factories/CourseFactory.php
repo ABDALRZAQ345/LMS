@@ -24,7 +24,7 @@ class CourseFactory extends Factory
             'user_id' => User::factory()->state(['role' => 'teacher']),
             'price' => $this->faker->numberBetween(0, 200),
             'verified' => $this->faker->boolean(80),
-            'rate'=>$this->faker->numberBetween(0, 5),
+            'rate' => $this->faker->numberBetween(0, 5),
         ];
     }
 }
