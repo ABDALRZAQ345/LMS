@@ -32,16 +32,25 @@ class CourseWithContentResource extends JsonResource
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
 
             'content' => $this->content->map(function ($item) {
-                return [
+                $contentItem = [
                     'id' => $item->id,
                     'title' => $item->title,
                     'type' => $item instanceof \App\Models\Video ? 'video' : 'test',
                     'order' => $item->order,
                 ];
+
+
+                if ($item instanceof \App\Models\Video) {
+                    $contentItem['is_free'] = (bool)$item->free;
+                }
+
+                if ($item instanceof \App\Models\Test) {
+                    $contentItem['is_final'] = (bool)$item->is_final;
+                }
+
+                return $contentItem;
             })->values(),
         ];
     }

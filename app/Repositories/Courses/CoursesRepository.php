@@ -14,6 +14,8 @@ class CoursesRepository
         if($validated['status']=='all')
             return Course::orderBy($validated['orderBy'],$validated['direction'])
                 ->with('teacher')
+                ->withCount('videos')
+                ->withCount('tests')
                 ->where('verified',true)->paginate($validated['items']);
         else{
             $user=\Auth::user();
@@ -31,7 +33,10 @@ class CoursesRepository
 
     public function getAllCoursesInLearningPath($id) {
         $learningPath = LearningPath::findOrFail($id);
-        return $learningPath->courses()->with('teacher')->get();
+        return $learningPath->courses()->where('verified',true)
+            ->withCount('videos')
+            ->withCount('tests')
+            ->with('teacher')->get();
     }
 
 

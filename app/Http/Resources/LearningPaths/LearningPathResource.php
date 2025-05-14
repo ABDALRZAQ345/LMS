@@ -22,9 +22,14 @@ class LearningPathResource extends JsonResource
             : null;
 
         return[
+            'id'=>$this->id,
             'title'=>$this->title,
             'description'=>$this->description,
             'image'=>$imageUrl,
+            'rate'=>$this->courses_sum_rate /$this->courses_count,
+            'courses_count'=>$this->courses_count,
+            'teacher_id'=>$this->teacher->id,
+            'total_courses_price' => $this->courses_sum_price,
             'teacher_name'=>$this->teacher->name,
             'verified'=>$this->verified,
         ];
