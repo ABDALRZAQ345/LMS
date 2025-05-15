@@ -67,7 +67,6 @@ class AppServiceProvider extends ServiceProvider
         $apiRouteFiles = [
             'auth.php',
             'user.php',
-            'googleAuth.php',
             'course.php',
             'learningPath.php',
 

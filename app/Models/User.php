@@ -132,7 +132,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function createdContests(): HasMany
     {
-        return $this->hasMany(Contest::class);
+        return $this->hasMany(Contest::class)
+            ->withCount('students');
     }
 
     public function friends(): BelongsToMany
@@ -207,4 +208,6 @@ class User extends Authenticatable implements JWTSubject
 
         return $streak ? $streak->current_streak : 0;
     }
+
+
 }

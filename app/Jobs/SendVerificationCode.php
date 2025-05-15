@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+
+
 use App\Exceptions\VerificationCodeException;
 use App\Services\VerificationCodeService;
 use Illuminate\Contracts\Queue\ShouldQueue;

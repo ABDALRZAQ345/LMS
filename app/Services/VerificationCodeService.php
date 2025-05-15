@@ -16,7 +16,7 @@ class VerificationCodeService
 {
     protected static StreakService $streakService;
 
-    public function __construct(StreakService $streakService)
+    public function __construct(StreakService $streakService=new StreakService())
     {
         self::$streakService = $streakService;
     }

@@ -2,25 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ContestResource;
 use App\Models\User;
+use App\Services\TeacherService;
+use Illuminate\Http\JsonResponse;
 
 class TeacherController extends Controller
 {
-    public function courses(User $user)
+    protected TeacherService $teacherService;
+    public function __construct(TeacherService $teacherService)
     {
-        $createdCourses=$user->verifiedCourses()->paginate(20);
+        $this->teacherService = $teacherService;
+    }
+    public function courses(User $user): JsonResponse
+    {
+        $createdCourses=$this->teacherService->getTeacherCourses($user);
         return response()->json([
             'status' => true,
-            'courses' => $createdCourses,
+            'courses' =>$createdCourses,
         ]);
     }
 
-    public function learningPaths(User $user)
+    public function learningPaths(User $user): JsonResponse
     {
-        $createdLearningPaths=$user->verifiedLearningPaths()->paginate(20);
+        $createdLearningPaths=$this->teacherService->getTeacherLearningPaths($user);
         return response()->json([
             'status' => true,
             'learningPaths' => $createdLearningPaths,
+        ]);
+    }
+
+    public function contests(User $user): JsonResponse
+    {
+        $createdContests=$user->createdContests()->paginate(20);
+        return response()->json([
+            'status' => true,
+            'contests' =>ContestResource::collection($createdContests),
         ]);
     }
 }

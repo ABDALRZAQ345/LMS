@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\FcmTokenController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\VerificationCodeController;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +17,7 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
         Route::post('/verificationCode/check', [VerificationCodeController::class, 'check'])->middleware('throttle:check_verification_code')->name('verificationCode.check');
 
         Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
-
+        Route::post('/auth/google', [GoogleAuthController::class, 'auth'])->middleware('guest')->name('auth.google');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
 
     });

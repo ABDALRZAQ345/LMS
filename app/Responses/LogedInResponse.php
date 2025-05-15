@@ -3,11 +3,12 @@
 namespace App\Responses;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LogedInResponse
 {
-    public static function response($data): \Illuminate\Http\JsonResponse
+    public static function response($data): JsonResponse
     {
         if ($data instanceof User) {
             $userId = $data['id'];

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\LearningPath;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class LearningPathSeeder extends Seeder
@@ -14,11 +15,18 @@ class LearningPathSeeder extends Seeder
     public function run(): void
     {
         // Create 3 learning paths
-        $learningPaths = LearningPath::factory(4)->create();
+        $teachers = User::where('role', 'teacher')->pluck('id');
+
+        $learningPaths = LearningPath::factory(10)->create()->each(function ($learningPath) use ($teachers) {
+            $learningPath->user_id = $teachers->random();
+            $learningPath->save();
+        });
 
         // For each learning path, create 5 courses and attach them
         foreach ($learningPaths as $index => $learningPath) {
-            $courses = Course::factory(5)->create();
+            $courses = Course::factory(5)->create([
+                'user_id' => $learningPath->user_id
+            ]);
 
             // Attach courses to learning path with order
             foreach ($courses as $order => $course) {

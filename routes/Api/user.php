@@ -17,10 +17,11 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function
         Route::get('/users/{user}/streaks', [StudentController::class, 'streaks'])->name('user.streaks');
         Route::get('/users/{user}/statistics', [StudentController::class, 'statistics'])->name('user.statistics');
     });
-    // todo
+
     Route::group(['middleware' => ['teacher.user']], function () {
         Route::get('/users/{user}/created_courses', [TeacherController::class, 'courses']);
         Route::get('/users/{user}/created_learning_paths', [TeacherController::class, 'learningPaths']);
+        Route::get('/users/{user}/created_contest', [TeacherController::class, 'contests']);
     });
 
 });
