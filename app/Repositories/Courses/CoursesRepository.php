@@ -22,13 +22,19 @@ class CoursesRepository
            return $user->allCourses()->orderBy($validated['orderBy'],$validated['direction'])
                 ->where('status',$validated['status'])
                ->with('teacher')
+               ->withCount('videos')
+               ->withCount('tests')
                 ->paginate($validated['items']);
         }
 
     }
 
     public function showCourse($id){
-        return Course::with('teacher','learningPaths')->where('id',$id)->first();
+        return Course::with('learningPaths')
+            ->with('teacher')
+            ->withCount('videos')
+            ->withCount('tests')
+            ->where('id',$id)->first();
     }
 
     public function getAllCoursesInLearningPath($id) {

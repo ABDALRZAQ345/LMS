@@ -163,9 +163,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Course::class)->where('paid', false);
     }
 
-    public function learningPaths(): HasMany
+    public function learningPaths(): BelongsToMany
     {
-        return $this->hasMany(LearningPath::class);
+        return $this->belongsToMany(LearningPath::class,'learning_path_user');
     }
 
     public function verifiedLearningPaths(): HasMany
@@ -176,5 +176,11 @@ class User extends Authenticatable implements JWTSubject
     public function unVerifiedLearningPaths(): HasMany
     {
         return $this->hasMany(LearningPath::class)->where('verified', false);
+    }
+
+    public function allLearningPaths():BelongsToMany
+    {
+        return $this->belongsToMany(LearningPath::class, 'learning_path_user')
+            ->withPivot('paid', 'status');
     }
 }

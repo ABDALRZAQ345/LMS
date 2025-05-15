@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LearningPath extends Model
 {
@@ -24,4 +25,12 @@ class LearningPath extends Model
         return $this->belongsToMany(Course::class, 'course_learning_path')
             ->orderByPivot('order');
     }
+
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'learning_path_user')
+            ->withPivot('paid', 'status')
+            ->withTimestamps();
+    }
+
 }

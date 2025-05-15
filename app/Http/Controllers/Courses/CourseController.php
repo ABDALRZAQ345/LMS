@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Courses;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Courses\GetCourseRequest;
+use App\Http\Requests\Courses\getAllCoursesRequest;
 use App\Models\Course;
 use App\Models\LearningPath;
 use App\Services\Courses\CoursesService;
@@ -18,7 +18,7 @@ class CourseController extends Controller
         $this->courseService = $courseService;
     }
 
-    public function getAllCourses(GetCourseRequest $request){
+    public function getAllCourses(getAllCoursesRequest $request){
 
         $validated = $request->validated();
         return $this->courseService->getAllCourses($validated);
@@ -36,6 +36,8 @@ class CourseController extends Controller
         if (!$learningPath->courses()->where('courses.id', $course->id)->exists()) {
             return ResponseHelper::jsonResponse([], 'Course not found in this learning path',404,false);
         }
+        if($course->verified == 0)
+            return ResponseHelper::jsonResponse([], 'Course not verified',404,false);
         return $this->courseService->showCourseInLearningPath($learningPath->title,$course->id);
     }
 }
