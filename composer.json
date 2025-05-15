@@ -16,6 +16,7 @@
         "laravel/socialite": "^5.18",
         "laravel/telescope": "^5.7",
         "laravel/tinker": "^2.10.1",
+        "socialiteproviders/github": "^4.1",
         "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {

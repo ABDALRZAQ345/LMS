@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\FcmTokenController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\VerificationCodeController;
+use App\Http\Controllers\GithubController;
+use App\Models\User;
+use App\Responses\LogedInResponse;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
@@ -18,6 +21,7 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
 
         Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
         Route::post('/auth/google', [GoogleAuthController::class, 'auth'])->middleware('guest')->name('auth.google');
+
         Route::post('/login', [AuthController::class, 'login'])->name('login');
 
     });
@@ -27,5 +31,12 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
         Route::post('/send_fcm', [FcmTokenController::class, 'send'])->name('fcm.send');
         Route::post('/token/refresh', [AuthController::class, 'refresh'])->middleware('throttle:rare')->name('refresh');
     });
+
+
+    Route::get('/auth/github/redirect', function () {
+        return Socialite::driver('github')->stateless()->redirect();
+    });
+
+    Route::get('/auth/github/callback', [GithubController::class,'callback']) ;
 
 });
