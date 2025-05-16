@@ -66,4 +66,11 @@ class UserController extends BaseController
         ]);
 
     }
+
+    public function getCurrentUser(): JsonResponse
+    {
+        $user = \Auth::user();
+
+        return UserProfileResponse::response($user);
+    }
 }

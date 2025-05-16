@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Exceptions\VerificationCodeException;
 use App\Mail\SendEmail;
 use App\Models\User;
 use App\Models\VerificationCode;
 use App\Responses\LogedInResponse;
+use App\Services\StreakService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +17,7 @@ class VerificationCodeService
 {
     protected static StreakService $streakService;
 
-    public function __construct(StreakService $streakService=new StreakService())
+    public function __construct(StreakService $streakService = new StreakService)
     {
         self::$streakService = $streakService;
     }

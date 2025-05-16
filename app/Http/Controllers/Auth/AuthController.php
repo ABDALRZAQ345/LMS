@@ -3,32 +3,28 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\ServerErrorException;
+use App\Exceptions\VerificationCodeException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignupRequest;
 use App\Responses\LogedInResponse;
 use App\Responses\LogedOutResponse;
-use App\Services\AuthService;
-use App\Services\VerificationCodeService;
+use App\Services\Auth\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends BaseController
 {
-    protected VerificationCodeService $verificationCodeService;
-
     protected AuthService $authService;
 
-    public function __construct(VerificationCodeService $verificationCodeService, AuthService $authService)
+    public function __construct( AuthService $authService)
     {
-        $this->verificationCodeService = $verificationCodeService;
         $this->authService = $authService;
     }
 
+
     /**
-     * @throws ServerErrorException
-     * @throws \App\Exceptions\VerificationCodeException
      * @throws \Throwable
+     * @throws VerificationCodeException
      */
     public function register(SignupRequest $request): JsonResponse
     {
@@ -56,7 +52,6 @@ class AuthController extends BaseController
         $user = $this->authService->attemptLogin($credentials, $request->validated());
 
         return LogedInResponse::response($user);
-
     }
 
     /**
@@ -64,19 +59,17 @@ class AuthController extends BaseController
      */
     public function logout(): JsonResponse
     {
-
         auth()->logout();
-
         return LogedOutResponse::response();
 
     }
 
     public function refresh(): JsonResponse
     {
-        $user = Auth::user();
         $token = auth()->refresh();
+        $user = auth()->user();
 
-        return LogedInResponse::response(['user_id' => $user->id, 'token' => $token, 'role' => $user->role]);
+        return LogedInResponse::response($user,$token);
 
     }
 }

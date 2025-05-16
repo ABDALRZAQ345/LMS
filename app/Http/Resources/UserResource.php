@@ -17,14 +17,24 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = parent::toArray($request);
-        $data['last_online'] = Carbon::parse($data['last_online'])->diffForHumans();
+        $time=Carbon::parse($data['last_online'])->addMinutes(10);
+
+        if(now()  <= $time){
+            $data['last_online']= 'online';
+        }
+        else {
+            $data['last_online']= $time->diffForHumans();
+        }
         $data['joined'] = Carbon::parse($data['created_at'])->format('Y-m-d');
         unset($data['created_at']);
-        if($data['role'] == 'student'){
+        if ($data['role'] == 'student') {
+
             $data['completed_courses'] = db::table('course_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
-            //todo
-            //$data['completed_learning_paths'];
-                    }
+            // todo
+            // $data['completed_learning_paths'];
+            if($data['id'] !=\Auth::id())
+             $data['is_friend']=db::table('friends')->where('user_id',\Auth::id())->where('friend_id' ,$data['id'])->count();
+        }
         if ($data['role'] == 'teacher') {
             unset($data['level']);
             unset($data['points']);

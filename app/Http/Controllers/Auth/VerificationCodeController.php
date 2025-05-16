@@ -8,12 +8,12 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\VerificationCode\CheckVerificationCodeRequest;
 use App\Http\Requests\VerificationCode\SendVerificationCodeRequest;
 use App\Jobs\SendVerificationCode;
-use App\Services\VerificationCodeService;
+use App\Services\Auth\VerificationCodeService;
 use Illuminate\Http\JsonResponse;
 
 class VerificationCodeController extends BaseController
 {
-    //
+
     protected VerificationCodeService $verificationCodeService;
 
     public function __construct(VerificationCodeService $verificationCodeService)
@@ -44,9 +44,7 @@ class VerificationCodeController extends BaseController
     {
         $validated = $request->validated();
 
-        $data = $this->verificationCodeService->CheckAndHandle($validated['email'], $validated['code'], $validated['registration'] ?? true);
-
-        return $data;
+        return $this->verificationCodeService->CheckAndHandle($validated['email'], $validated['code'], $validated['registration'] ?? true);
 
     }
 }

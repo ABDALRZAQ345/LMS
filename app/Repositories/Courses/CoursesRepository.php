@@ -43,7 +43,6 @@ class CoursesRepository
             ->with('teacher')->get();
     }
 
-
     public function showCourseInLearningPath($courseId)
     {
         $course = Course::with('teacher')->findOrFail($courseId);
@@ -51,6 +50,7 @@ class CoursesRepository
 
         return new CourseWithContentResource($course, $content);
     }
+
     public function getAllCoursesForUser(User $user): \Illuminate\Database\Eloquent\Collection
     {
 

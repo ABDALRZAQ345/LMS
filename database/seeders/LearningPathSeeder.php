@@ -25,7 +25,7 @@ class LearningPathSeeder extends Seeder
         // For each learning path, create 5 courses and attach them
         foreach ($learningPaths as $index => $learningPath) {
             $courses = Course::factory(5)->create([
-                'user_id' => $learningPath->user_id
+                'user_id' => $learningPath->user_id,
             ]);
 
             // Attach courses to learning path with order

@@ -20,7 +20,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'email', 'image', 'bio', 'role', 'password', 'fcm_token', 'gitHub_account', 'points', 'last_online', 'email_verified','github_id', 'github_token'
+        'name', 'email', 'image', 'bio', 'role', 'password', 'fcm_token', 'gitHub_account', 'points', 'last_online', 'email_verified', 'github_id', 'github_token',
     ];
 
     protected $guarded = [
@@ -33,7 +33,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $hidden = [
-        'password', 'fcm_token', 'email_verified', 'remember_token', 'updated_at', 'google_id', 'pivot','github_id', 'github_token'
+        'password', 'fcm_token', 'email_verified', 'remember_token', 'updated_at', 'google_id', 'pivot', 'github_id', 'github_token',
     ];
 
     /**
@@ -144,6 +144,7 @@ class User extends Authenticatable implements JWTSubject
             'user_id',
             'friend_id'
         );
+
     }
 
     public function createdCourses(): HasMany
@@ -208,6 +209,4 @@ class User extends Authenticatable implements JWTSubject
 
         return $streak ? $streak->current_streak : 0;
     }
-
-
 }

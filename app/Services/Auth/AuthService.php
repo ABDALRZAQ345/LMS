@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Auth;
 
 use App\Exceptions\UNAuthorizedException;
 use App\Exceptions\VerificationCodeException;
 use App\Jobs\SendVerificationCode;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -29,7 +30,7 @@ class AuthService
             ->where('email_verified', true)
             ->first();
 
-        if ((! $token = JWTAuth::attempt($credentials)) || (! $user)) {
+        if ((! JWTAuth::attempt($credentials)) || (! $user)) {
             throw new UNAuthorizedException('Invalid email or password');
         }
 

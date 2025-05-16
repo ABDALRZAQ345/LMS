@@ -7,6 +7,7 @@ use App\Http\Resources\AchievementResource;
 use App\Http\Resources\CertificateResource;
 use App\Http\Resources\UserContestResource;
 use App\Models\User;
+use App\Responses\StudentStaticsResponse;
 use App\Services\StreakService;
 use Illuminate\Http\JsonResponse;
 
@@ -82,21 +83,7 @@ class StudentController extends Controller
     public function statistics(User $user): JsonResponse
     {
 
-        return response()->json([
-            'status' => true,
-            'completed_courses' => $user->finishedCourses()->count(),
-            'certificates' => $user->certificates()->count(),
-            'contests' => $user->contests()->count(),
-            'points' => $user->points,
-            'achievements' => $user->achievements()->count(),
-            'best_contest' => new UserContestResource($user->contests()->orderByPivot('rank', 'desc')->without('pivot')->first()),
-            'max_streak' => $user->LongestStreak(),
-            'current_streak' => $user->CurrentStreak(),
-        ]);
+       return  StudentStaticsResponse::response($user);
 
     }
-
-    /**
-     * @throws ServerErrorException
-     */
 }

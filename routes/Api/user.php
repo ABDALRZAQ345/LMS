@@ -6,6 +6,8 @@ use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
+
+    Route::get('/me', [UserController::class, 'getCurrentUser']);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');

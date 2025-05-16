@@ -10,8 +10,8 @@ use App\Http\Requests\Password\ForgetPasswordRequest;
 use App\Http\Requests\Password\ResetPasswordRequest;
 use App\Models\User;
 use App\Responses\LogedInResponse;
+use App\Services\Auth\VerificationCodeService;
 use App\Services\UserService;
-use App\Services\VerificationCodeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,12 +37,12 @@ class PasswordController extends BaseController
 
         $this->verificationCodeService->Check($validated['email'], $validated['code'], false);
 
-        DB::beginTransaction();
+
         $user = User::where('email', $validated['email'])->firstOrFail();
         UserService::updatePassword($user, $validated['password']);
 
         $this->verificationCodeService->delete($validated['email'], false);
-        DB::commit();
+
 
         return LogedInResponse::response($user);
 

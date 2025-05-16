@@ -13,6 +13,7 @@ class CheckVerificationCodeRequest extends FormRequest
     {
         return true;
     }
+
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
@@ -22,10 +23,9 @@ class CheckVerificationCodeRequest extends FormRequest
             $user = User::where('email', $email)->first();
 
             if ($isRegistration) {
-                if(!$user){
+                if (! $user) {
                     $validator->errors()->add('email', 'There is no user with this email');
-                }
-                else if ($user && $user->email_verified) {
+                } elseif ($user && $user->email_verified) {
                     $validator->errors()->add('email', 'This user is already verified.');
                 }
             } else {
@@ -35,6 +35,7 @@ class CheckVerificationCodeRequest extends FormRequest
             }
         });
     }
+
     /**
      * Get the validation rules that apply to the request.
      *

@@ -13,6 +13,7 @@ class SendVerificationCodeRequest extends FormRequest
     {
         return true;
     }
+
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
@@ -32,6 +33,7 @@ class SendVerificationCodeRequest extends FormRequest
             }
         });
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
