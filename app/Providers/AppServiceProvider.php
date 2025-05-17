@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Review;
+use App\Observers\ReviewObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -26,11 +28,14 @@ class AppServiceProvider extends ServiceProvider
         $this->routes();
         $this->productionConfigurations();
         $this->PassWordConfigurations();
+        Review::observe(ReviewObserver::class);
     }
 
     public function GatesAndPolicies() {}
 
-    private function observers(): void {}
+    private function observers(): void {
+        \App\Models\Review::observe(\App\Observers\ReviewObserver::class);
+    }
 
     private function rateLimiters(): void
     {
@@ -70,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
             'googleAuth.php',
             'course.php',
             'learningPath.php',
+            'review.php',
 
 
         ];

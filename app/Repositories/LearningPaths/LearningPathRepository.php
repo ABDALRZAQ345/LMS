@@ -51,7 +51,6 @@ class LearningPathRepository
         } else {
             $user->learningPaths()->attach($learningPathId, [
                 'status' => $validated['status'],
-                'paid' => false
             ]);
         }
 
@@ -67,7 +66,7 @@ class LearningPathRepository
         $exists = $user->learningPaths()->where('learning_path_id', $id)->exists();
 
         if ($exists) {
-            $user->learningPaths()->detach($id); 
+            $user->learningPaths()->detach($id);
             return true;
         } else {
             return false;

@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('learning_path_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('paid')->comment('how much student paid that learning path');
             $table->enum('status', ['finished', 'watch_now', 'watch_later']);
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(LearningPath::class)->constrained()->cascadeOnDelete();
