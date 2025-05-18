@@ -13,11 +13,10 @@ class HomePageController extends Controller
     public function __invoke(HomePageRequest $request)
     {
 
-        try {
-
-        } catch (\Exception $e) {
-            throw new ServerErrorException($e->getMessage());
-        }
+        return response() ->json([
+            'success' => true,
+            'message' => 'Home page requested'
+        ]);
 
     }
 }

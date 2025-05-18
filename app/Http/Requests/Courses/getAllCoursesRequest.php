@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Requests\Courses;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetCourseRequest extends FormRequest
+class getAllCoursesRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -35,4 +34,5 @@ class GetCourseRequest extends FormRequest
             'orderBy' => $orderBy,
         ]);
     }
+
 }

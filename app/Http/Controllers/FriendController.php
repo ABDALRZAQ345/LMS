@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\ServerErrorException;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Services\LearningPaths\FriendService;
+use App\Services\FriendService;
 use Illuminate\Http\JsonResponse;
 
 class FriendController extends Controller

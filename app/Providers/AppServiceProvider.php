@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Review;
+use App\Observers\ReviewObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -30,7 +32,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function GatesAndPolicies() {}
 
-    private function observers(): void {}
+    private function observers(): void {
+        Review::observe(ReviewObserver::class);
+    }
 
     private function rateLimiters(): void
     {
@@ -70,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
             'course.php',
             'learningPath.php',
             'friend.php',
+            'review.php'
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')
