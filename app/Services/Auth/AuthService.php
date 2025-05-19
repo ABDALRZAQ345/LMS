@@ -6,7 +6,7 @@ use App\Exceptions\UNAuthorizedException;
 use App\Exceptions\VerificationCodeException;
 use App\Jobs\SendVerificationCode;
 use App\Models\User;
-use App\Services\UserService;
+use App\Services\User\UserService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;

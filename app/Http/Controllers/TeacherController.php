@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ContestResource;
 use App\Models\User;
-use App\Services\TeacherService;
+use App\Services\User\TeacherService;
 use Illuminate\Http\JsonResponse;
 
 class TeacherController extends Controller

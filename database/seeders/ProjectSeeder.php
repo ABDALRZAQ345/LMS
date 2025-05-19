@@ -14,9 +14,13 @@ class ProjectSeeder extends Seeder
     public function run(): void
     {
         $tags = Tag::all();
-        Project::factory(10)->create([
-            'tag_id' => $tags->random()->id,
-            'user_id' => rand(1, 20),
-        ]);
+
+        for ($i = 0; $i < 15; $i++) {
+            Project::factory()->create([
+                'tag_id' => $tags->random()->id,
+                'user_id' => rand(1, 20),
+
+            ]);
+        }
     }
 }

@@ -11,10 +11,9 @@ use App\Http\Requests\Password\ResetPasswordRequest;
 use App\Models\User;
 use App\Responses\LogedInResponse;
 use App\Services\Auth\VerificationCodeService;
-use App\Services\UserService;
+use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class PasswordController extends BaseController

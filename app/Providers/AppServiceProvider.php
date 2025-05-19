@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
     private function rateLimiters(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('send_confirmation_code', function (Request $request) {
             return [
@@ -74,7 +74,8 @@ class AppServiceProvider extends ServiceProvider
             'course.php',
             'learningPath.php',
             'friend.php',
-            'review.php'
+            'review.php',
+            'project.php'
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

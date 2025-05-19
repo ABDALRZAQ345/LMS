@@ -30,8 +30,8 @@ class UserResource extends JsonResource
         if ($data['role'] == 'student') {
 
             $data['completed_courses'] = db::table('course_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
-            // todo
-            // $data['completed_learning_paths'];
+
+            $data['completed_learning_paths']= db::table('learning_path_user')->where('user_id', $data['id'])->where('status','finished')->count();
             if($data['id'] !=\Auth::id())
              $data['is_friend']=db::table('friends')->where('user_id',\Auth::id())->where('friend_id' ,$data['id'])->count();
         }

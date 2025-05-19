@@ -5,19 +5,23 @@ namespace App\Http\Controllers;
 use App\Exceptions\ServerErrorException;
 use App\Http\Resources\AchievementResource;
 use App\Http\Resources\CertificateResource;
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\UserContestResource;
 use App\Models\User;
 use App\Responses\StudentStaticsResponse;
-use App\Services\StreakService;
+use App\Services\Project\ProjectService;
+use App\Services\User\StreakService;
 use Illuminate\Http\JsonResponse;
 
 class StudentController extends Controller
 {
     protected StreakService $streakService;
+    protected ProjectService $projectService;
 
-    public function __construct(StreakService $streakService)
+    public function __construct(StreakService $streakService, ProjectService $projectService)
     {
         $this->streakService = $streakService;
+        $this->projectService = $projectService;
     }
 
     /**
@@ -85,5 +89,11 @@ class StudentController extends Controller
 
        return  StudentStaticsResponse::response($user);
 
+    }
+
+    public function projects(User $user)
+    {
+
+        return  ProjectResource::collection($this->projectService->GetUserProjects($user,\Auth::user()));
     }
 }

@@ -7,7 +7,7 @@ use App\Mail\SendEmail;
 use App\Models\User;
 use App\Models\VerificationCode;
 use App\Responses\LogedInResponse;
-use App\Services\StreakService;
+use App\Services\User\StreakService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;

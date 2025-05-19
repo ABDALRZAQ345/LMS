@@ -9,8 +9,8 @@ use App\Http\Requests\GetUsersRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Responses\UserProfileResponse;
-use App\Services\StreakService;
-use App\Services\UserService;
+use App\Services\User\StreakService;
+use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 

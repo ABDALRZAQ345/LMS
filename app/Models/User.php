@@ -218,4 +218,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(LearningPath::class, 'learning_path_user')
             ->withPivot('paid', 'status');
     }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
 }

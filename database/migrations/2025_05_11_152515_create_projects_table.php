@@ -21,6 +21,8 @@ return new class extends Migration
             $table->json('technologies')->nullable();
             $table->string('gitHub_url')->nullable();
             $table->string('url')->nullable();
+
+            $table->enum('status',['pending','accepted','refused'])->default('pending');
             $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
