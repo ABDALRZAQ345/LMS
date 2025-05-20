@@ -2,10 +2,9 @@
 
 namespace App\Responses;
 
-use App\Http\Resources\UserContestResource;
+use App\Http\Resources\Users\UserContestResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StudentStaticsResponse
 {

@@ -176,11 +176,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(LearningPath::class);
     }
+
     public function learningPaths(): BelongsToMany
     {
-        return $this->belongsToMany(LearningPath::class,'learning_path_user');
+        return $this->belongsToMany(LearningPath::class, 'learning_path_user');
 
     }
+
     public function verifiedLearningPaths(): HasMany
     {
         return $this->hasMany(LearningPath::class)->where('verified', true);
@@ -213,7 +215,8 @@ class User extends Authenticatable implements JWTSubject
 
         return $streak ? $streak->current_streak : 0;
     }
-    public function allLearningPaths():BelongsToMany
+
+    public function allLearningPaths(): BelongsToMany
     {
         return $this->belongsToMany(LearningPath::class, 'learning_path_user')
             ->withPivot('paid', 'status');

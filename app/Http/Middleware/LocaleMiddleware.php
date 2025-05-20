@@ -10,11 +10,12 @@ class LocaleMiddleware
     {
         // handling languages or maybe last login or any thing else that happen in each request
 
-        $user=\Auth::user();
-        if($user){
-            $user->last_online= now()->toDateTimeString();
+        $user = \Auth::user();
+        if ($user) {
+            $user->last_online = now()->toDateTimeString();
             $user->save();
         }
+
         return $next($request);
 
     }

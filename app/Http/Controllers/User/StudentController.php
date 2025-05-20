@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Exceptions\ServerErrorException;
-use App\Http\Resources\AchievementResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Achievements\AchievementResource;
 use App\Http\Resources\CertificateResource;
-use App\Http\Resources\ProjectResource;
-use App\Http\Resources\UserContestResource;
+use App\Http\Resources\Projects\ProjectResource;
+use App\Http\Resources\Users\UserContestResource;
 use App\Models\User;
 use App\Responses\StudentStaticsResponse;
 use App\Services\Project\ProjectService;
@@ -16,6 +17,7 @@ use Illuminate\Http\JsonResponse;
 class StudentController extends Controller
 {
     protected StreakService $streakService;
+
     protected ProjectService $projectService;
 
     public function __construct(StreakService $streakService, ProjectService $projectService)
@@ -87,13 +89,13 @@ class StudentController extends Controller
     public function statistics(User $user): JsonResponse
     {
 
-       return  StudentStaticsResponse::response($user);
+        return StudentStaticsResponse::response($user);
 
     }
 
     public function projects(User $user)
     {
 
-        return  ProjectResource::collection($this->projectService->GetUserProjects($user,\Auth::user()));
+        return ProjectResource::collection($this->projectService->GetUserProjects($user, \Auth::user()));
     }
 }

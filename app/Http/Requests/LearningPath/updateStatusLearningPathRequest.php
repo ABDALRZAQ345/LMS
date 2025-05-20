@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\LearningPath;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class updateStatusLearningPathRequest extends FormRequest
 {
@@ -24,5 +26,14 @@ class updateStatusLearningPathRequest extends FormRequest
         return [
             'status' => 'sometimes|string|in:watch_now,watch_later',
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }

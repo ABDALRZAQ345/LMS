@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\GithubRules\ValidGitHubAccount;
 use App\Rules\SignupEmail;
-use App\Rules\ValidGitHubAccount;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

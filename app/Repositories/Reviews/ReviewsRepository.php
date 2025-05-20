@@ -6,8 +6,8 @@ use App\Models\Review;
 
 class ReviewsRepository
 {
-
-    public function getAllReviewsInCourse($courseId){
+    public function getAllReviewsInCourse($courseId)
+    {
         $userId = auth()->id();
         $userReview = Review::with(['student:id,name,image'])
             ->where('course_id', $courseId)
@@ -24,7 +24,8 @@ class ReviewsRepository
             : $otherReviews;
     }
 
-    public function addNewReviewInCourse($courseId,$validated){
+    public function addNewReviewInCourse($courseId, $validated)
+    {
         $userId = auth()->id();
         $existingReview = Review::with(['student:id,name,image'])
             ->where('course_id', $courseId)
@@ -34,32 +35,32 @@ class ReviewsRepository
         if ($existingReview) {
             return [
                 'review' => $existingReview->load('student:id,name,image'),
-                'is_new' => false
+                'is_new' => false,
             ];
         }
 
         $newReview = Review::create([
             'course_id' => $courseId,
-            'user_id'   => $userId,
-            'rate'      => $validated['rate'],
-            'comment'   => $validated['comment'] ?? null,
+            'user_id' => $userId,
+            'rate' => $validated['rate'],
+            'comment' => $validated['comment'] ?? null,
         ]);
 
         return [
             'review' => $newReview->load('student:id,name,image'),
-            'is_new' => true
+            'is_new' => true,
         ];
 
     }
 
-    public function updateReviewInCourse($courseId,$validated)
+    public function updateReviewInCourse($courseId, $validated)
     {
         $userId = auth()->id();
         $review = Review::where('course_id', $courseId)
             ->where('user_id', $userId)
             ->first();
 
-        if (!$review) {
+        if (! $review) {
             return null;
         }
 
@@ -67,17 +68,15 @@ class ReviewsRepository
 
         return $review->load('student:id,name,image');
 
-
     }
 
     public function deleteReviewInCourse($courseId)
     {
         $userId = auth()->id();
+
         return Review::where('course_id', $courseId)
             ->where('user_id', $userId)
             ->delete();
 
     }
-
-
 }

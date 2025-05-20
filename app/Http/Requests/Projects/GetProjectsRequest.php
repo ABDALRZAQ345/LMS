@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Projects;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GetProjectsRequest extends FormRequest
 {
@@ -26,11 +28,21 @@ class GetProjectsRequest extends FormRequest
             'search' => ['nullable', 'string'],
         ];
     }
+
     public function prepareForValidation(): void
     {
         $this->merge([
             'tag' => $this->filled('tag') ? $this->input('tag') : 'all',
             'search' => $this->filled('search') ? $this->input('search') : '',
         ]);
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }

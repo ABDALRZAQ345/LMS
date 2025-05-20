@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Project;
 
-use App\Http\Requests\AddProjectRequest;
-use App\Http\Requests\GetProjectsRequest;
-use App\Http\Requests\updateProjectStatusRequest;
-use App\Http\Resources\ProjectResource;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Projects\AddProjectRequest;
+use App\Http\Requests\Projects\GetProjectsRequest;
+use App\Http\Requests\Projects\updateProjectStatusRequest;
+use App\Http\Resources\Projects\ProjectResource;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Services\Project\ProjectService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProjectController extends Controller
 {
@@ -23,6 +23,7 @@ class ProjectController extends Controller
     public function index(GetProjectsRequest $request)
     {
         $validated = $request->validated();
+
         return ProjectResource::collection($this->projectService->GetAllProjects($validated));
     }
 
@@ -34,6 +35,7 @@ class ProjectController extends Controller
     public function store(AddProjectRequest $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validated();
+
         return $this->projectService->AddProject($validated);
     }
 
@@ -41,7 +43,7 @@ class ProjectController extends Controller
     {
         return response()->json([
             'status' => true,
-            'tags' => Tag::all()
+            'tags' => Tag::all(),
         ]);
     }
 
@@ -50,10 +52,21 @@ class ProjectController extends Controller
         return $this->projectService->getProjectsRequest();
     }
 
-    public function updateStatus(updateProjectStatusRequest $request,Project $project)
+    public function updateStatus(updateProjectStatusRequest $request, Project $project)
     {
         $validated = $request->validated();
-        return $this->projectService->UpdateProjectStatus($validated,$project);
 
+        return $this->projectService->UpdateProjectStatus($validated, $project);
+
+    }
+
+    public function delete(Project $project)
+    {
+        $project->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Project successfully deleted',
+        ]);
     }
 }

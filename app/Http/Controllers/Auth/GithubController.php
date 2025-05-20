@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\ServerErrorException;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Responses\LogedInResponse;
 use Illuminate\Support\Facades\Hash;

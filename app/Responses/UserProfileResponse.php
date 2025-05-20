@@ -2,7 +2,7 @@
 
 namespace App\Responses;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Users\UserResource;
 use App\Models\User;
 
 class UserProfileResponse

@@ -36,12 +36,10 @@ class PasswordController extends BaseController
 
         $this->verificationCodeService->Check($validated['email'], $validated['code'], false);
 
-
         $user = User::where('email', $validated['email'])->firstOrFail();
         UserService::updatePassword($user, $validated['password']);
 
         $this->verificationCodeService->delete($validated['email'], false);
-
 
         return LogedInResponse::response($user);
 

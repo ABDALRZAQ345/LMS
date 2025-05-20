@@ -13,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 
 class VerificationCodeController extends BaseController
 {
-
     protected VerificationCodeService $verificationCodeService;
 
     public function __construct(VerificationCodeService $verificationCodeService)

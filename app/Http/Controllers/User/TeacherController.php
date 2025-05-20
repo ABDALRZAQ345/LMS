@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ContestResource;
 use App\Models\User;
 use App\Services\User\TeacherService;

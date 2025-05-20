@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Auth\UpdateUserRequest;
-use App\Http\Requests\GetUsersRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\Users\GetUsersRequest;
+use App\Http\Resources\Users\UserResource;
 use App\Models\User;
 use App\Responses\UserProfileResponse;
 use App\Services\User\StreakService;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends BaseController
 {
@@ -46,6 +47,8 @@ class UserController extends BaseController
      */
     public function show(User $user): JsonResponse
     {
+        $this->CheckCanAccessStudent($user);
+
         return UserProfileResponse::response($user);
 
     }
@@ -72,5 +75,12 @@ class UserController extends BaseController
         $user = \Auth::user();
 
         return UserProfileResponse::response($user);
+    }
+
+    public function CheckCanAccessStudent(User $user): void
+    {
+        if ($user->role == 'admin' && \Auth::user()->role != 'admin') {
+            throw new NotFoundHttpException;
+        }
     }
 }

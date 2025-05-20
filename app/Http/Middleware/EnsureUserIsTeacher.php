@@ -14,6 +14,8 @@ class EnsureUserIsTeacher
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     *
+     * @throws NotFoundException
      */
     public function handle(Request $request, Closure $next): Response
     {

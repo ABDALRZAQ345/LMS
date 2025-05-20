@@ -21,7 +21,7 @@ class ProjectFactory extends Factory
             'description' => $this->faker->paragraph(),
             'gitHub_url' => $this->faker->url(),
             'url' => $this->faker->url(),
-            'status' => $this->faker->randomElement(['pending', 'accepted', 'refused'])
+            'status' => $this->faker->randomElement(['pending', 'accepted', 'refused']),
         ];
     }
 }

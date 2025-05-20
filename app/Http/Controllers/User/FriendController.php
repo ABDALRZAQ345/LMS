@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Exceptions\ServerErrorException;
-use App\Http\Resources\UserResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Users\UserResource;
 use App\Models\User;
 use App\Services\User\FriendService;
 use Illuminate\Http\JsonResponse;

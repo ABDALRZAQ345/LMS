@@ -16,11 +16,10 @@ class AuthController extends BaseController
 {
     protected AuthService $authService;
 
-    public function __construct( AuthService $authService)
+    public function __construct(AuthService $authService)
     {
         $this->authService = $authService;
     }
-
 
     /**
      * @throws \Throwable
@@ -60,6 +59,7 @@ class AuthController extends BaseController
     public function logout(): JsonResponse
     {
         auth()->logout();
+
         return LogedOutResponse::response();
 
     }
@@ -69,7 +69,7 @@ class AuthController extends BaseController
         $token = auth()->refresh();
         $user = auth()->user();
 
-        return LogedInResponse::response($user,$token);
+        return LogedInResponse::response($user, $token);
 
     }
 }

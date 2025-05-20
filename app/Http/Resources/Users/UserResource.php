@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Users;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,13 +17,12 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = parent::toArray($request);
-        $time=Carbon::parse($data['last_online'])->addMinutes(10);
+        $time = Carbon::parse($data['last_online'])->addMinutes(10);
 
-        if(now()  <= $time){
-            $data['last_online']= 'online';
-        }
-        else {
-            $data['last_online']= $time->diffForHumans();
+        if (now() <= $time) {
+            $data['last_online'] = 'online';
+        } else {
+            $data['last_online'] = $time->diffForHumans();
         }
         $data['joined'] = Carbon::parse($data['created_at'])->format('Y-m-d');
         unset($data['created_at']);
@@ -31,9 +30,10 @@ class UserResource extends JsonResource
 
             $data['completed_courses'] = db::table('course_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
 
-            $data['completed_learning_paths']= db::table('learning_path_user')->where('user_id', $data['id'])->where('status','finished')->count();
-            if($data['id'] !=\Auth::id())
-             $data['is_friend']=db::table('friends')->where('user_id',\Auth::id())->where('friend_id' ,$data['id'])->count();
+            $data['completed_learning_paths'] = db::table('learning_path_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
+            if ($data['id'] != \Auth::id()) {
+                $data['is_friend'] = db::table('friends')->where('user_id', \Auth::id())->where('friend_id', $data['id'])->count();
+            }
         }
         if ($data['role'] == 'teacher') {
             unset($data['level']);

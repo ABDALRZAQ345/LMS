@@ -9,6 +9,7 @@ use App\Repositories\Reviews\ReviewsRepository;
 class ReviewService
 {
     public $reviewRepository;
+
     public function __construct(ReviewsRepository $reviewRepository)
     {
         $this->reviewRepository = $reviewRepository;
@@ -18,41 +19,40 @@ class ReviewService
     {
         $reviews = $this->reviewRepository->getAllReviewsInCourse($course->id);
 
-        return ResponseHelper::jsonResponse(ReviewResource::collection($reviews),'Get All Reviews In '.
-        $course->title .' Course Successfully');
+        return ResponseHelper::jsonResponse(ReviewResource::collection($reviews), 'Get All Reviews In '.
+        $course->title.' Course Successfully');
     }
 
-    public function addNewReviewInCourse($course,$validated){
-        $review = $this->reviewRepository->addNewReviewInCourse($course->id,$validated);
+    public function addNewReviewInCourse($course, $validated)
+    {
+        $review = $this->reviewRepository->addNewReviewInCourse($course->id, $validated);
 
-        if($review['is_new']){
-            return ResponseHelper::jsonResponse(ReviewResource::make($review['review']) , 'Review Added Successfully');
-        }
-
-        else{
+        if ($review['is_new']) {
+            return ResponseHelper::jsonResponse(ReviewResource::make($review['review']), 'Review Added Successfully');
+        } else {
             return ResponseHelper::jsonResponse(ReviewResource::make($review['review']),
                 'You already reviewed this course. You can update your review.');
         }
     }
 
-    public function updateReviewInCourse($course , $validated)
+    public function updateReviewInCourse($course, $validated)
     {
         $review = $this->reviewRepository->updateReviewInCourse($course->id, $validated);
 
-        if (!$review) {
-            return ResponseHelper::jsonResponse([], 'You don\'t have a review to update', 404 ,false);
+        if (! $review) {
+            return ResponseHelper::jsonResponse([], 'You don\'t have a review to update', 404, false);
         }
 
-        return ResponseHelper::jsonResponse(ReviewResource::make($review),'Your Review Updated Successfully');
+        return ResponseHelper::jsonResponse(ReviewResource::make($review), 'Your Review Updated Successfully');
     }
 
     public function deleteReviewInCourse($course)
     {
         $remove = $this->reviewRepository->deleteReviewInCourse($course->id);
-        if($remove){
-            return ResponseHelper::jsonResponse([],'Your Review deleted successfully');
+        if ($remove) {
+            return ResponseHelper::jsonResponse([], 'Your Review deleted successfully');
+        } else {
+            return ResponseHelper::jsonResponse([], 'No review found to delete.', 404, false);
         }
-        else
-            return ResponseHelper::jsonResponse([],'No review found to delete.',404,false);
     }
 }

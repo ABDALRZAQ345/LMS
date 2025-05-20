@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\UserController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\User\StudentController;
+use App\Http\Controllers\User\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
@@ -18,7 +18,6 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function
         Route::get('/users/{user}/contests', [StudentController::class, 'contests'])->name('user.contests');
         Route::get('/users/{user}/streaks', [StudentController::class, 'streaks'])->name('user.streaks');
         Route::get('/users/{user}/statistics', [StudentController::class, 'statistics'])->name('user.statistics');
-
         Route::get('/users/{user}/projects', [StudentController::class, 'projects'])->name('user.projects');
     });
 

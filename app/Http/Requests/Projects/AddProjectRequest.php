@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Projects;
 
-use App\Rules\ValidGitHubAccount;
+use App\Rules\GithubRules\ValidGithubRepository;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AddProjectRequest extends FormRequest
 {
@@ -26,9 +28,17 @@ class AddProjectRequest extends FormRequest
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'technologies' => ['nullable', 'array'],
-            // todo rule for github repo
-            'gitHub_url' => ['nullable', 'string'],
+            'gitHub_url' => ['nullable', 'string', new ValidGithubRepository],
             'tag_id' => ['required', 'exists:tags,id'],
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }

@@ -7,36 +7,37 @@ use App\Models\User;
 
 class LearningPathRepository
 {
+    public function getAllLearningPaths($validated)
+    {
 
-    public function getAllLearningPaths($validated){
-
-        if($validated['status']=='all'){
+        if ($validated['status'] == 'all') {
             return LearningPath::where('verified', true)
                 ->with('teacher')
                 ->withCount('courses')
                 ->withSum('courses', 'price')
-                ->withSum('courses','rate')
+                ->withSum('courses', 'rate')
                 ->orderBy($validated['orderBy'], $validated['direction'])
                 ->paginate($validated['items']);
-        }
-        else{
+        } else {
             $user = \Auth::user();
-            return $user->allLearningPaths()->orderBy($validated['orderBy'],$validated['direction'])
-                ->where('status',$validated['status'])
+
+            return $user->allLearningPaths()->orderBy($validated['orderBy'], $validated['direction'])
+                ->where('status', $validated['status'])
                 ->with('teacher')
                 ->withCount('courses')
                 ->withSum('courses', 'price')
-                ->withSum('courses','rate')
+                ->withSum('courses', 'rate')
                 ->paginate($validated['items']);
         }
     }
 
-    public function showLearningPath($id){
+    public function showLearningPath($id)
+    {
         return LearningPath::find($id)
             ->with('teacher')
             ->withCount('courses')
             ->withSum('courses', 'price')
-            ->withSum('courses','rate');
+            ->withSum('courses', 'rate');
     }
 
     public function updateStatusLearningPath($validated, $learningPathId)
@@ -47,12 +48,12 @@ class LearningPathRepository
 
         if ($exists) {
             $user->learningPaths()->updateExistingPivot($learningPathId, [
-                'status' => $validated['status']
+                'status' => $validated['status'],
             ]);
         } else {
             $user->learningPaths()->attach($learningPathId, [
                 'status' => $validated['status'],
-                'paid' => false
+                'paid' => false,
             ]);
         }
 
@@ -63,12 +64,14 @@ class LearningPathRepository
             ->find($learningPathId);
     }
 
-    public function removeStatusLearningPath($id){
+    public function removeStatusLearningPath($id)
+    {
         $user = auth()->user();
         $exists = $user->learningPaths()->where('learning_path_id', $id)->exists();
 
         if ($exists) {
             $user->learningPaths()->detach($id);
+
             return true;
         } else {
             return false;

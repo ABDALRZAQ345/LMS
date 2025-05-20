@@ -10,12 +10,12 @@ class HomePageController extends Controller
     /**
      * @throws ServerErrorException
      */
-    public function __invoke(HomePageRequest $request)
+    public function __invoke(HomePageRequest $request): \Illuminate\Http\JsonResponse
     {
 
-        return response() ->json([
+        return response()->json([
             'success' => true,
-            'message' => 'Home page requested'
+            'message' => 'Home page requested',
         ]);
 
     }

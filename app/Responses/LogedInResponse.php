@@ -8,12 +8,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LogedInResponse
 {
-    public static function response(User $user,$token=null): JsonResponse
+    public static function response(User $user, $token = null): JsonResponse
     {
 
-
-            if($token == null)
+        if ($token == null) {
             $token = JWTAuth::fromUser($user);
+        }
 
         return response()->json([
             'message' => true,

@@ -32,7 +32,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function GatesAndPolicies() {}
 
-    private function observers(): void {
+    private function observers(): void
+    {
         Review::observe(ReviewObserver::class);
     }
 
@@ -47,11 +48,11 @@ class AppServiceProvider extends ServiceProvider
             ];
         });
         RateLimiter::for('check_verification_code', function (Request $request) {
-            return Limit::perDay(20)->by($request->user()?->id ?: $request->ip());
+            return Limit::perDay(30)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('register', function (Request $request) {
             return [
-                Limit::perMinutes(30, 10)->by($request->user()?->id ?: $request->ip()),
+                Limit::perMinutes(30, 20)->by($request->user()?->id ?: $request->ip()),
                 Limit::perDay(40)->by($request->user()?->id ?: $request->ip()),
             ];
         });
@@ -75,7 +76,8 @@ class AppServiceProvider extends ServiceProvider
             'learningPath.php',
             'friend.php',
             'review.php',
-            'project.php'
+            'project.php',
+            'admin.php',
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

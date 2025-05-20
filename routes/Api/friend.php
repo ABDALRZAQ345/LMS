@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\FriendController;
+use App\Http\Controllers\User\FriendController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
 
     Route::get('/users/{user}/friends', [FriendController::class, 'index'])->name('user.friends');
-    Route::post('/friends/{friend}',    [FriendController::class, 'store'])->name('user.friends.add');
-    Route::delete('/friends/{friend}',  [FriendController::class, 'destroy'])->name('user.friends.remove');
+    Route::post('/friends/{friend}', [FriendController::class, 'store'])->name('user.friends.add');
+    Route::delete('/friends/{friend}', [FriendController::class, 'destroy'])->name('user.friends.remove');
 
 });

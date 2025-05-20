@@ -9,12 +9,15 @@ class Project extends Model
 {
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
-    protected $guarded=[
-        'id'
+
+    protected $guarded = [
+        'id',
     ];
+
     protected $casts = [
         'technologies' => 'array',
     ];
+
     public function tag(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Tag::class);

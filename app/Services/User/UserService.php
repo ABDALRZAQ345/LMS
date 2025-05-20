@@ -2,7 +2,7 @@
 
 namespace App\Services\User;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Users\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -53,7 +53,7 @@ class UserService
 
     public static function deleteUnVerifiedUser($email): true
     {
-        $user = User::where('email', $email)
+        User::where('email', $email)
             ->where('email_verified', false)
             ->delete();
 
@@ -75,6 +75,20 @@ class UserService
         }
 
         return UserResource::collection($users);
+
+    }
+
+    public function CreateTeacher($data): \Illuminate\Http\JsonResponse
+    {
+
+        $data['role'] = 'teacher';
+        $data['email_verified'] = true;
+        UserService::createUser($data);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Teacher created successfully',
+        ]);
 
     }
 }

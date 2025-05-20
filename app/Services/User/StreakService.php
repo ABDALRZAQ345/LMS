@@ -42,6 +42,7 @@ class StreakService
         });
     }
 
+    // todo use it to update streak when user watch video or take test or contest
     public function increaseStreak(User $user): void
     {
         $today = now()->toDateString();
