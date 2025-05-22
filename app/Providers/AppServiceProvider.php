@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Contest;
 use App\Models\Review;
 use App\Observers\ReviewObserver;
+use App\Policies\ContestPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -30,7 +33,9 @@ class AppServiceProvider extends ServiceProvider
         $this->PassWordConfigurations();
     }
 
-    public function GatesAndPolicies() {}
+    public function GatesAndPolicies() {
+        Gate::policy(Contest::class, ContestPolicy::class);
+    }
 
     private function observers(): void
     {
@@ -78,6 +83,7 @@ class AppServiceProvider extends ServiceProvider
             'review.php',
             'project.php',
             'admin.php',
+            'contest.php'
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

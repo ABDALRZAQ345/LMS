@@ -29,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'student.user' => EnsureUserIsStudent::class,
             'teacher.user' => EnsureUserIsTeacher::class,
+            'contest' => \App\Http\Middleware\ContestTypeMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

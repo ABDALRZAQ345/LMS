@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('contest_user', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('end_time');
-            $table->integer('correct_answers');
-            $table->integer('gained_points');
+            $table->dateTime('end_time')->nullable();
+            $table->integer('correct_answers')->default(0);
+            $table->integer('gained_points')->nullable()->default(null);
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Contest::class)->constrained()->cascadeOnDelete();
-            $table->unsignedInteger('rank');
+            $table->unsignedInteger('rank')->nullable()->default(null);
             $table->timestamps();
         });
     }

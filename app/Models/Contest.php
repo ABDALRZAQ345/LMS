@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Contest extends Model
@@ -32,5 +33,10 @@ class Contest extends Model
             ->orderByPivot('correct_answers', 'desc')
             ->orderByPivot('end_time', 'asc')
             ->withTimestamps();
+    }
+
+    public function problems(): HasMany
+    {
+        return $this->hasMany(Problem::class);
     }
 }
