@@ -22,8 +22,8 @@ class GetAllContestsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', 'string','in:quiz,programming,all'],
-            'status' => ['required', 'string','in:active,ended,coming'],
+            'type' => ['required', 'string', 'in:quiz,programming,all'],
+            'status' => ['required', 'string', 'in:active,ended,coming'],
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Jobs;
 
 use App\Models\Submission;
@@ -32,7 +33,7 @@ class ProcessSubmission implements ShouldQueue
 
         $problem = $this->submission->problem;
 
-        $response = Http::timeout(60*5)->withHeaders([
+        $response = Http::timeout(60 * 5)->withHeaders([
             'X-RapidAPI-Key' => env('RAPIDAPI_KEY'),
             'Accept' => 'application/json',
             'X-RapidAPI-Host' => 'judge0-ce.p.rapidapi.com',
@@ -41,14 +42,13 @@ class ProcessSubmission implements ShouldQueue
             'source_code' => $this->submission->code,
             'stdin' => $problem->test_input,
             'cpu_time_limit' => $problem->time_limit,
-            'memory_limit' =>$problem->memory_limit * 1024
+            'memory_limit' => $problem->memory_limit * 1024,
         ]);
 
         $result = $response->json();
         Log::channel('verification_code')->info($result);
         $output = trim($result['stdout'] ?? '');
         $expected = trim($problem->expected_output);
-
 
         $normalizedOutput = preg_replace('/\s+/', '', $output);
         $normalizedExpected = preg_replace('/\s+/', '', $expected);
@@ -57,11 +57,9 @@ class ProcessSubmission implements ShouldQueue
             $status = 'time_limit_exceeded';
         } elseif ($statusId === 6) {
             $status = 'memory_limit_exceeded';
-        }
-        elseif ($statusId === 11) {
+        } elseif ($statusId === 11) {
             $status = 'runtime_error';
-        }
-        elseif (isset($result['stderr'])) {
+        } elseif (isset($result['stderr'])) {
             $status = 'error';
             $output = $result['stderr'];
         } elseif ($normalizedOutput === $normalizedExpected) {

@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             CertificateSeeder::class,
             StreakSeeder::class,
-            ProblemSeeder::class
+            ProblemSeeder::class,
         ]);
     }
 }

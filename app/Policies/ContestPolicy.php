@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Contest;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ContestPolicy
 {
@@ -63,6 +62,7 @@ class ContestPolicy
     {
         return false;
     }
+
     public function submit(User $user, Contest $contest): bool
     {
 
@@ -70,9 +70,6 @@ class ContestPolicy
             return false;
         }
 
-
-
         return true;
     }
-
 }

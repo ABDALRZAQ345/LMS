@@ -19,3 +19,11 @@ if (! function_exists('DeletePublicPhoto')) {
     }
 
 }
+
+if (! function_exists('getPercentege')) {
+    function getPercentege($sub, $total)
+    {
+        return ($total > 0 ? ($sub / $total) * 100 : 0).'%';
+    }
+
+}

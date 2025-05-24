@@ -13,7 +13,9 @@ class Option extends Model
     protected $guarded = [
         'id',
     ];
-    protected $hidden=['created_at','updated_at','question_id','is_correct'];
+
+    protected $hidden = ['created_at', 'updated_at', 'question_id', 'is_correct'];
+
     public function question(): BelongsTo
     {
         return $this->BelongsTo(Question::class);

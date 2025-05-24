@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('problem_id')->constrained()->onDelete('cascade');
             $table->enum('language', ['cpp', 'python']);
             $table->text('code');
-            $table->enum('status', ['pending', 'accepted', 'wrong_answer', 'error','runtime_error','memory_limit_exceeded','time_limit_exceeded'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'wrong_answer', 'error', 'runtime_error', 'memory_limit_exceeded', 'time_limit_exceeded'])->default('pending');
             $table->longText('output')->nullable();
             $table->timestamps();
         });

@@ -2,12 +2,8 @@
 
 namespace App\Services;
 
-use App\Http\Resources\Courses\CourseResource;
-use App\Http\Resources\LearningPaths\LearningPathResource;
 use App\Models\Contest;
-use App\Models\User;
-use App\Repositories\Courses\CoursesRepository;
-use App\Repositories\LearningPaths\LearningPathRepository;
+use Illuminate\Support\Facades\Auth;
 
 class ContestService
 {
@@ -23,30 +19,36 @@ class ContestService
         return $query->paginate();
     }
 
-    public function GetContestContent(Contest $contest)
+    public function GetContestContent(Contest $contest): \Illuminate\Http\JsonResponse
     {
+        $user = Auth::user();
+        $alreadyParticipate = $user->contests()->where('contest_id', $contest->id)->exists();
         if ($contest->type == 'quiz') {
             $questions = $contest->questions()
                 ->with('options')
                 ->get();
+
             return response()->json([
                 'status' => true,
                 'contest_type' => $contest->type,
+                'alreadyParticipate' => $alreadyParticipate,
                 'questions_count' => $questions->count(),
-                'questions' => $questions
+                'questions' => $questions,
+
             ]);
         } else {
 
             $problems = $contest->problems()->get();
+
             return response()->json([
                 'status' => true,
                 'contest_type' => $contest->type,
+                'alreadyParticipate' => $alreadyParticipate,
                 'problems_count' => $problems->count(),
-                'problems' => $problems
+                'problems' => $problems,
+
             ]);
         }
 
-
     }
-
 }

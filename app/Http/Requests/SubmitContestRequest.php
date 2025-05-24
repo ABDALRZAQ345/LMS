@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SubmitContestQuizRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SubmitContestRequest extends FormRequest
@@ -21,8 +22,10 @@ class SubmitContestRequest extends FormRequest
      */
     public function rules(): array
     {
+        $contest = $this->route('contest');
+
         return [
-            'answers' => ['required', 'array'],
+            'answers' => ['required', 'array', new SubmitContestQuizRule($contest)],
             'answers.*' => ['required', 'integer', 'exists:options,id'],
 
         ];

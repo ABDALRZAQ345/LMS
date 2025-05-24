@@ -14,9 +14,11 @@ class Question extends Model
     protected $guarded = [
         'id',
     ];
-    protected $hidden=[
-        'questionable_type','questionable_id','created_at','updated_at',
+
+    protected $hidden = [
+        'questionable_type', 'questionable_id', 'created_at', 'updated_at',
     ];
+
     public function questionable(): MorphTo
     {
         return $this->morphTo();

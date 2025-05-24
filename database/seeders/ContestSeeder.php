@@ -17,11 +17,11 @@ class ContestSeeder extends Seeder
         $teachers = User::where('role', 'teacher')->get();
 
         // Create 5-10 contests
-        $numContests = rand(15,20);
+        $numContests = rand(15, 20);
         for ($i = 0; $i < $numContests; $i++) {
             Contest::factory()->create([
                 'user_id' => $teachers->random()->id,
-                'type' => $i %2 ? 'quiz' : 'programming'
+                'type' => $i % 2 ? 'quiz' : 'programming',
             ]);
         }
     }

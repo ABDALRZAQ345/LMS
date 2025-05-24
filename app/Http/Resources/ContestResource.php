@@ -14,9 +14,10 @@ class ContestResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-       $data=parent::toArray($request);
-       $data['teacher_id']=$data['user_id'];
-       unset($data['user_id'],$data['verified']);
-       return $data;
+        $data = parent::toArray($request);
+        $data['teacher_id'] = $data['user_id'];
+        unset($data['user_id'],$data['verified']);
+
+        return $data;
     }
 }

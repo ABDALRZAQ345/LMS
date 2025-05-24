@@ -9,7 +9,8 @@ class Submission extends Model
 {
     /** @use HasFactory<\Database\Factories\SubmissionFactory> */
     use HasFactory;
-    protected  $guarded=['id'];
+
+    protected $guarded = ['id'];
 
     public function problem()
     {

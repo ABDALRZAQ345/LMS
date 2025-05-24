@@ -33,7 +33,8 @@ class AppServiceProvider extends ServiceProvider
         $this->PassWordConfigurations();
     }
 
-    public function GatesAndPolicies() {
+    public function GatesAndPolicies()
+    {
         Gate::policy(Contest::class, ContestPolicy::class);
     }
 
@@ -83,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
             'review.php',
             'project.php',
             'admin.php',
-            'contest.php'
+            'contest.php',
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

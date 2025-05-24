@@ -13,15 +13,15 @@ class ContestTypeMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,string $type): Response
+    public function handle(Request $request, Closure $next, string $type): Response
     {
         $contest = $request->route('contest');
-        if($contest->type == $type)
-        return $next($request);
-        else{
+        if ($contest->type == $type) {
+            return $next($request);
+        } else {
             return \response()->json([
                 'status' => false,
-                'message' => "Contest Type must be $type"
+                'message' => "Contest Type must be $type",
             ]);
         }
     }

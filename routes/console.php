@@ -15,10 +15,10 @@ Schedule::call(function () {
     \App\Models\Contest::where('start_at', '<=', now())
         ->whereRaw('DATE_ADD(start_at, INTERVAL time MINUTE) > ?', [now()])
         ->update([
-            'status' => 'active'
+            'status' => 'active',
         ]);
     \App\Models\Contest::whereRaw('DATE_ADD(start_at, INTERVAL time MINUTE) <= ?', [now()])
         ->update([
-            'status' => 'ended'
+            'status' => 'ended',
         ]);
 })->everyMinute();

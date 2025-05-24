@@ -7,23 +7,24 @@ use App\Http\Requests\GetAllContestsRequest;
 use App\Http\Resources\ContestResource;
 use App\Models\Contest;
 use App\Services\ContestService;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ContestController extends Controller
 {
     protected ContestService $contestService;
+
     public function __construct(ContestService $contestService)
     {
         $this->contestService = $contestService;
     }
+
     public function index(GetAllContestsRequest $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validated();
-       $contests = $this->contestService->getAllVerifiedContests($validated['status'],$validated['type']);
+        $contests = $this->contestService->getAllVerifiedContests($validated['status'], $validated['type']);
+
         return response()->json([
             'status' => true,
-            'contests' => ContestResource::collection($contests)
+            'contests' => ContestResource::collection($contests),
         ]);
     }
 
@@ -32,14 +33,13 @@ class ContestController extends Controller
      */
     public function show(Contest $contest): \Illuminate\Http\JsonResponse
     {
-        if($contest->verified)
-        {
+        if ($contest->verified) {
             return response()->json([
                 'status' => true,
-                'contest' => ContestResource::make($contest)
+                'contest' => ContestResource::make($contest),
             ]);
         }
-        throw new NotFoundException();
+        throw new NotFoundException;
     }
 
     public function content(Contest $contest): \Illuminate\Http\JsonResponse
@@ -63,8 +63,7 @@ class ContestController extends Controller
     public function problems(Contest $contest): \Illuminate\Http\JsonResponse
     {
 
-            return $this->contestService->GetContestContent($contest);
+        return $this->contestService->GetContestContent($contest);
 
     }
-
 }
