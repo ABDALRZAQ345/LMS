@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\FORBIDDEN;
 use App\Models\Contest;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,10 +20,14 @@ class ContestService
         return $query->paginate();
     }
 
+    /**
+     * @throws FORBIDDEN
+     */
     public function GetContestContent(Contest $contest): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
         $alreadyParticipate = $user->contests()->where('contest_id', $contest->id)->exists();
+
         if ($contest->type == 'quiz') {
             $questions = $contest->questions()
                 ->with('options')

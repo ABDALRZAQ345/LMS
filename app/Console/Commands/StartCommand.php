@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\HabitLogService;
+
 use Illuminate\Console\Command;
 
 class StartCommand extends Command
@@ -14,5 +14,5 @@ class StartCommand extends Command
     /**
      * @throws \Throwable
      */
-    public function handle(HabitLogService $habitLogService): void {}
+    public function handle( ): void {}
 }

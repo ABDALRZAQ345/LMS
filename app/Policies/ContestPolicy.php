@@ -2,17 +2,27 @@
 
 namespace App\Policies;
 
+use App\Exceptions\BadRequestException;
+use App\Exceptions\FORBIDDEN;
 use App\Models\Contest;
 use App\Models\User;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ContestPolicy
 {
     /**
      * Determine whether the user can view any models.
+     * @throws FORBIDDEN
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user,Contest $contest): bool
     {
-        return false;
+        if($contest->verified==false)
+            return false;
+
+        if($contest->status=='coming')
+            throw new FORBIDDEN("coming contest not available , you can reach it when its active or ended");
+
+        return  true;
     }
 
     /**
@@ -20,7 +30,13 @@ class ContestPolicy
      */
     public function view(User $user, Contest $contest): bool
     {
-        return false;
+        if($contest->verified == false)
+            return false;
+
+        if($contest->status=='coming')
+            throw new FORBIDDEN("coming contest not available , you can reach it when its active or ended");
+
+        return  true;
     }
 
     /**
@@ -63,13 +79,22 @@ class ContestPolicy
         return false;
     }
 
+    /**
+     * @throws FORBIDDEN
+     * @throws BadRequestException
+     */
     public function submit(User $user, Contest $contest): bool
     {
+        if($contest->verified == false)
+            return false;
 
         if ($user->contests()->where('contests.id', $contest->id)->exists()) {
-            return false;
+            throw  new BadRequestException("you already participated in this contest");
         }
-
+        if ($contest->status == 'coming')
+        {
+            throw new FORBIDDEN("coming contest not available , you can reach it when its active or ended");
+        }
         return true;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubmitContestRequest;
+use App\Http\Requests\SubmitProblemRequest;
 use App\Jobs\ProcessSubmission;
 use App\Models\Contest;
 use App\Models\Problem;
@@ -15,17 +16,14 @@ use Illuminate\Support\Facades\Gate;
 
 class SubmissionController extends Controller
 {
-    public function submitProblem(Contest $contest, Problem $problem, Request $request)
+    public function submitProblem(Contest $contest, Problem $problem, SubmitProblemRequest $request): JsonResponse
     {
-        $request->validate([
-            'language' => 'required|in:cpp,python',
-            'code' => 'required|string',
-        ]);
-        $problem = $contest->problems()->find($problem->id);
+        $validated=$request->validated();
+        $problem = $contest->problems()->findOrFail($problem->id);
         $submission = Submission::create([
             'problem_id' => $problem->id,
-            'language' => $request->language,
-            'code' => $request->code,
+            'language' => $validated['language'],
+            'code' => $validated['code'],
             'status' => 'pending',
         ]);
 
@@ -39,8 +37,9 @@ class SubmissionController extends Controller
 
     public function submitContest(Contest $contest, SubmitContestRequest $request): JsonResponse
     {
-        $validated = $request->validated();
         Gate::authorize('submit', $contest);
+        $validated = $request->validated();
+
 
         $questions = $contest->questions()->get();
         $questionsCount = $questions->count();
@@ -68,6 +67,7 @@ class SubmissionController extends Controller
             'end_time' => now(), 'correct_answers' => $correct,
             'user_id' => Auth::user()->id,
             'contest_id' => $contest->id,
+            'is_official' => $contest->status == 'active'
         ]);
 
         return $correct;

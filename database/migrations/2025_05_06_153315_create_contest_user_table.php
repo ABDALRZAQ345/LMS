@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Contest::class)->constrained()->cascadeOnDelete();
             $table->unsignedInteger('rank')->nullable()->default(null);
+            $table->boolean('is_official')->default(false);
             $table->timestamps();
         });
     }

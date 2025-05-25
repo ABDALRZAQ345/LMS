@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\FORBIDDEN;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\GetAllContestsRequest;
 use App\Http\Resources\ContestResource;
 use App\Models\Contest;
 use App\Services\ContestService;
+use Illuminate\Http\JsonResponse;
 
 class ContestController extends Controller
 {
@@ -17,7 +19,7 @@ class ContestController extends Controller
         $this->contestService = $contestService;
     }
 
-    public function index(GetAllContestsRequest $request): \Illuminate\Http\JsonResponse
+    public function index(GetAllContestsRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $contests = $this->contestService->getAllVerifiedContests($validated['status'], $validated['type']);
@@ -31,7 +33,7 @@ class ContestController extends Controller
     /**
      * @throws NotFoundException
      */
-    public function show(Contest $contest): \Illuminate\Http\JsonResponse
+    public function show(Contest $contest): JsonResponse
     {
         if ($contest->verified) {
             return response()->json([
@@ -42,28 +44,27 @@ class ContestController extends Controller
         throw new NotFoundException;
     }
 
-    public function content(Contest $contest): \Illuminate\Http\JsonResponse
+    public function content(Contest $contest): JsonResponse
     {
+        \Gate::authorize('view',$contest);
         return $this->contestService->GetContestContent($contest);
     }
 
     /**
      * @throws NotFoundException
      */
-    public function questions(Contest $contest): \Illuminate\Http\JsonResponse
+    public function questions(Contest $contest): JsonResponse
     {
-
+        \Gate::authorize('view',$contest);
         return $this->contestService->GetContestContent($contest);
-
     }
 
     /**
      * @throws NotFoundException
      */
-    public function problems(Contest $contest): \Illuminate\Http\JsonResponse
+    public function problems(Contest $contest): JsonResponse
     {
-
+        \Gate::authorize('view',$contest);
         return $this->contestService->GetContestContent($contest);
-
     }
 }
