@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\AddTeacherRequest;
 use App\Services\User\UserService;
+use Illuminate\Http\JsonResponse;
 
 class AdminController extends Controller
 {
@@ -14,7 +16,7 @@ class AdminController extends Controller
         $this->userService = $userService;
     }
 
-    public function addTeacher(AddTeacherRequest $request): \Illuminate\Http\JsonResponse
+    public function addTeacher(AddTeacherRequest $request): JsonResponse
     {
         $validated = $request->validated();
 

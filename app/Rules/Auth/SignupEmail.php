@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\Auth;
 
 use App\Models\User;
 use Closure;

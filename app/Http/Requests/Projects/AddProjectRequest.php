@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Projects;
 
-use App\Rules\GithubRules\ValidGithubRepository;
+use App\Rules\Auth\GithubRules\ValidGithubRepository;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;

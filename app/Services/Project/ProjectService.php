@@ -77,17 +77,4 @@ class ProjectService
     {
         return $user->projects()->where('created_at', '>=', now()->startOfMonth())->count() >= 3;
     }
-
-    public function updateProjectStatus($data, Project $project): \Illuminate\Http\JsonResponse
-    {
-        $project->update([
-            'status' => $data['status'],
-        ]);
-
-        // todo send notification to student
-        return response()->json([
-            'status' => true,
-            'message' => 'project status updated successfully',
-        ]);
-    }
 }

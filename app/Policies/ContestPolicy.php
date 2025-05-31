@@ -6,37 +6,44 @@ use App\Exceptions\BadRequestException;
 use App\Exceptions\FORBIDDEN;
 use App\Models\Contest;
 use App\Models\User;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ContestPolicy
 {
     /**
      * Determine whether the user can view any models.
+     *
      * @throws FORBIDDEN
      */
-    public function viewAny(User $user,Contest $contest): bool
+    public function viewAny(User $user, Contest $contest): bool
     {
-        if($contest->verified==false)
+        if ($contest->request_status != 'accepted') {
             return false;
+        }
 
-        if($contest->status=='coming')
-            throw new FORBIDDEN("coming contest not available , you can reach it when its active or ended");
+        if ($contest->status == 'coming') {
+            throw new FORBIDDEN('coming contest not available , you can reach it when its active there is '.Carbon::parse($contest->start_at)->diffForHumans());
+        }
 
-        return  true;
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
+     * @throws FORBIDDEN
      */
     public function view(User $user, Contest $contest): bool
     {
-        if($contest->verified == false)
+        if ($contest->request_status != 'accepted') {
             return false;
+        }
 
-        if($contest->status=='coming')
-            throw new FORBIDDEN("coming contest not available , you can reach it when its active or ended");
+        if ($contest->status == 'coming') {
+            throw new FORBIDDEN('coming contest not available , you can reach it when its active there is '.Carbon::parse($contest->start_at)->diffForHumans());
+        }
 
-        return  true;
+        return true;
     }
 
     /**
@@ -85,16 +92,34 @@ class ContestPolicy
      */
     public function submit(User $user, Contest $contest): bool
     {
-        if($contest->verified == false)
+        if ($contest->request_status != 'accepted') {
             return false;
-
+        }
+        // check that the user already participated
         if ($user->contests()->where('contests.id', $contest->id)->exists()) {
-            throw  new BadRequestException("you already participated in this contest");
+            $contest = $user->contests()->find($contest->id);
+            $correct = $contest->pivot['correct_answers'];
+            throw new BadRequestException(' you already participated in this contest with '.$correct.' correct answer if you participate as official check your rank in standing');
         }
-        if ($contest->status == 'coming')
-        {
-            throw new FORBIDDEN("coming contest not available , you can reach it when its active or ended");
+        if ($contest->status == 'coming') {
+            throw new FORBIDDEN('coming contest not available , you can reach it when its active there is '.Carbon::parse($contest->start_at)->diffForHumans());
         }
+
         return true;
+    }
+
+    /**
+     * @throws FORBIDDEN
+     */
+    public function seeStanding(User $user, Contest $contest): bool
+    {
+        if ($contest->request_status != 'accepted') {
+            return false;
+        }
+        if ($contest->status == 'coming') {
+            throw new FORBIDDEN('coming contest not available , you can reach it when its active there is '.Carbon::parse($contest->start_at)->diffForHumans());
+        }
+        return  true;
+
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Contest;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class GetAllContestsRequest extends FormRequest
 {
@@ -23,7 +25,15 @@ class GetAllContestsRequest extends FormRequest
     {
         return [
             'type' => ['required', 'string', 'in:quiz,programming,all'],
-            'status' => ['required', 'string', 'in:active,ended,coming'],
+            'status' => ['required', 'string', 'in:active,ended,coming,all'],
         ];
+    }
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }

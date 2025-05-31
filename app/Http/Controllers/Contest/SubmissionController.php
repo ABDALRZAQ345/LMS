@@ -1,15 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Contest;
 
-use App\Http\Requests\SubmitContestRequest;
-use App\Http\Requests\SubmitProblemRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Contest\SubmitContestRequest;
+use App\Http\Requests\Contest\SubmitProblemRequest;
+use App\Http\Resources\StudentStandingCollection;
+use App\Http\Resources\StudentStandingResource;
 use App\Jobs\ProcessSubmission;
 use App\Models\Contest;
 use App\Models\Problem;
 use App\Models\Submission;
+use App\Responses\StudentStaticsResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,7 +22,7 @@ class SubmissionController extends Controller
 {
     public function submitProblem(Contest $contest, Problem $problem, SubmitProblemRequest $request): JsonResponse
     {
-        $validated=$request->validated();
+        $validated = $request->validated();
         $problem = $contest->problems()->findOrFail($problem->id);
         $submission = Submission::create([
             'problem_id' => $problem->id,
@@ -35,11 +39,14 @@ class SubmissionController extends Controller
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function submitContest(Contest $contest, SubmitContestRequest $request): JsonResponse
     {
+        //? check why the validation work before the policy :) .
         Gate::authorize('submit', $contest);
         $validated = $request->validated();
-
 
         $questions = $contest->questions()->get();
         $questionsCount = $questions->count();
@@ -47,7 +54,7 @@ class SubmissionController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Contest submitted successfully',
+            'message' => 'Contest submitted successfully'.($contest->status == 'active') ? 'you can see your rank when the contest over' : '',
             'correct_answers' => getPercentege($correct, $questionsCount),
         ]);
 
@@ -67,9 +74,11 @@ class SubmissionController extends Controller
             'end_time' => now(), 'correct_answers' => $correct,
             'user_id' => Auth::user()->id,
             'contest_id' => $contest->id,
-            'is_official' => $contest->status == 'active'
+            'is_official' => $contest->status == 'active',
         ]);
 
         return $correct;
     }
+
+
 }

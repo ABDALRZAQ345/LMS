@@ -23,11 +23,9 @@ class ContestFactory extends Factory
             'name' => $this->faker->sentence(3),
             'time' => $this->faker->numberBetween(30, 180),
             'description' => $this->faker->paragraph(2),
-            'level' => $this->faker->numberBetween(1, 5),
             'status' => $this->faker->randomElement(['active', 'ended', 'coming']),
             'start_at' => $startAt,
             'user_id' => User::factory()->state(['role' => 'teacher']),
-            'verified' => $this->faker->boolean(80),
         ];
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Contest;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SubmitProblemRequest extends FormRequest
 {
@@ -22,8 +24,16 @@ class SubmitProblemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'language' => ['required','in:cpp,python,csharp,java'],
-            'code' => ['required','string'],
+            'language' => ['required', 'in:cpp,python,csharp,java'],
+            'code' => ['required', 'string'],
         ];
+    }
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }

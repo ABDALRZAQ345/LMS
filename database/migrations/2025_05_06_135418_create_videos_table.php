@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('order');
             $table->string('url');
             $table->boolean('free')->default(true);
+            $table->integer('duration')->default(0);
             $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

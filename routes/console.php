@@ -11,5 +11,4 @@ Schedule::call(function () {
     Artisan::call('streaks:refresh');
 })->yearlyOn(1, 1, '00:00');
 
-
-Schedule::command('contests:update-statuses')->everyMinute();
+Schedule::command('contests:update-statuses')->everyThirtySeconds();

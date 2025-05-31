@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\Contest;
 
 use App\Models\Contest;
 use App\Models\Option;

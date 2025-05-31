@@ -18,13 +18,14 @@ return new class extends Migration
             $table->integer('time')->comment('period of time of the contest');
             $table->text('description')->nullable();
             $table->enum('type', ['quiz', 'programming'])->default('quiz');
-            $table->unsignedInteger('level')->default(0);
+            $table->Enum('level',['beginner','intermediate','advanced','expert'])->default('beginner');
             $table->enum('status', ['active', 'ended', 'coming'])->default('coming');
             $table->dateTime('start_at');
             $table->foreignIdFor(User::class)
                 ->comment('teacher id (creator)')
                 ->constrained()->cascadeOnDelete();
-            $table->boolean('verified')->default(false);
+
+            $table->enum('request_status', ['pending', 'accepted', 'rejected'])->default('pending');
 
             $table->timestamps();
         });

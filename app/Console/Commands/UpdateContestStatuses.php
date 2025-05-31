@@ -1,33 +1,44 @@
 <?php
+
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Jobs\CountContestResults;
 use App\Models\Contest;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class UpdateContestStatuses extends Command
 {
     protected $signature = 'contests:update-statuses';
+
     protected $description = 'Update contest statuses and delete unverified contests after start time';
 
-    public function handle()
+    public function handle(): void
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->toDateTimeString();
 
-        Contest::where('status', 'coming')
-            ->where('start_at', '<=', $now)
-            ->update(['status' => 'active']);
+        $this->updateComingToActive($now);
 
-
-        Contest::where('status', 'active')
-            ->whereRaw("DATE_ADD(start_at, INTERVAL time MINUTE) <= ?", [$now])
-            ->update(['status' => 'ended']);
-
-        Contest::where('verified', false)->where('start_at', '<=', $now)
-            ->delete();
-
-        \Log::channel('verification_code')->info('Running contest status update at ' . now());
+        $this->UpdateActiveToEnded($now);
 
         $this->info('Contest statuses updated and unverified contests deleted.');
+    }
+
+    public function updateComingToActive(string $now): void
+    {
+        Contest::where('status', 'coming')->where('start_at', '<=', $now)
+            ->update(['status' => 'active']);
+    }
+
+    public function UpdateActiveToEnded(string $now): void
+    {
+        $contests = Contest::where('status', 'active')
+            ->whereRaw('DATE_ADD(start_at, INTERVAL time MINUTE) <= ?', [$now])
+            ->get();
+
+        foreach ($contests as $contest) {
+            CountContestResults::dispatch($contest);
+        }
+
     }
 }

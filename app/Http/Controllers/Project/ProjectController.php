@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Projects\AddProjectRequest;
 use App\Http\Requests\Projects\GetProjectsRequest;
-use App\Http\Requests\Projects\updateProjectStatusRequest;
 use App\Http\Resources\Projects\ProjectResource;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Services\Project\ProjectService;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -47,18 +47,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function requests()
-    {
-        return $this->projectService->getProjectsRequest();
-    }
-
-    public function updateStatus(updateProjectStatusRequest $request, Project $project)
-    {
-        $validated = $request->validated();
-
-        return $this->projectService->UpdateProjectStatus($validated, $project);
-
-    }
 
     public function delete(Project $project)
     {

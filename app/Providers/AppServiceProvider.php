@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         $this->PassWordConfigurations();
     }
 
-    public function GatesAndPolicies()
+    public function GatesAndPolicies(): void
     {
         Gate::policy(Contest::class, ContestPolicy::class);
     }
@@ -68,9 +68,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('web', function (Request $request) {
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
-        RateLimiter::for('rare', function (Request $request) {
-            return Limit::perDay(2)->by($request->user()?->id ?: $request->ip());
-        });
+
     }
 
     private function routes(): void
@@ -84,7 +82,9 @@ class AppServiceProvider extends ServiceProvider
             'review.php',
             'project.php',
             'admin.php',
+            'teacher.php',
             'contest.php',
+
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-
 use Illuminate\Console\Command;
 
 class StartCommand extends Command
@@ -14,5 +13,5 @@ class StartCommand extends Command
     /**
      * @throws \Throwable
      */
-    public function handle( ): void {}
+    public function handle(): void {}
 }

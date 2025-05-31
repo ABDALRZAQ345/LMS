@@ -15,6 +15,9 @@ class Contest extends Model
     protected $guarded = [
         'id',
     ];
+    protected $hidden=[
+        'created_at','updated_at'
+    ];
 
     public function teacher(): BelongsTo
     {
@@ -29,7 +32,8 @@ class Contest extends Model
     public function students()
     {
         return $this->belongsToMany(User::class, 'contest_user')
-            ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank')
+            ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank', 'is_official')
+            ->wherePivot('is_official', true)
             ->orderByPivot('correct_answers', 'desc')
             ->orderByPivot('end_time', 'asc')
             ->withTimestamps();

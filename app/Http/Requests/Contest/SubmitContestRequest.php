@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Contest;
 
-use App\Rules\SubmitContestQuizRule;
+use App\Rules\Contest\SubmitContestQuizRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SubmitContestRequest extends FormRequest
 {
@@ -29,5 +31,13 @@ class SubmitContestRequest extends FormRequest
             'answers.*' => ['required', 'integer', 'exists:options,id'],
 
         ];
+    }
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $validator->errors(),
+            ], 422)
+        );
     }
 }

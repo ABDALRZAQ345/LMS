@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules\GithubRules;
+namespace App\Rules\Auth\GithubRules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;

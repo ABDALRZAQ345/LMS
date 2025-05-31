@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Contest;
 
-use App\Rules\Auth\GithubRules\ValidGitHubAccount;
-use App\Rules\Auth\SignupEmail;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
-class SignupRequest extends FormRequest
+class MakeContestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,16 +24,18 @@ class SignupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
-            'password' => ['required', 'confirmed', Password::defaults(), 'max:40'],
-            'email' => ['required', new SignupEmail],
-            'image' => ['nullable', 'image', 'max:512'],
-            'fcm_token' => ['nullable', 'string'],
-            'gitHub_account' => ['nullable', 'string', new ValidGitHubAccount],
-            'bio' => ['nullable', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'time' => ['required', 'integer', 'min:10', 'max:1440'],
+            'description' => ['nullable', 'string'],
+            'level' => ['required', 'in:beginner,intermediate,advanced,expert'],
+            'type' => ['required', 'in:quiz,programming'],
+            'start_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
+            'questions' => ['required', 'array', 'min:1'],
+            'questions.*.question' => ['required', 'string'],
+            'questions.*.options' => ['required', 'array', 'min:2'],
+            'questions.*.options.*' => ['required', 'string'],
         ];
     }
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

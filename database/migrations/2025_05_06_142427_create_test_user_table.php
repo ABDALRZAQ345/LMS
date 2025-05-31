@@ -20,7 +20,6 @@ return new class extends Migration
             $table->dateTime('end_time')->nullable();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Test::class)->constrained()->cascadeOnDelete();
-
             $table->timestamps();
         });
     }
