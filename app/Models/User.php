@@ -130,9 +130,10 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank');
     }
 
-    public function createdContests(): HasMany
+    public function AcceptedCreatedContests(): HasMany
     {
         return $this->hasMany(Contest::class)
+            ->where('request_status','accepted')
             ->withCount('students');
     }
 

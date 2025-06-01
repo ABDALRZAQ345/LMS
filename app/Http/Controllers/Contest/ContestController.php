@@ -7,6 +7,7 @@ use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contest\GetAllContestsRequest;
 use App\Http\Requests\Contest\MakeContestRequest;
+use App\Http\Requests\StandingRequest;
 use App\Http\Resources\ContestResource;
 use App\Http\Resources\StudentStandingResource;
 use App\Models\Contest;
@@ -26,7 +27,7 @@ class ContestController extends Controller
     public function index(GetAllContestsRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type']);
+        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'],$validated['search']);
 
         return response()->json([
             'status' => true,
@@ -88,13 +89,16 @@ class ContestController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function standing(Contest $contest): JsonResponse
+    public function standing(StandingRequest $request,Contest $contest): JsonResponse
     {
         \Gate::authorize('seeStanding', $contest);
-        $students = $contest->students()->paginate(20);
+        $validated=$request->validated();
+
+        $students =$this->contestService->GetContestResults($contest,$validated['justFriends']) ;
+
         return response()->json([
             'status' => true,
-            'message' => "results might not be calculated yet so you will get a gained_points null ",
+            'message' => "results might not be calculated yet  ",
             'students' => StudentStandingResource::collection($students),
         ]);
 

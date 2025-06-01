@@ -44,8 +44,7 @@ class SubmissionController extends Controller
      */
     public function submitContest(Contest $contest, SubmitContestRequest $request): JsonResponse
     {
-        //? check why the validation work before the policy :) .
-        Gate::authorize('submit', $contest);
+
         $validated = $request->validated();
 
         $questions = $contest->questions()->get();

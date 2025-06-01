@@ -20,11 +20,15 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
     }
 
-    public function index(GetProjectsRequest $request)
+    public function index(GetProjectsRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
-        return ProjectResource::collection($this->projectService->GetAllProjects($validated));
+        return response()->json([
+            'status' => true,
+            'projects' => ProjectResource::collection($this->projectService->GetAllProjects($validated))
+        ]);
+
     }
 
     public function show(Project $project)

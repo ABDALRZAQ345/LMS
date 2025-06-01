@@ -12,7 +12,7 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function
     Route::get('/contests/{contest}/questions', [ContestController::class, 'questions'])->middleware('contest:quiz')->name('submissions.index');
     Route::post('/contests/{contest}/questions', [SubmissionController::class, 'submitContest'])->middleware(['contest:quiz', 'role:student'])->name('submissions.store');
     Route::get('/contests/{contest}/standing', [ContestController::class, 'standing']);
-    // ? in result request remember that the result might not be calculated yet
+
 
     // todo test and refactor that requests
     Route::get('/contests/{contest}/problems', [ContestController::class, 'problems'])->middleware('contest:programming')->name('submissions.index');

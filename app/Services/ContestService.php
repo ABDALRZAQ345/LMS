@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ServerErrorException;
 use App\Models\Contest;
+use App\Models\User;
 use App\Repositories\Contest\ContestsRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +19,10 @@ class ContestService
         $this->contestsRepository = $contestsRepository;
     }
 
-    public function getAllAcceptedContests(string $status = 'all', string $type = 'all', int $limit = 20)
+    public function getAllAcceptedContests(string $status = 'all', string $type = 'all',string $search='',int $limit = 20)
     {
-        $query = $this->contestsRepository->getAllAcceptedContests();
+        $query = $this->contestsRepository->getAllAcceptedContests()->
+        where('name','like','%'.$search.'%');
         if ($status != 'all') {
             $query->where('status', $status);
         }
@@ -145,5 +147,15 @@ class ContestService
             'request_status' => $requestStatus,
         ]);
 
+    }
+
+    public function GetContestResults(Contest $contest,$justFriends=false): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        if(!$justFriends){
+          return  $contest->students()->paginate(20);
+        }
+        else{
+            return $this->contestsRepository->friendsResults($contest,Auth::user())->paginate(20);
+        }
     }
 }

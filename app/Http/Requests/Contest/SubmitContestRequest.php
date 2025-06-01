@@ -14,7 +14,8 @@ class SubmitContestRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+
+        return \Gate::allows('submit', $this->route('contest'));
     }
 
     /**

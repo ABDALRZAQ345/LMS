@@ -39,6 +39,11 @@ class Contest extends Model
             ->withTimestamps();
     }
 
+
+
+
+
+
     public function problems(): HasMany
     {
         return $this->hasMany(Problem::class);

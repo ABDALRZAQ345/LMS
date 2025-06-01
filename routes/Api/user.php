@@ -12,6 +12,7 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');
 
+    // students profile details requests
     Route::group(['middleware' => ['student.user']], function () {
         Route::get('/users/{user}/achievements', [StudentController::class, 'achievements'])->name('user.achievements');
         Route::get('/users/{user}/certificates', [StudentController::class, 'certificates'])->name('user.certificates');
@@ -20,7 +21,7 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function
         Route::get('/users/{user}/statistics', [StudentController::class, 'statistics'])->name('user.statistics');
         Route::get('/users/{user}/projects', [StudentController::class, 'projects'])->name('user.projects');
     });
-
+    /// teacher profile details requests
     Route::group(['middleware' => ['teacher.user']], function () {
         Route::get('/users/{user}/created_courses', [TeacherController::class, 'courses']);
         Route::get('/users/{user}/created_learning_paths', [TeacherController::class, 'learningPaths']);

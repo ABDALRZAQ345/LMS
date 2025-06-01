@@ -26,7 +26,14 @@ class GetAllContestsRequest extends FormRequest
         return [
             'type' => ['required', 'string', 'in:quiz,programming,all'],
             'status' => ['required', 'string', 'in:active,ended,coming,all'],
+            'search' => ['nullable', 'string'],
         ];
+    }
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'search' => $this->filled('search') ? $this->input('search') : '',
+        ]);
     }
     public function failedValidation(Validator $validator)
     {
