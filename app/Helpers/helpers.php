@@ -27,3 +27,12 @@ if (! function_exists('getPercentege')) {
     }
 
 }
+function getMeta($data): array
+{
+    return  [
+    'current_page' => $data->currentPage(),
+    'last_page' => $data->lastPage(),
+    'per_page' => $data->perPage(),
+    'total' => $data->total(),
+];
+}

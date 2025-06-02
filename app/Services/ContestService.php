@@ -155,7 +155,7 @@ class ContestService
           return  $contest->students()->paginate(20);
         }
         else{
-            return $this->contestsRepository->friendsResults($contest,Auth::user())->paginate(20);
+            return $this->contestsRepository->friendsResults($contest,Auth::user())->paginate(25);
         }
     }
 }

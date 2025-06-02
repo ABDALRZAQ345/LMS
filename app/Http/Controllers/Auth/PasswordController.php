@@ -55,9 +55,18 @@ class PasswordController extends BaseController
         $validated = $request->validated();
 
         $user = Auth::user();
-        if (Hash::check($validated['old_password'], $user->password)) {
+        return $this->ResetPassword($validated, $user);
+    }
 
-            UserService::updatePassword($user, $validated['new_password']);
+    /**
+     * @param mixed $data* @return JsonResponse
+     * @throws UNAuthorizedException
+     */
+    public function ResetPassword(mixed $data, User $user): JsonResponse
+    {
+        if (Hash::check($data['old_password'], $user->password)) {
+
+            UserService::updatePassword($user, $data['new_password']);
 
             return response()->json([
                 'status' => true,

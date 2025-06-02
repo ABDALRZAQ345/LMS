@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Responses\StudentStaticsResponse;
 use App\Services\Project\ProjectService;
 use App\Services\User\StreakService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class StudentController extends Controller
@@ -31,10 +32,11 @@ class StudentController extends Controller
      */
     public function achievements(User $user): JsonResponse
     {
+        $user->load(['achievements' => fn($q) => $q->withPivot('created_at')]);
 
         return response()->json([
             'status' => true,
-            'achievements' => AchievementResource::collection($user->achievements()->get()),
+            'achievements' => AchievementResource::collection($user->achievements),
         ]);
 
     }
@@ -93,9 +95,13 @@ class StudentController extends Controller
 
     }
 
-    public function projects(User $user)
+    public function projects(User $user): JsonResponse
     {
+        $projects=$this->projectService->GetUserProjects($user, \Auth::user());
+        return  response()->json([
+           'status'=> true,
+           'projects'=> ProjectResource::collection($projects)
+        ]);
 
-        return ProjectResource::collection($this->projectService->GetUserProjects($user, \Auth::user()));
     }
 }

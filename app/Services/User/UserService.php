@@ -73,8 +73,9 @@ class UserService
         } else {
             $users = User::where('role', $role)->where('name', 'like', '%'.$search.'%')->orderBy($orderBy, $direction)->paginate(20);
         }
+        return $users;
 
-        return UserResource::collection($users);
+
 
     }
 
@@ -89,6 +90,11 @@ class UserService
             'status' => true,
             'message' => 'Teacher created successfully',
         ]);
+
+    }
+
+    public function UpdateFcmToken($token): void
+    {
 
     }
 }

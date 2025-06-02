@@ -9,6 +9,7 @@ use App\Http\Resources\Projects\ProjectResource;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Services\Project\ProjectService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
@@ -22,28 +23,34 @@ class ProjectController extends Controller
 
     public function index(GetProjectsRequest $request): JsonResponse
     {
-        $validated = $request->validated();
 
+        $validated = $request->validated();
+        $projects = $this->projectService->GetAllProjects($validated);
         return response()->json([
             'status' => true,
-            'projects' => ProjectResource::collection($this->projectService->GetAllProjects($validated))
+            'data' => ProjectResource::collection($projects),
+            'meta' => getMeta($projects)
         ]);
 
     }
 
-    public function show(Project $project)
+    /**
+     * @throws AuthorizationException
+     */
+    public function show(Project $project): ProjectResource
     {
+        \Gate::authorize('viewProject', $project);
         return $this->projectService->getProject($project);
     }
 
-    public function store(AddProjectRequest $request): \Illuminate\Http\JsonResponse
+    public function store(AddProjectRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
         return $this->projectService->AddProject($validated);
     }
 
-    public function getTags(): \Illuminate\Http\JsonResponse
+    public function getTags(): JsonResponse
     {
         return response()->json([
             'status' => true,
@@ -52,7 +59,7 @@ class ProjectController extends Controller
     }
 
 
-    public function delete(Project $project)
+    public function delete(Project $project): JsonResponse
     {
         $project->delete();
 

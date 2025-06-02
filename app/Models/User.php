@@ -62,7 +62,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function achievements(): belongsToMany
     {
-        return $this->belongsToMany(Achievement::class, 'achievement_user');
+        return $this->belongsToMany(Achievement::class, 'achievement_user')
+            ->withTimestamps();
 
     }
 
@@ -226,5 +227,10 @@ class User extends Authenticatable implements JWTSubject
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
+    }
+
+    public function AcceptedProjects(): HasMany
+    {
+        return $this->projects()->where('status','accepted');
     }
 }

@@ -3,9 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Contest;
+use App\Models\Project;
 use App\Models\Review;
+use App\Models\User;
 use App\Observers\ReviewObserver;
 use App\Policies\ContestPolicy;
+use App\Policies\ProjectPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -36,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
     public function GatesAndPolicies(): void
     {
         Gate::policy(Contest::class, ContestPolicy::class);
+        Gate::policy(Project::class, ProjectPolicy::class);
+        Gate::policy(User::class,UserPolicy::class);
     }
 
     private function observers(): void

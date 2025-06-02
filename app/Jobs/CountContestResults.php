@@ -2,8 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Models\Achievement;
 use App\Models\Contest;
 use App\Models\User;
+use App\Services\AchievementsService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +16,11 @@ class CountContestResults implements ShouldQueue
 
     protected Contest $contest;
 
+
     public function __construct($contest)
     {
         $this->contest = $contest;
+
     }
 
     /**
@@ -39,8 +43,10 @@ class CountContestResults implements ShouldQueue
                 // update his points and rank in contest
                 $this->UpdateUserPointsAndRank($student, $StudentOrder, $gainedPoints);
                 //move to the next user
+                $this->handleAchievements($StudentOrder, $student, $studentsCount);
                 $StudentOrder++;
             }
+
 
             Contest::where('id', $this->contest->id)->update(['status' => 'ended']);
 
@@ -53,9 +59,9 @@ class CountContestResults implements ShouldQueue
 
 
     /**
-        if the user is from the first 50% he will get extra points equal to 100 minus his percentage
-        if he from the last 50% he will lose points equal to -percentage
-      */
+     * if the user is from the first 50% he will get extra points equal to 100 minus his percentage
+     * if he from the last 50% he will lose points equal to -percentage
+     */
     public function getPointsForUser(int $UserOrder, int $studentsCount): int|float
     {
         $percentage = $UserOrder * 100 / $studentsCount;
@@ -80,4 +86,40 @@ class CountContestResults implements ShouldQueue
         $student = User::find($student->id);
         $student->increment('points', $gainedPoints);
     }
+
+    /**
+     * @param int $StudentOrder
+     * @param mixed $student
+     * @param int $studentsCount
+     * @return void
+     */
+    public function handleAchievements(int $StudentOrder, mixed $student, int $studentsCount): void
+    {
+        $user = User::find($student->id);
+        if ($StudentOrder <= 3) {
+            $this->WonContest($user);
+        }
+        if ($studentsCount > 3 && $StudentOrder == $studentsCount) {
+            $this->LoseContest($user);
+        }
+    }
+    public function WonContest(User $user): void
+    {
+
+        $achievement=Achievement::where('name','Winner Winner')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+
+
+
+    }
+    public function LoseContest(User $user): void
+    {
+
+        $achievement=Achievement::where('name','Looser Looser')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+
+
+
+    }
+
 }

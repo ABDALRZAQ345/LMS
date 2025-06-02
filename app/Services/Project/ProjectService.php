@@ -5,6 +5,7 @@ namespace App\Services\Project;
 use App\Http\Resources\Projects\ProjectResource;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -18,7 +19,7 @@ class ProjectService
         } else {
             $projects = Project::whereHas('tag', function ($query) use ($data) {
                 $query->where('name', 'like', '%'.$data['tag'].'%');
-            });
+            })->where('title', 'like', '%'.$data['search'].'%');
         }
 
         return $projects->with(['user', 'tag'])->where('status', 'accepted')->paginate(20);
@@ -27,28 +28,26 @@ class ProjectService
 
     public function getProject(Project $project)
     {
-        if ($project->user_id == \Auth::id() || $project->status == 'accepted' || \Auth::user()->role == 'admin') {
+
             $project->load(['user', 'tag']);
 
             return new ProjectResource($project);
-        } else {
-            throw new NotFoundHttpException;
-        }
+
     }
 
-    public function GetUserProjects(User $user, User $currentUser): \Illuminate\Pagination\LengthAwarePaginator
+    public function GetUserProjects(User $user, User $currentUser): \Illuminate\Database\Eloquent\Collection
     {
         if ($currentUser->id == $user->id || $currentUser->role == 'admin') {
             return $user->projects()
-                ->with(['user', 'tag'])->paginate(20);
+                ->with(['user', 'tag'])->get();
         } else {
             return $user->projects()->where('status', 'accepted')
-                ->with(['user', 'tag'])->paginate(20);
+                ->with(['user', 'tag'])->get();
         }
 
     }
 
-    public function AddProject($data): \Illuminate\Http\JsonResponse
+    public function AddProject($data): JsonResponse
     {
         $user = Auth::user();
         if ($this->checkCanAddProject($user)) {
@@ -67,7 +66,8 @@ class ProjectService
 
     public function getProjectsRequest()
     {
-        return ProjectResource::collection(Project::where('status', 'pending')->With(['user', 'tag'])->paginate(20));
+        return Project::where('status', 'pending')->With(['user', 'tag'])->paginate(20);
+
     }
 
     /**

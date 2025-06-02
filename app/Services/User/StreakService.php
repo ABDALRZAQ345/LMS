@@ -61,4 +61,24 @@ class StreakService
             ]);
         }
     }
+    public function LoginStreak(User $user): void
+    {
+
+        $today = now()->toDateString();
+
+
+        $todayStreak = $user->streaks()->where('date', $today)->first();
+
+
+        if ($todayStreak->status == 0) {
+            $yesterday = now()->subDay()->toDateString();
+            $yesterdayStreak = $user->streaks()->where('date', $yesterday)->first();
+            $newStatus =  1;
+            $newStreakCount = $yesterdayStreak ? $yesterdayStreak->current_streak + 1 : 1;
+            $todayStreak->update([
+                'status' => $newStatus,
+                'current_streak' => $newStreakCount,
+            ]);
+        }
+    }
 }

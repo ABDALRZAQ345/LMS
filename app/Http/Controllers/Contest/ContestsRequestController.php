@@ -21,7 +21,10 @@ class ContestsRequestController extends Controller
     {
         $contests = $this->contestService->getAllPendingContests();
         return response()->json([
+            'status' => true,
+            'message' => "requests retried successfully",
             'contests' => ContestResource::collection($contests),
+            'meta' => getMeta($contests)
         ]);
     }
 

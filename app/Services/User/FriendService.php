@@ -3,10 +3,16 @@
 namespace App\Services\User;
 
 use App\Models\User;
+use App\Services\AchievementsService;
 use Illuminate\Http\JsonResponse;
 
 class FriendService
 {
+    protected AchievementsService  $achievementsService;
+    public function __construct(AchievementsService $achievementsService)
+    {
+        $this->achievementsService = $achievementsService;
+    }
     public function addFriend(User $user, User $friend): JsonResponse
     {
         if ($user->id == $friend->id) {

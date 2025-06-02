@@ -32,6 +32,7 @@ class ContestController extends Controller
         return response()->json([
             'status' => true,
             'contests' => ContestResource::collection($contests),
+            'meta' => getMeta($contests)
         ]);
     }
 
@@ -100,6 +101,7 @@ class ContestController extends Controller
             'status' => true,
             'message' => "results might not be calculated yet  ",
             'students' => StudentStandingResource::collection($students),
+            'meta' => getMeta($students)
         ]);
 
     }
