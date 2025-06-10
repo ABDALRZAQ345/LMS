@@ -12,30 +12,60 @@ class CoursesRepository
 
     public function getAllCourses($validated)
     {
-        if($validated['status']=='all')
-            return Course::orderBy($validated['orderBy'],$validated['direction'])
+        $user = auth()->user();
+        if(!$validated['search']){
+            if ($validated['status'] === 'all') {
+            return Course::orderBy($validated['orderBy'], $validated['direction'])
                 ->with('teacher')
-                ->withCount('videos')
-                ->withCount('tests')
-                ->where('verified',true)->paginate($validated['items']);
-        else{
-            $user=\Auth::user();
-            return $user->allCourses()->orderBy($validated['orderBy'],$validated['direction'])
-                ->where('status',$validated['status'])
-                ->with('teacher')
-                ->withCount('videos')
-                ->withCount('tests')
+                ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
+                ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
+                ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
+                ->where('verified',true)
                 ->paginate($validated['items']);
         }
+            else {
+                return $user->verifiedCourses()
+                    ->wherePivot('status', $validated['status'])
+                    ->orderBy($validated['orderBy'], $validated['direction'])
+                    ->with('teacher')
+                    ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
+                    ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
+                    ->paginate($validated['items']);
+            }
+        } else{
+            if ($validated['status'] === 'all') {
+                return Course::where('title','like','%'.$validated['search'].'%')
+                    ->orderBy($validated['orderBy'], $validated['direction'])
+                    ->with('teacher')
+                    ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
+                    ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
+                    ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
+                    ->where('verified',true)
+                    ->paginate($validated['items']);
+            }
+            else {
+                return $user->verifiedCourses()
+                    ->where('title','like','%'.$validated['search'].'%')
+                    ->wherePivot('status', $validated['status'])
+                    ->orderBy($validated['orderBy'], $validated['direction'])
+                    ->with('teacher')
+                    ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
+                    ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
+                    ->paginate($validated['items']);
+            }
 
+        }
     }
 
+
     public function showCourse($id){
-        return Course::with('learningPaths')
+        $course = auth()->user()->verifiedCourses()
             ->with('teacher')
-            ->withCount('videos')
-            ->withCount('tests')
-            ->where('id',$id)->first();
+            ->with('learningPaths')
+            ->findOrFail($id);
+        $content = $course->content();
+
+        return new CourseWithContentResource($course, $content);
     }
 
     public function getAllCoursesInLearningPath($id) {
@@ -43,12 +73,17 @@ class CoursesRepository
         return $learningPath->courses()->where('verified',true)
             ->withCount('videos')
             ->withCount('tests')
-            ->with('teacher')->get();
+            ->with(['teacher', 'students' => fn($q) => $q->where('user_id', auth()->id())])
+            ->with('teacher')
+            ->get();
     }
 
 
     public function showCourseInLearningPath($courseId){
-        $course = Course::with('teacher')->findOrFail($courseId);
+        $course =  auth()->user()->verifiedCourses()
+            ->with('teacher')
+            ->with('learningPaths')
+            ->findOrFail($courseId);
         $content = $course->content();
 
         return new CourseWithContentResource($course, $content);
@@ -59,6 +94,8 @@ class CoursesRepository
         return $user->verifiedCourses()
             ->withCount('videos')
             ->withCount('tests')
-            ->with('teacher')->get();
+            ->with('teacher')
+            ->get();
     }
+
 }

@@ -18,7 +18,7 @@ class CourseController extends Controller
         $this->courseService = $courseService;
     }
 
-    public function getAllCourses(getAllCoursesRequest $request){
+    public function index(getAllCoursesRequest $request){
 
         $validated = $request->validated();
         return $this->courseService->getAllCourses($validated);
@@ -40,4 +40,6 @@ class CourseController extends Controller
             return ResponseHelper::jsonResponse([], 'Course not verified',404,false);
         return $this->courseService->showCourseInLearningPath($learningPath->title,$course->id);
     }
+
+
 }

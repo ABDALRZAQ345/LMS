@@ -60,4 +60,5 @@ class LearningPathService
             return ResponseHelper::jsonResponse([],'Learning path has been removed');
 
     }
+
 }

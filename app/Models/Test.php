@@ -31,4 +31,9 @@ class Test extends Model
         return $this->belongsToMany(User::class, 'test_user')
             ->withPivot('start_time', 'end_time', 'correct_answers');
     }
+
+    public function studentProgress()
+    {
+        return $this->hasMany(UserTestProgress::class);
+    }
 }

@@ -152,10 +152,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Course::class);
     }
 
-    public function verifiedCourses(): HasMany
+    public function verifiedCourses()
     {
-        return $this->hasMany(Course::class)->where('verified', true);
+        return $this->allCourses()
+            ->where('verified', true);
     }
+
+
 
     public function unVerifiedCourses(): HasMany
     {
@@ -218,4 +221,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(LearningPath::class, 'learning_path_user')
             ->withPivot('paid', 'status');
     }
+
+    public function videos()
+    {
+        return $this->belongsToMany(Video::class,'user_video_progress')
+            ->withPivot('progress', 'is_completed','last_watched_at');
+    }
+
 }

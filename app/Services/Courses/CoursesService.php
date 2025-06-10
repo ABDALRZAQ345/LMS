@@ -17,7 +17,6 @@ class CoursesService
     public function getAllCourses($validated){
 
         $courses = $this->coursesRepository->getAllCourses($validated);
-
         $data = [
             'courses' => CourseResource::collection($courses),
             'total_pages' => $courses->lastPage(),
@@ -31,7 +30,7 @@ class CoursesService
     public function showCourse($id){
         $course = $this->coursesRepository->showCourse($id);
 
-        return ResponseHelper::jsonResponse(CourseResource::make($course) ,'Get Course Successfully');
+        return ResponseHelper::jsonResponse($course ,'Get Course Successfully');
     }
 
     public function getAllCoursesInLearningPath($learningPathTitle,$learningPathId){
@@ -47,4 +46,6 @@ class CoursesService
         return ResponseHelper::jsonResponse($course,'Get Course In Learning Path '
             .$learningPathName.' Successfully');
     }
+
+
 }

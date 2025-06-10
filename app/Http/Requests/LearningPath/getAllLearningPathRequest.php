@@ -26,6 +26,7 @@ class getAllLearningPathRequest extends FormRequest
             'direction' => ['nullable', 'string', 'in:asc,desc'],
             'orderBy' => ['nullable', 'string', 'in:title,date'],
             'status' => ['nullable', 'string', 'in:all,finished,watch_now,watch_later'],
+            'search' => ['nullable', 'string'],
         ];
     }
 
@@ -40,6 +41,7 @@ class getAllLearningPathRequest extends FormRequest
             'items' => $this->input('items', 20),
             'direction' => $this->input('direction', 'asc'),
             'status' => $this->input('status', 'all'),
+            'search' => $this->input('search', ''),
             'orderBy' => $orderBy,
         ]);
     }

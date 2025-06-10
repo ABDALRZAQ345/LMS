@@ -23,6 +23,9 @@ class CourseWithContentResource extends JsonResource
                 : config('app.url').'/storage/'.$this->teacher->image)
             : null;
 
+
+
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -30,9 +33,23 @@ class CourseWithContentResource extends JsonResource
             'rate' => $this->rate,
             'image' => $this->image,
             'price' => $this->price == 0 ? 'free' : $this->price,
+            'status' => $this->pivot->status ?? null,
+            'student_paid' => $this->pivot->paid ?? null,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
+            'learning_paths' => $this->learningPaths->map(function ($path) {
+                return [
+                    'id' => $path->id,
+                    'title' => $path->title,
+                    'image' => $path->image
+                        ? (str_starts_with($path->image, 'https://via.placeholder.com')
+                            ? $path->image
+                            : config('app.url') . '/storage/' . $path->image)
+                        : null,
+                ];
+            }),
+
 
             'content' => $this->content->map(function ($item) {
                 $contentItem = [

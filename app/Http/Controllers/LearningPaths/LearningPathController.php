@@ -17,7 +17,7 @@ class LearningPathController extends Controller
         return  $this->learningPathServices = $learningPathServices;
     }
 
-    public function getAllLearningPaths(getAllLearningPathRequest $request){
+    public function index(getAllLearningPathRequest $request){
         $validated = $request->validated();
         return $this->learningPathServices->getAllLearningPaths($validated);
     }
@@ -36,4 +36,5 @@ class LearningPathController extends Controller
     {
         return $this->learningPathServices->removeStatusLearningPath($learningPath->id);
     }
+
 }
