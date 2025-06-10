@@ -13,11 +13,11 @@ class AchievementsService {
         $user=User::find($project->user_id);
         if($user->AcceptedProjects()->count() == 3){
             $achievement=Achievement::where('name','Projects Master')->firstOrFail();
-            $user->achievements()->attach($achievement->id);
+            $user->achievements()->syncWithoutDetaching($achievement->id);
         }
         else{
             $achievement=Achievement::where('name','Project Creator')->firstOrFail();
-            $user->achievements()->attach($achievement->id);
+            $user->achievements()->syncWithoutDetaching($achievement->id);
         }
 
     }
@@ -28,11 +28,27 @@ class AchievementsService {
             $user->achievements()->syncWithoutDetaching($achievement->id);
         }
         else if($user->Friends()->count() == 100){
-            $achievement=Achievement::where('name','Voyeur')->firstOrFail();
+            $achievement=Achievement::where('name','Famous')->firstOrFail();
             $user->achievements()->syncWithoutDetaching($achievement->id);
         }
 
     }
+
+    public function ReachIntermediate(User $user): void{
+        $achievement=Achievement::where('name','Not beginner yet')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+    }
+
+    public function FirstContest(User $user): void{
+        $achievement=Achievement::where('name','Contest Rookie')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+    }
+
+    public function ReturnAfterYear(User $user): void{
+        $achievement=Achievement::where('name','Back Again')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+    }
+
 
 
 }

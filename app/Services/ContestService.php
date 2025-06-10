@@ -151,7 +151,7 @@ class ContestService
 
     public function GetContestResults(Contest $contest,$justFriends=false): \Illuminate\Pagination\LengthAwarePaginator
     {
-        if(!$justFriends){
+        if(!$justFriends || !Auth::user()){
           return  $contest->students()->paginate(20);
         }
         else{

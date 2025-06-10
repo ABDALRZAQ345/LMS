@@ -4,10 +4,15 @@ namespace App\Services\User;
 
 use App\Models\Streak;
 use App\Models\User;
+use App\Services\AchievementsService;
 use Carbon\Carbon;
 
 class StreakService
 {
+    protected AchievementsService $achievementsService;
+    public function __construct(AchievementsService $achievementsService){
+        $this->achievementsService = $achievementsService;
+    }
     public static function CreateStreakLogs(User $user): void
     {
         $startOfYear = now()->startOfYear();
@@ -73,10 +78,9 @@ class StreakService
         if ($todayStreak->status == 0) {
             $yesterday = now()->subDay()->toDateString();
             $yesterdayStreak = $user->streaks()->where('date', $yesterday)->first();
-            $newStatus =  1;
             $newStreakCount = $yesterdayStreak ? $yesterdayStreak->current_streak + 1 : 1;
             $todayStreak->update([
-                'status' => $newStatus,
+                'status' => 1,
                 'current_streak' => $newStreakCount,
             ]);
         }

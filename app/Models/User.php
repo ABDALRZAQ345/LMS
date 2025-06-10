@@ -137,7 +137,11 @@ class User extends Authenticatable implements JWTSubject
             ->where('request_status','accepted')
             ->withCount('students');
     }
-
+    public function AllCreatedContests(): HasMany
+    {
+        return $this->hasMany(Contest::class)
+            ->withCount('students');
+    }
     public function friends(): BelongsToMany
     {
         return $this->belongsToMany(

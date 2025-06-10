@@ -33,10 +33,10 @@ class ContestPolicy
      * Determine whether the user can view the model.
      * @throws FORBIDDEN
      */
-    public function view(User $user, Contest $contest): bool
+    public function view(?User $user, Contest $contest): bool
     {
         if ($contest->request_status != 'accepted') {
-            return false;
+            throw new FORBIDDEN('no such contest');
         }
 
         if ($contest->status == 'coming') {
@@ -111,7 +111,7 @@ class ContestPolicy
     /**
      * @throws FORBIDDEN
      */
-    public function seeStanding(User $user, Contest $contest): bool
+    public function seeStanding(?User $user, Contest $contest): bool
     {
         if ($contest->request_status != 'accepted') {
             return false;

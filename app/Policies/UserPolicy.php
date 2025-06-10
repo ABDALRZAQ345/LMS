@@ -11,9 +11,10 @@ class UserPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function viewUser(User $user, User $accessedUser): bool
+    public function viewUser(?User $user, User $accessedUser): bool
     {
-        if ($accessedUser->role == 'admin' && $user->role != 'admin') {
+
+        if ($accessedUser->role == 'admin' &&$user &&  $user->role != 'admin') {
             return false;
         }
         return true;

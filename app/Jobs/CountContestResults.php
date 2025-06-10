@@ -15,7 +15,7 @@ class CountContestResults implements ShouldQueue
     use Queueable;
 
     protected Contest $contest;
-
+    protected AchievementsService $achievementsService;
 
     public function __construct($contest)
     {
@@ -43,7 +43,8 @@ class CountContestResults implements ShouldQueue
                 // update his points and rank in contest
                 $this->UpdateUserPointsAndRank($student, $StudentOrder, $gainedPoints);
                 //move to the next user
-                $this->handleAchievements($StudentOrder, $student, $studentsCount);
+
+                $this->handleAchievements($StudentOrder, $student, $studentsCount,$gainedPoints);
                 $StudentOrder++;
             }
 
@@ -84,7 +85,12 @@ class CountContestResults implements ShouldQueue
                 'gained_points' => $gainedPoints,
             ]);
         $student = User::find($student->id);
+
         $student->increment('points', $gainedPoints);
+        $student->update([
+            'level' => $student->points <= 200 ? 'beginner' : ($student->points <= 500 ? 'intermediate' : ($student->points <= 900 ? 'advanced' : 'expert')),
+            'points' => max($student->points,0),
+        ]);
     }
 
     /**
@@ -93,7 +99,7 @@ class CountContestResults implements ShouldQueue
      * @param int $studentsCount
      * @return void
      */
-    public function handleAchievements(int $StudentOrder, mixed $student, int $studentsCount): void
+    public function handleAchievements(int $StudentOrder, mixed $student, int $studentsCount,int $gainedPoints): void
     {
         $user = User::find($student->id);
         if ($StudentOrder <= 3) {
@@ -101,6 +107,12 @@ class CountContestResults implements ShouldQueue
         }
         if ($studentsCount > 3 && $StudentOrder == $studentsCount) {
             $this->LoseContest($user);
+        }
+        if ($student->points <= 200 && $student->points + $gainedPoints > 200) {
+            $this->achievementsService->ReachIntermediate($student);
+        }
+        if ($student->points == 0) {
+            $this->achievementsService->FirstContest($student);
         }
     }
     public function WonContest(User $user): void
@@ -121,5 +133,7 @@ class CountContestResults implements ShouldQueue
 
 
     }
+
+
 
 }

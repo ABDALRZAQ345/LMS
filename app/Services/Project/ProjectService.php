@@ -35,9 +35,9 @@ class ProjectService
 
     }
 
-    public function GetUserProjects(User $user, User $currentUser): \Illuminate\Database\Eloquent\Collection
+    public function GetUserProjects(User $user, ?User $currentUser): \Illuminate\Database\Eloquent\Collection
     {
-        if ($currentUser->id == $user->id || $currentUser->role == 'admin') {
+        if ($currentUser && ( $currentUser->id == $user->id || $currentUser->role == 'admin')) {
             return $user->projects()
                 ->with(['user', 'tag'])->get();
         } else {

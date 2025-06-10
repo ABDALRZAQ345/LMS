@@ -22,9 +22,9 @@ class ProjectPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function viewProject(User $user, Project $project): bool
+    public function viewProject(?User $user, Project $project): bool
     {
-        if ($project->user_id == $user->id || $project->status == 'accepted' || $user->role == 'admin') {
+        if ($project->status == 'accepted' || ($user!=null && ($project->user_id == $user->id || $user->role == 'admin'))) {
             return  true;
         }
         return false;

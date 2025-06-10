@@ -40,12 +40,21 @@ class TeacherController extends Controller
     public function contests(User $user): JsonResponse
     {
         $createdContests = $user->AcceptedCreatedContests()
-
             ->paginate(20);
 
         return response()->json([
             'status' => true,
             'contests' => ContestResource::collection($createdContests),
+        ]);
+    }
+
+    public function myContests(): JsonResponse
+    {
+        $user = \Auth::user();
+        $contests=$user->AllCreatedContests()->paginate(20);
+        return response()->json([
+            'status' => true,
+            'contests' => ContestResource::collection($contests),
         ]);
     }
 }

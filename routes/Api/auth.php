@@ -21,6 +21,7 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
 
         Route::post('/auth/google', [GoogleAuthController::class, 'auth'])->middleware('guest')->name('auth.google');
+        //todo fix and refactor github auth
         Route::get('/auth/github/redirect', [GithubController::class, 'redirectToGithub']);
         Route::get('/auth/github/callback', [GithubController::class, 'callback']);
 
