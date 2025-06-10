@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class StreakService
 {
     protected AchievementsService $achievementsService;
-    public function __construct(AchievementsService $achievementsService){
+    public function __construct(AchievementsService $achievementsService=new AchievementsService()){
         $this->achievementsService = $achievementsService;
     }
     public static function CreateStreakLogs(User $user): void

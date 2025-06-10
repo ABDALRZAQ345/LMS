@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-
+use OpenApi\Annotations as OA;
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
