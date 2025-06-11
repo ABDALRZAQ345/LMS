@@ -21,6 +21,16 @@ class UserSeeder extends Seeder
             'email_verified' => true,
             'role' => 'admin',
         ]);
+        User::firstOrCreate([
+            'email' => 'student@student.com',
+        ], [
+            'name' => 'student',
+            'email' => 'student@student.com',
+            'password' => \Hash::make('1234/*-+Asa'),
+            'email_verified' => true,
+            'role' => 'student',
+        ]);
+
 
         User::factory()->count(20)->create([
             'role' => 'student',
