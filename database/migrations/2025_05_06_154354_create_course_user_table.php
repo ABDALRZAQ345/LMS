@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('course_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('paid')->comment('how much student paid that course');
+            $table->unsignedInteger('paid')
+                ->default(0)
+                ->comment('how much student paid that course');
             $table->enum('status', ['finished', 'enrolled', 'watch_later']);
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();

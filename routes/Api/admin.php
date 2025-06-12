@@ -3,6 +3,7 @@
 use App\Http\Controllers\Contest\ContestsRequestController;
 use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Project\ProjectsRequestController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\User\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,7 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
 
         Route::post('/teachers', [AdminController::class, 'addTeacher']);
         Route::delete('/projects/{project}', [ProjectController::class, 'delete']);
-
+        Route::get('/statistics', [StatisticsController::class, 'overview']);
+        Route::get('/statistics/students', [StatisticsController::class, 'overviewUsers']);
+        Route::get('/statistics/projects', [StatisticsController::class, 'overviewProjects']);
     });
