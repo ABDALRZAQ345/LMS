@@ -74,6 +74,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('web', function (Request $request) {
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
+        RateLimiter::for('refresh_token', function (Request $request) {
+            return Limit::perDay(3)->by($request->user()?->id ?: $request->ip());
+        });
 
     }
 

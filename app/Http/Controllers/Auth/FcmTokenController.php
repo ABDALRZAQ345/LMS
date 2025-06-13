@@ -19,7 +19,7 @@ class FcmTokenController extends BaseController
     /**
      * @throws ServerErrorException
      */
-    public function send(FcmTokenRequest $request): JsonResponse
+    public function update(FcmTokenRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -27,7 +27,7 @@ class FcmTokenController extends BaseController
 
         return response()->json([
             'status' => true,
-            'message' => 'token send successfully',
+            'message' => 'token Updated successfully',
         ]);
 
     }

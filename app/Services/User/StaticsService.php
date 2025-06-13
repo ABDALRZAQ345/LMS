@@ -46,6 +46,37 @@ class StaticsService
 
     }
 
+    public function StudentsStatistics()
+    {
+
+
+    }
+
+    public function StudentsLastWeek()
+    {
+        $startOfWeek = Carbon::now()->startOfWeek()->toDateTimeString();
+        $endOfWeek = Carbon::now()->endOfWeek()->toDateTimeString();
+
+
+        $query = User::where('role', 'student')
+            ->where('email_verified', true)
+            ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+            ->selectRaw('DAYOFWEEK(created_at) as day, COUNT(*) as count')
+            ->groupByRaw('DAYOFWEEK(created_at)')
+            ->pluck('count', 'day');
+
+        $studentsLastWeek = [];
+
+        for ($i = 0; $i <= 6; $i++) {
+            $dayName = Carbon::now()->startOfWeek()->addDays($i )->format('l');
+            $studentsLastWeek[$dayName] = $query->get($i+2, 0);
+        }
+
+        return response()->json([
+           'studentsLastWeek' => $studentsLastWeek,
+        ]);
+    }
+
     public function StudentsPerMonth()
     {
         return \Cache::remember('admin.studentsPerMonth',60*60*24,function (){

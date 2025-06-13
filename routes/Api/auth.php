@@ -21,7 +21,7 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
 
         Route::post('/auth/google', [GoogleAuthController::class, 'auth'])->middleware('guest')->name('auth.google');
-        //todo fix and refactor github auth
+
         Route::get('/auth/github/redirect', [GithubController::class, 'redirectToGithub']);
         Route::get('/auth/github/callback', [GithubController::class, 'callback']);
 
@@ -29,8 +29,8 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('password/reset', [PasswordController::class, 'reset'])->name('password.reset');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-        Route::post('/send_fcm', [FcmTokenController::class, 'send'])->name('fcm.send');
-        Route::post('/token/refresh', [AuthController::class, 'refresh'])->middleware('throttle:rare')->name('refresh');
+        Route::post('/send_fcm', [FcmTokenController::class, 'update'])->name('fcm.send');
+        Route::post('/token/refresh', [AuthController::class, 'refresh'])->middleware('throttle:refresh_token')->name('refresh');
     });
 
 });

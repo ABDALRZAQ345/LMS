@@ -18,7 +18,7 @@ class StatisticsController extends Controller
     {
         return $this->staticsService->overview();
     }
-    public function overviewUsers()
+    public function StudentsPerMonth()
     {
         return
             $this->staticsService->StudentsPerMonth();
@@ -27,5 +27,10 @@ class StatisticsController extends Controller
     public function overviewProjects()
     {
         return $this->staticsService->ProjectsByType();
+    }
+
+    public function StudentsLastWeek()
+    {
+        return $this->staticsService->StudentsLastWeek();
     }
 }

@@ -24,7 +24,12 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
 
         Route::post('/teachers', [AdminController::class, 'addTeacher']);
         Route::delete('/projects/{project}', [ProjectController::class, 'delete']);
-        Route::get('/statistics', [StatisticsController::class, 'overview']);
-        Route::get('/statistics/students', [StatisticsController::class, 'overviewUsers']);
-        Route::get('/statistics/projects', [StatisticsController::class, 'overviewProjects']);
+
+        Route::group(['prefix' => '/statistics'], function () {
+            Route::get('', [StatisticsController::class, 'overview']);
+            Route::get('/students/perMonth', [StatisticsController::class, 'StudentsPerMonth']);
+            Route::get('/students/lastWeek', [StatisticsController::class, 'StudentsLastWeek']);
+            Route::get('/projects', [StatisticsController::class, 'overviewProjects']);
+        });
+
     });

@@ -23,6 +23,7 @@ class SendVerificationCodeRequest extends FormRequest
             $user = User::where('email', $email)->first();
 
             if ($isRegistration) {
+
                 if ($user && $user->email_verified) {
                     $validator->errors()->add('email', 'This user is already verified.');
                 }

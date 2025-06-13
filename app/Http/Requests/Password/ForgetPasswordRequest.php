@@ -33,7 +33,13 @@ class ForgetPasswordRequest extends FormRequest
             'code' => ['required', 'numeric', 'digits:6'],
         ];
     }
+    public function messages()
+    {
+        return [
 
+            'email.exists' => 'there is no user with this email',
+        ];
+    }
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\BadRequestException;
 use App\Exceptions\ServerErrorException;
 use App\Exceptions\VerificationCodeException;
 use App\Http\Controllers\BaseController;
@@ -11,6 +12,7 @@ use App\Responses\LogedInResponse;
 use App\Responses\LogedOutResponse;
 use App\Services\Auth\AuthService;
 use Illuminate\Http\JsonResponse;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthController extends BaseController
 {
@@ -64,12 +66,22 @@ class AuthController extends BaseController
 
     }
 
+    /**
+     * @throws ServerErrorException
+     */
     public function refresh(): JsonResponse
     {
-        $token = auth()->refresh();
-        $user = auth()->user();
 
-        return LogedInResponse::response($user, $token);
+        try {
+            $user = auth()->user();
+            $token = auth()->refresh();
+
+            return LogedInResponse::response($user, $token);
+        }
+        catch (TokenExpiredException $exception) {
+            throw new BadRequestException($exception->getMessage());
+        }
+
 
     }
 }

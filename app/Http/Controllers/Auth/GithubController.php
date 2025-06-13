@@ -12,7 +12,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GithubController extends Controller
 {
-    //? refactor
+
     public function callback()
     {
 
