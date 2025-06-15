@@ -84,7 +84,7 @@ class ContestController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Contest created successfully',
-        ]);
+        ],201);
     }
 
     /**

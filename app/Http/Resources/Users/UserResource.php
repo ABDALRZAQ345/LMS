@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Users;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -16,29 +17,28 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = parent::toArray($request);
-        $time = Carbon::parse($data['last_online'])->addMinutes(10);
+        $data = [
+            'id'=> $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'image' => $this->image,
+            'gitHub_account' => $this->github_account,
+            'bio' => $this->bio,
+            'last_online' => $this->last_online,
+            'role' => $this->role,
+            'level' => $this->level,
+            'joined'=> $this->created_at->format('Y-m-d')
+        ];
 
-        if (now() <= $time) {
-            $data['last_online'] = 'online';
-        } else {
-            $data['last_online'] = $time->diffForHumans();
-        }
-        $data['joined'] = Carbon::parse($data['created_at'])->format('Y-m-d');
-        unset($data['created_at']);
-        if ($data['role'] == 'student') {
 
-            $data['completed_courses'] = db::table('course_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
+        if ($this->role == 'student') {
+            $data['points'] = $this->points;
+            $data['role']=$this->role;
+            $data['completed_courses'] = $this->finishedCourses()->count();
+            $data['completed_learning_paths'] = $this->finishedLearningPaths()->count();
+            $data['is_friend'] = db::table('friends')->where('user_id', \Auth::id())->where('friend_id', $data['id'])->exists() ? 1 : 0;
+        }
 
-            $data['completed_learning_paths'] = db::table('learning_path_user')->where('user_id', $data['id'])->where('status', 'finished')->count();
-            if ($data['id'] != \Auth::id()) {
-                $data['is_friend'] = db::table('friends')->where('user_id', \Auth::id())->where('friend_id', $data['id'])->count();
-            }
-        }
-        if ($data['role'] == 'teacher') {
-            unset($data['level']);
-            unset($data['points']);
-        }
 
         return $data;
     }

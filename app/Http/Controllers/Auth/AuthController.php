@@ -68,6 +68,7 @@ class AuthController extends BaseController
 
     /**
      * @throws ServerErrorException
+     * @throws BadRequestException
      */
     public function refresh(): JsonResponse
     {

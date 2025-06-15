@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,6 +15,17 @@ class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public function getLastOnlineAttribute($value): ?string
+    {
+        if (!$value) return 'long time ago';
+
+        $lastOnline = Carbon::parse($value);
+        $onlineThreshold = $lastOnline->addMinutes(10);
+
+        return now() <= $onlineThreshold
+            ? 'online'
+            : $onlineThreshold->diffForHumans();
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -225,6 +237,13 @@ class User extends Authenticatable implements JWTSubject
     public function allLearningPaths(): BelongsToMany
     {
         return $this->belongsToMany(LearningPath::class, 'learning_path_user')
+            ->withPivot('paid', 'status');
+    }
+
+    public function finishedLearningPaths(): BelongsToMany
+    {
+        return $this->belongsToMany(LearningPath::class, 'learning_path_user')
+            ->where('status','finished')
             ->withPivot('paid', 'status');
     }
 

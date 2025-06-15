@@ -59,9 +59,9 @@ class SubmissionController extends Controller
 
     }
 
-    public function getNumberOfCorrectAnswers($answers1, \Illuminate\Database\Eloquent\Collection $questions, Contest $contest): int
+    public function getNumberOfCorrectAnswers($answers, \Illuminate\Database\Eloquent\Collection $questions, Contest $contest): int
     {
-        $answers = $answers1;
+
         $correct = 0;
         foreach ($questions as $question) {
             $correctOption = $question->correctOption();

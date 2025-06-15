@@ -10,6 +10,7 @@ use App\Http\Resources\Projects\ProjectResource;
 use App\Http\Resources\Users\UserContestResource;
 use App\Models\User;
 use App\Responses\StudentStaticsResponse;
+use App\Responses\UserContestResponse;
 use App\Services\Project\ProjectService;
 use App\Services\User\StreakService;
 use Carbon\Carbon;
@@ -33,10 +34,11 @@ class StudentController extends Controller
     public function achievements(User $user): JsonResponse
     {
         $user->load(['achievements' => fn($q) => $q->withPivot('created_at')]);
-
+        $achievements=$user->achievements()->paginate(20);
         return response()->json([
             'status' => true,
-            'achievements' => AchievementResource::collection($user->achievements),
+            'achievements' => AchievementResource::collection($achievements),
+            'meta'=> getMeta($achievements)
         ]);
 
     }
@@ -47,9 +49,11 @@ class StudentController extends Controller
     public function certificates(User $user): JsonResponse
     {
 
+        $certificates=$user->certificates()->paginate(20);
         return response()->json([
             'status' => true,
-            'certificates' => CertificateResource::collection($user->certificates()->get()),
+            'certificates' => CertificateResource::collection($certificates),
+            'meta'=> getMeta($certificates)
         ]);
 
     }
@@ -59,16 +63,7 @@ class StudentController extends Controller
      */
     public function contests(User $user): JsonResponse
     {
-
-        $user->load('contests');
-
-        return response()->json([
-            'status' => true,
-            'contests_count' => $user->contests()->count(),
-            'total_points' => $user->points,
-            'contests' => UserContestResource::collection($user->contests()->get()),
-        ]);
-
+        return UserContestResponse::response($user);
     }
 
     /**
@@ -97,10 +92,11 @@ class StudentController extends Controller
 
     public function projects(User $user): JsonResponse
     {
-        $projects=$this->projectService->GetUserProjects($user, \Auth::user());
+        $projects=$this->projectService->GetUserProjects($user);
         return  response()->json([
            'status'=> true,
-           'projects'=> ProjectResource::collection($projects)
+           'projects'=> ProjectResource::collection($projects),
+            'meta' => getMeta($projects)
         ]);
 
     }

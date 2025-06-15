@@ -79,13 +79,13 @@ class LearningPathRepository
 
     }
 
-    public function TeacherLearningPaths(User $user): \Illuminate\Database\Eloquent\Collection
+    public function TeacherLearningPaths(User $user): \Illuminate\Pagination\LengthAwarePaginator
     {
         return $user->verifiedLearningPaths()
             ->with('teacher')
             ->withCount('courses')
             ->withSum('courses', 'price')
             ->withSum('courses', 'rate')
-            ->get();
+            ->paginate(20);
     }
 }

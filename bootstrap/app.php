@@ -72,16 +72,25 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 429);
             }
         });
-        if (app()->environment() == 'production') {
-            $exceptions->render(function (Exception $e, Request $request) {
-                if ($request->is('api/*')) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Something went wrong.',
-                    ], 500);
-                }
-            });
-        }
+        $exceptions->render(function (\Illuminate\Validation\UnauthorizedException | \App\Exceptions\UNAuthorizedException $e, Request $request) {
+
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated',
+                ], 401);
+            }
+        });
+//        if (app()->environment() == 'production') {
+//            $exceptions->render(function (Exception $e, Request $request) {
+//                if ($request->is('api/*')) {
+//                    return response()->json([
+//                        'status' => false,
+//                        'message' => 'Something went wrong.',
+//                    ], 500);
+//                }
+//            });
+//        }
 
     })
     ->create();

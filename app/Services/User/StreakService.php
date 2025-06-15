@@ -42,7 +42,6 @@ class StreakService
                 $streak->status = null;
             }
             $streak->dayOfWeek = Carbon::parse($streak->date)->format('l');
-
             return $streak;
         });
     }

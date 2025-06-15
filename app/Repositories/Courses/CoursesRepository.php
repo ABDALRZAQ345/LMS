@@ -57,12 +57,12 @@ class CoursesRepository
         return new CourseWithContentResource($course, $content);
     }
 
-    public function getAllCoursesForUser(User $user): \Illuminate\Database\Eloquent\Collection
+    public function getAllCoursesForUser(User $user): \Illuminate\Pagination\LengthAwarePaginator
     {
 
         return $user->verifiedCourses()
             ->withCount('videos')
             ->withCount('tests')
-            ->with('teacher')->get();
+            ->with('teacher')->paginate(20);
     }
 }

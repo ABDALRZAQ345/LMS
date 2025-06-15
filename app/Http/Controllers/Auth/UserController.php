@@ -41,6 +41,7 @@ class UserController extends BaseController
 
         $users =$this->userService->GetUsers($validated['friends'], $validated['role'], $validated['search'], $validated['orderBy'], $validated['direction']);
 
+
         return response()->json([
             'status' => true,
             'message' => 'users retrieved successfully',
@@ -64,7 +65,7 @@ class UserController extends BaseController
      * @throws ServerErrorException
      * @throws \Throwable
      */
-    public function update(UpdateUserRequest $request, User $user): JsonResponse
+    public function update(UpdateUserRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -80,7 +81,6 @@ class UserController extends BaseController
     public function getCurrentUser(): JsonResponse
     {
         $user = \Auth::user();
-
         return UserProfileResponse::response($user);
     }
 

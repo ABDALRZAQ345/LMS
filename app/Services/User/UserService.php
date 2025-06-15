@@ -35,9 +35,8 @@ class UserService
     {
         $user = Auth::user();
         if (isset($data['image']) && $data['image'] != null) {
-            if ($user->image) {
-                DeletePublicPhoto($user->image);
-            }
+
+            if ($user->image)  DeletePublicPhoto($user->image);
             $data['image'] = NewPublicPhoto($data['image']);
         }
 
@@ -61,19 +60,20 @@ class UserService
 
     }
 
-    public function GetUsers($friends = 0, $role = 'student', $search = '', $orderBy = 'points', $direction = 'desc')
+    public function GetUsers($friends = 0, $role = 'student', $search = '', $orderBy = 'points', $direction = 'desc'): \Illuminate\Pagination\LengthAwarePaginator
     {
 
         $user = Auth::user();
 
-        if ($friends) {
-            $users = $user->friends()->where('role', $role)->orderBy($orderBy, $direction)
-                ->where('name', 'like', '%'.$search.'%')
-                ->paginate(20);
+        if ($user && $friends) {
+            $users = $user->friends();
         } else {
-            $users = User::where('role', $role)->where('name', 'like', '%'.$search.'%')->orderBy($orderBy, $direction)->paginate(20);
+            $users = User::query();
         }
-        return $users;
+        return $users->where('role', $role)->orderBy($orderBy, $direction)
+        ->where('name', 'like', '%'.$search.'%')
+        ->paginate(20);
+
 
 
 

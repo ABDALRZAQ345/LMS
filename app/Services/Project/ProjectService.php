@@ -15,14 +15,14 @@ class ProjectService
     {
 
         if ($data['tag'] == 'all') {
-            $projects = Project::where('title', 'like', '%'.$data['search'].'%');
+            $projects = Project::query();
         } else {
             $projects = Project::whereHas('tag', function ($query) use ($data) {
                 $query->where('name', 'like', '%'.$data['tag'].'%');
-            })->where('title', 'like', '%'.$data['search'].'%');
+            });
         }
 
-        return $projects->with(['user', 'tag'])->where('status', 'accepted')->paginate(20);
+        return $projects->where('title', 'like', '%'.$data['search'].'%')->with(['user', 'tag'])->where('status', 'accepted')->paginate(20);
 
     }
 
@@ -35,14 +35,15 @@ class ProjectService
 
     }
 
-    public function GetUserProjects(User $user, ?User $currentUser): \Illuminate\Database\Eloquent\Collection
+    public function GetUserProjects(User $user): \Illuminate\Pagination\LengthAwarePaginator
     {
+        $currentUser=Auth::user();
         if ($currentUser && ( $currentUser->id == $user->id || $currentUser->role == 'admin')) {
             return $user->projects()
-                ->with(['user', 'tag'])->get();
+                ->with(['user', 'tag'])->paginate(20);
         } else {
             return $user->projects()->where('status', 'accepted')
-                ->with(['user', 'tag'])->get();
+                ->with(['user', 'tag'])->paginate(20);
         }
 
     }

@@ -24,6 +24,7 @@ class TeacherController extends Controller
         return response()->json([
             'status' => true,
             'courses' => $createdCourses,
+            'meta' => getMeta($createdCourses)
         ]);
     }
 
@@ -34,17 +35,18 @@ class TeacherController extends Controller
         return response()->json([
             'status' => true,
             'learningPaths' => $createdLearningPaths,
+            'meta' => getMeta($createdLearningPaths)
         ]);
     }
 
     public function contests(User $user): JsonResponse
     {
-        $createdContests = $user->AcceptedCreatedContests()
-            ->paginate(20);
+        $createdContests = $this->teacherService->getCreatedContests($user);
 
         return response()->json([
             'status' => true,
-            'contests' => ContestResource::collection($createdContests),
+            'contests' => $createdContests,
+            'meta' => getMeta($createdContests)
         ]);
     }
 
