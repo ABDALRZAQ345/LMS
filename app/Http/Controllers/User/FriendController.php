@@ -23,11 +23,12 @@ class FriendController extends Controller
      */
     public function index(User $user): JsonResponse
     {
-        $friends = $user->friends()->get();
+        $friends = $user->friends()->paginate(20);
 
         return response()->json([
             'status' => true,
             'friends' => UserResource::collection($friends),
+            'meta' => getMeta($friends)
         ]);
     }
 

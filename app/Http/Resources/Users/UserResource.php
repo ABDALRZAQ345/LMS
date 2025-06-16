@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'image' => $this->image,
-            'gitHub_account' => $this->github_account,
+            'gitHub_account' => $this->gitHub_account,
             'bio' => $this->bio,
             'last_online' => $this->last_online,
             'role' => $this->role,

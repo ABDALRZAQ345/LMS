@@ -87,7 +87,9 @@ class ContestService
         $user = Auth::user();
         $alreadyParticipate = $user->contests()->where('contest_id', $contest->id)->exists();
 
-        $problems = $contest->problems()->get();
+        $problems = $contest->problems()
+            ->select(['id','title','time_limit','memory_limit'])
+            ->get();
 
         return response()->json([
             'status' => true,

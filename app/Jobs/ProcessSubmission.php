@@ -15,6 +15,13 @@ class ProcessSubmission implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 5;
+
+    public function backoff(): int|array
+    {
+        return [60, 120, 240,60*60*12,60*60*24 ];
+    }
+
     public $submission;
 
     public function __construct(Submission $submission)
@@ -22,7 +29,7 @@ class ProcessSubmission implements ShouldQueue
         $this->submission = $submission;
     }
 
-    public function handle()
+    public function handle(): void
     {
         $langMap = [
             'cpp' => 54,
@@ -33,35 +40,44 @@ class ProcessSubmission implements ShouldQueue
 
         $problem = $this->submission->problem;
 
+        $sourceCode = base64_encode($this->submission->code);
+        $stdin = base64_encode($problem->test_input);
+
         $response = Http::timeout(60 * 5)->withHeaders([
             'X-RapidAPI-Key' => env('RAPIDAPI_KEY'),
             'Accept' => 'application/json',
             'X-RapidAPI-Host' => 'judge0-ce.p.rapidapi.com',
-        ])->post('https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true', [
+        ])->post('https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=true', [
             'language_id' => $langMap[$this->submission->language],
-            'source_code' => $this->submission->code,
-            'stdin' => $problem->test_input,
+            'source_code' => $sourceCode,
+            'stdin' => $stdin,
             'cpu_time_limit' => $problem->time_limit,
             'memory_limit' => $problem->memory_limit * 1024,
         ]);
 
         $result = $response->json();
-        Log::channel('verification_code')->info($result);
-        $output = trim($result['stdout'] ?? '');
+
+
+        $output = isset($result['stdout']) ? trim(base64_decode($result['stdout'])) : '';
         $expected = trim($problem->expected_output);
+
 
         $normalizedOutput = preg_replace('/\s+/', '', $output);
         $normalizedExpected = preg_replace('/\s+/', '', $expected);
-        $statusId = $result['status']['id'] ?? null;
+
+        $statusId =isset($result['status']) ? $result['status']['id'] : null;
+
+        Log::channel('verification_code')->info($result);
         if ($statusId === 5) {
             $status = 'time_limit_exceeded';
-        } elseif ($statusId === 6) {
-            $status = 'memory_limit_exceeded';
+        }
+        elseif ($statusId === 6) {
+            $status = 'compile_error';
         } elseif ($statusId === 11) {
             $status = 'runtime_error';
         } elseif (isset($result['stderr'])) {
             $status = 'error';
-            $output = $result['stderr'];
+            $output = 'some thing wrong from our side';
         } elseif ($normalizedOutput === $normalizedExpected) {
             $status = 'accepted';
         } else {
@@ -72,6 +88,5 @@ class ProcessSubmission implements ShouldQueue
             'status' => $status,
             'output' => $output,
         ]);
-
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 
-class CountContestResults implements ShouldQueue
+class CountQuizContestResults implements ShouldQueue
 {
     use Queueable;
 
@@ -32,7 +32,7 @@ class CountContestResults implements ShouldQueue
 
         db::beginTransaction();
         try {
-            // here we are getting students ordered by correct_answers then by time
+            // here we are getting students ordered by correct_answers then by end_time
             $students = $this->contest->students;
             $studentsCount = count($students);
 

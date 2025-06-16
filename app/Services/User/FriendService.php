@@ -15,38 +15,43 @@ class FriendService
     }
     public function addFriend(User $user, User $friend): JsonResponse
     {
+
         if ($user->id == $friend->id) {
-            return response()->json([
+          $data=[
                 'status' => false,
                 'message' => 'You cannot add yourself as a friend.',
-            ]);
+            ];
+          $status_code=400;
         }
-
-        if ($friend->role == 'teacher') {
-            return response()->json([
+        else if ($friend->role == 'teacher') {
+            $data=[
                 'status' => false,
                 'message' => 'common nigga you think that teachers are your friends ? have some respect please do not  add teachers as friends',
-            ]);
+            ];
+            $status_code=400;
         }
-
-        if ($user->friends()->where('friend_id', $friend->id)->exists()) {
-            return response()->json([
+        else if ($user->HasFriend($friend)) {
+            $data=[
                 'status' => false,
                 'message' => 'This user is already your friend.',
-            ]);
+            ];
+            $status_code=400;
         }
+        else {
+            $user->friends()->attach($friend->id);
+           $data=[
+                'status' => true,
+                'message' => 'Friend added successfully.',
+            ];
+           $status_code=200;
+        }
+        return response()->json($data, $status_code);
 
-        $user->friends()->attach($friend->id);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Friend added successfully.',
-        ]);
     }
 
     public function removeFriend(User $user, User $friend): JsonResponse
     {
-        $data = [];
+
         $status_code = 200;
         if ($user->id == $friend->id) {
             $data = [
@@ -54,7 +59,7 @@ class FriendService
                 'message' => 'common man you cant delete yourself',
             ];
             $status_code = 400;
-        } elseif (! $user->friends()->where('friend_id', $friend->id)->exists()) {
+        } elseif (! $user->HasFriend($friend)) {
             $data = [
                 'status' => false,
                 'message' => 'the user is not a friend',

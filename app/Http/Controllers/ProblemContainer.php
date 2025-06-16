@@ -9,6 +9,7 @@ class ProblemContainer extends Controller
 {
     public function show(Contest $contest, Problem $problem): \Illuminate\Http\JsonResponse
     {
+
         $problem = $contest->problems()->findOrFail($problem->id);
 
         return response()->json([

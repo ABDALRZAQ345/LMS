@@ -26,7 +26,7 @@ class ProjectService
 
     }
 
-    public function getProject(Project $project)
+    public function getProject(Project $project): ProjectResource
     {
 
             $project->load(['user', 'tag']);
@@ -54,7 +54,7 @@ class ProjectService
         if ($this->checkCanAddProject($user)) {
             return response()->json([
                 'status' => false,
-                'message' => 'you cant send more than 3 projects requests a month ',
+                'message' => 'you can`t send more than 3 projects requests a month ',
             ]);
         }
         $user->projects()->create($data);

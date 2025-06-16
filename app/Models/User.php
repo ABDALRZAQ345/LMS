@@ -256,4 +256,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->projects()->where('status','accepted');
     }
+
+    public function HasFriend(User $friend)
+    {
+        return $this->friends()->where('friend_id', $friend->id)->exists();
+    }
 }

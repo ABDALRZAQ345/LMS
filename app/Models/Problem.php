@@ -19,7 +19,7 @@ class Problem extends Model
         'updated_at',
     ];
 
-    public function submission()
+    public function submissions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Submission::class);
     }

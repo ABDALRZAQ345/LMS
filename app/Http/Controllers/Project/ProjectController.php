@@ -9,6 +9,7 @@ use App\Http\Resources\Projects\ProjectResource;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Services\Project\ProjectService;
+use http\Env\Response;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 
@@ -37,10 +38,14 @@ class ProjectController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function show(Project $project): ProjectResource
+    public function show(Project $project): JsonResponse
     {
         \Gate::authorize('viewProject', $project);
-        return $this->projectService->getProject($project);
+        return  response()->json([
+            'status' => true,
+            'project' => $this->projectService->getProject($project),
+        ]);
+
     }
 
     public function store(AddProjectRequest $request): JsonResponse

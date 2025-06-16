@@ -48,4 +48,16 @@ class Contest extends Model
     {
         return $this->hasMany(Problem::class);
     }
+
+    public function submissions(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Submission::class,
+            Problem::class,
+            'contest_id',
+            'problem_id',
+            'id',
+            'id'
+        )->select('submissions.*');
+    }
 }

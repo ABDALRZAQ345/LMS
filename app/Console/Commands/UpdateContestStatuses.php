@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\CountContestResults;
+use App\Jobs\CountQuizContestResults;
 use App\Models\Contest;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -37,7 +37,12 @@ class UpdateContestStatuses extends Command
             ->get();
 
         foreach ($contests as $contest) {
-            CountContestResults::dispatch($contest);
+            if($contest->type=='quiz'){
+                CountQuizContestResults::dispatch($contest);
+            }
+            else {
+
+            }
         }
 
     }
