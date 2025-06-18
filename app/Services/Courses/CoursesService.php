@@ -17,6 +17,8 @@ class CoursesService
     public function getAllCourses($validated){
 
         $courses = $this->coursesRepository->getAllCourses($validated);
+        //todo data[]=getmeta($courses)
+        //? mkmk
         $data = [
             'courses' => CourseResource::collection($courses),
             'total_pages' => $courses->lastPage(),

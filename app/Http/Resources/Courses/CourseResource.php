@@ -46,6 +46,7 @@ class CourseResource extends JsonResource
             'number_of_video' => $countOfVideos,
             'video_progress' => $videoProgressPercentage,
             'final_test_passed' => $finalTestPassed,
+            'level'=> $this->level,
             'price' => $this->price,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,

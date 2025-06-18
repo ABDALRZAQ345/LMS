@@ -13,48 +13,20 @@ class CoursesRepository
     public function getAllCourses($validated)
     {
         $user = auth()->user();
-        if(!$validated['search']){
-            if ($validated['status'] === 'all') {
-            return Course::orderBy($validated['orderBy'], $validated['direction'])
-                ->with('teacher')
-                ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
-                ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
-                ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
-                ->where('verified',true)
-                ->paginate($validated['items']);
+        $query=Course::orderBy($validated['orderBy'], $validated['direction'])
+            ->with('teacher')
+            ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
+            ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
+            ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
+            ->where('verified',true);
+        if($validated['status'] != 'all'){
+            $query->wherePivot('status', $validated['status']);
         }
-            else {
-                return $user->verifiedCourses()
-                    ->wherePivot('status', $validated['status'])
-                    ->orderBy($validated['orderBy'], $validated['direction'])
-                    ->with('teacher')
-                    ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
-                    ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
-                    ->paginate($validated['items']);
-            }
-        } else{
-            if ($validated['status'] === 'all') {
-                return Course::where('title','like','%'.$validated['search'].'%')
-                    ->orderBy($validated['orderBy'], $validated['direction'])
-                    ->with('teacher')
-                    ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
-                    ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
-                    ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
-                    ->where('verified',true)
-                    ->paginate($validated['items']);
-            }
-            else {
-                return $user->verifiedCourses()
-                    ->where('title','like','%'.$validated['search'].'%')
-                    ->wherePivot('status', $validated['status'])
-                    ->orderBy($validated['orderBy'], $validated['direction'])
-                    ->with('teacher')
-                    ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
-                    ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
-                    ->paginate($validated['items']);
-            }
+        if($validated['search']){
+            $query->where('title','like','%'.$validated['search'].'%');
+        }
 
-        }
+     return $query->paginate($validated['items']);
     }
 
 
