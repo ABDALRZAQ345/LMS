@@ -27,7 +27,8 @@ class UserResource extends JsonResource
             'last_online' => $this->last_online,
             'role' => $this->role,
             'level' => $this->level,
-            'joined'=> $this->created_at->format('Y-m-d')
+            'joined'=> $this->created_at->format('Y-m-d'),
+            'age' => $this->age
         ];
 
 

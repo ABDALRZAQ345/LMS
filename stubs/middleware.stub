@@ -17,4 +17,13 @@ class {{ class }}
     {
         return $next($request);
     }
+      public function failedValidation(Validator $validator)
+        {
+            throw new HttpResponseException(
+                response()->json([
+                    'errors' => $validator->errors(),
+                ], 422)
+            );
+        }
 }
+

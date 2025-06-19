@@ -21,18 +21,21 @@ if (! function_exists('DeletePublicPhoto')) {
 }
 
 if (! function_exists('getPercentege')) {
-    function getPercentege($sub, $total)
+    function getPercentege($sub, $total): string
     {
         return ($total > 0 ? ($sub / $total) * 100 : 0).'%';
     }
 
 }
-function getMeta($data): array
-{
-    return  [
-    'current_page' => $data->currentPage(),
-    'last_page' => $data->lastPage(),
-    'per_page' => $data->perPage(),
-    'total' => $data->total(),
-];
-}
+
+    function getMeta($data): array
+    {
+        return  [
+            'current_page' => $data->currentPage(),
+            'last_page' => $data->lastPage(),
+            'per_page' => $data->perPage(),
+            'total' => $data->total(),
+        ];
+    }
+
+

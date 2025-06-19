@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\Contest;
 use App\Models\Project;
 use App\Models\Review;
+use App\Models\Submission;
 use App\Models\User;
 use App\Observers\ReviewObserver;
+use App\Observers\SubmissionObserver;
 use App\Policies\ContestPolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\UserPolicy;
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
     private function observers(): void
     {
         Review::observe(ReviewObserver::class);
+        Submission::observe(SubmissionObserver::class);
     }
 
     private function rateLimiters(): void

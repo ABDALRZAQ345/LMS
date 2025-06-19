@@ -7,10 +7,15 @@ use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contest\GetAllContestsRequest;
 use App\Http\Requests\Contest\MakeContestRequest;
+use App\Http\Requests\Contest\MakeProgrammingContestRequest;
+use App\Http\Requests\ShowContestProblemsRequest;
+use App\Http\Requests\ShowContestRequest;
+use App\Http\Requests\ShowQuestionsRequest;
 use App\Http\Requests\StandingRequest;
 use App\Http\Resources\ContestResource;
 use App\Http\Resources\StudentStandingResource;
 use App\Models\Contest;
+use App\Responses\ContestStandingResponse;
 use App\Services\ContestService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -27,7 +32,7 @@ class ContestController extends Controller
     public function index(GetAllContestsRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'],$validated['search']);
+        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'], $validated['search']);
 
         return response()->json([
             'status' => true,
@@ -36,17 +41,12 @@ class ContestController extends Controller
         ]);
     }
 
-    /**
-     * @throws NotFoundException
-     * @throws AuthorizationException
-     */
-    public function show(Contest $contest): JsonResponse
-    {
-        \Gate::authorize('view', $contest);
 
+    public function show(Contest $contest, ShowContestRequest $request): JsonResponse
+    {
         return response()->json([
             'status' => true,
-            'contest' => ContestResource::make($contest->makeHidden('request_status')),
+            'contest' => ContestResource::make($contest),
         ]);
 
     }
@@ -55,9 +55,8 @@ class ContestController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function questions(Contest $contest): JsonResponse
+    public function questions(Contest $contest, ShowQuestionsRequest $request): JsonResponse
     {
-        \Gate::authorize('view', $contest);
 
         return $this->contestService->GetContestQuestions($contest);
     }
@@ -65,10 +64,8 @@ class ContestController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function problems(Contest $contest): JsonResponse
+    public function problems(Contest $contest,ShowContestProblemsRequest $request): JsonResponse
     {
-        \Gate::authorize('view', $contest);
-
         return $this->contestService->GetContestProblems($contest);
     }
 
@@ -76,34 +73,43 @@ class ContestController extends Controller
      * @throws ServerErrorException
      * @throws \Throwable
      */
-    public function store(MakeContestRequest $request): JsonResponse
+    public function CreateQuizContest(MakeContestRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $this->contestService->CreateContest($validated);
+        $this->contestService->CreateQuizContest($validated);
 
         return response()->json([
             'status' => true,
             'message' => 'Contest created successfully',
-        ],201);
+        ], 201);
     }
 
     /**
      * @throws AuthorizationException
      */
-    public function standing(StandingRequest $request,Contest $contest): JsonResponse
+    public function standing(StandingRequest $request, Contest $contest): JsonResponse
     {
-        \Gate::authorize('seeStanding', $contest);
-        $validated=$request->validated();
 
-        $students =$this->contestService->GetContestResults($contest,$validated['justFriends']) ;
-        $currentUser=$students->where('id',\Auth::id())->first() ;
+        $validated = $request->validated();
+        $students = $this->contestService->GetContestResults($contest, $validated['justFriends']);
+        $currentUser = $students->where('id', \Auth::id())->first();
+
+        return ContestStandingResponse::response($students,$currentUser);
+
+    }
+
+    /**
+     * @throws ServerErrorException
+     * @throws \Throwable
+     */
+    public function CreateProgrammingContest(MakeProgrammingContestRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $this->contestService->CreateProgrammingContest($validated);
+
         return response()->json([
             'status' => true,
-            'message' => "results might not be calculated yet  ",
-            'your_order' => $currentUser ? $currentUser->pivot->rank : null,
-            'students' => StudentStandingResource::collection($students),
-            'meta' => getMeta($students)
-        ]);
-
+            'message' => 'Contest created successfully',
+        ], 201);
     }
 }

@@ -15,6 +15,7 @@ use App\Models\Problem;
 use App\Models\Submission;
 use App\Responses\StudentStaticsResponse;
 use App\Services\ProblemService;
+use App\Services\SubmissionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -24,16 +25,19 @@ use Illuminate\Support\Facades\Gate;
 class SubmissionController extends Controller
 {
     protected ProblemService $problemService;
+    protected SubmissionService $submissionService;
 
-    public function __construct(ProblemService $problemService)
+    public function __construct(ProblemService $problemService, SubmissionService $submissionService)
     {
         $this->problemService = $problemService;
+        $this->submissionService = $submissionService;
     }
 
     public function showProblemSubmissions(Contest $contest, Problem $problem, ShowProblemSubmissionsRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $problem = $contest->problems()->findOrFail($problem->id);
+
         $submissions = $this->problemService->getObjectSubmissions($problem, $validated['user_id'] ?? 'all', $validated['language'], $validated['status']);
 
         return response()->json([
@@ -45,26 +49,6 @@ class SubmissionController extends Controller
 
     }
 
-    public function submitProblem(Contest $contest, Problem $problem, SubmitProblemRequest $request): JsonResponse
-    {
-        $validated = $request->validated();
-        $problem = $contest->problems()->findOrFail($problem->id);
-
-        $submission = Submission::create([
-            'problem_id' => $problem->id,
-            'language' => $validated['language'],
-            'code' => $validated['code'],
-            'status' => 'pending',
-            'user_id' => Auth::id()
-        ]);
-
-        ProcessSubmission::dispatch($submission);
-
-        return response()->json([
-            'message' => 'Submission received',
-            'submission_id' => $submission->id,
-        ]);
-    }
 
     /**
      * @throws AuthorizationException
@@ -74,47 +58,42 @@ class SubmissionController extends Controller
 
         $validated = $request->validated();
 
-        $questions = $contest->questions()->get();
-        $questionsCount = $questions->count();
-        $correct = $this->getNumberOfCorrectAnswers($validated['answers'], $questions, $contest);
+
+        $percentage=$this->submissionService->SubmitQuizContest($validated,$contest);
+
 
         return response()->json([
             'status' => true,
             'message' => 'Contest submitted successfully' . ($contest->status == 'active') ? 'you can see your rank when the contest over' : '',
-            'correct_answers' => getPercentege($correct, $questionsCount),
+            'correct_answers' =>$percentage,
         ]);
 
     }
 
-    public function getNumberOfCorrectAnswers($answers, \Illuminate\Database\Eloquent\Collection $questions, Contest $contest): int
-    {
 
-        $correct = 0;
-        foreach ($questions as $question) {
-            $correctOption = $question->correctOption();
-            if (isset($answers[$question->id]) && $correctOption && $answers[$question->id] == $correctOption->id) {
-                $correct++;
-            }
-        }
-        db::table('contest_user')->insert([
-            'end_time' => now(), 'correct_answers' => $correct,
-            'user_id' => Auth::user()->id,
-            'contest_id' => $contest->id,
-            'is_official' => $contest->status == 'active',
-        ]);
-
-        return $correct;
-    }
 
     public function showContestSubmissions(Contest $contest, ShowProblemSubmissionsRequest $request): JsonResponse
     {
-        $validated=$request->validated();
-        $submissions = $this->problemService->getObjectSubmissions($contest,$validated['user_id'] ?? 'all',$validated['language'],$validated['status']);
+        $validated = $request->validated();
+        $submissions = $this->problemService->getObjectSubmissions($contest, $validated['user_id'] ?? 'all', $validated['language'], $validated['status']);
 
         return response()->json([
             'status' => true,
             'submissions' => SubmissionResource::collection($submissions),
             'meta' => getMeta($submissions),
+        ]);
+    }
+
+    public function submitProblem(Contest $contest, Problem $problem, SubmitProblemRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $problem = $contest->problems()->findOrFail($problem->id);
+
+        $submission = $this->submissionService->createProblemSubmission($problem, $validated);
+
+        return response()->json([
+            'message' => 'Submission received',
+            'submission_id' => $submission->id,
         ]);
     }
 

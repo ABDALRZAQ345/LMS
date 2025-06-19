@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Contest\ContestController;
+use App\Http\Controllers\Contest\ProblemContainer;
 use App\Http\Controllers\Contest\SubmissionController;
-use App\Http\Controllers\ProblemContainer;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale'])->group(function () {
@@ -21,7 +21,6 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
             Route::post('/contests/{contest}/problems/{problem}/submissions', [SubmissionController::class, 'submitProblem'])->middleware(['role:student']);
             Route::get('/contests/{contest}/problems/{problem}/submissions',[SubmissionController::class, 'showProblemSubmissions']);
             Route::get('/contests/{contest}/submissions',[SubmissionController::class, 'showContestSubmissions']);
-
         });
 
     });

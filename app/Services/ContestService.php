@@ -21,8 +21,8 @@ class ContestService
 
     public function getAllAcceptedContests(string $status = 'all', string $type = 'all',string $search='',int $limit = 20)
     {
-        $query = $this->contestsRepository->getAllAcceptedContests()->
-        where('name','like','%'.$search.'%');
+        $query = $this->contestsRepository->getAllAcceptedContests()
+            ->where('name','like','%'.$search.'%');
         if ($status != 'all') {
             $query->where('status', $status);
         }
@@ -32,6 +32,8 @@ class ContestService
 
         return $query->paginate($limit);
     }
+
+
 
     public function getAllPendingContests(string $status = 'all', string $type = 'all', int $limit = 20)
     {
@@ -105,7 +107,7 @@ class ContestService
      * @throws ServerErrorException
      * @throws \Throwable
      */
-    public function CreateContest($data): void
+    public function CreateQuizContest($data): void
     {
 
         db::beginTransaction();
@@ -114,7 +116,7 @@ class ContestService
                 'name' => $data['name'],
                 'description' => $data['description'],
                 'time' => $data['time'],
-                'type' => $data['type'],
+                'type' => 'quiz',
                 'status' => 'coming',
                 'level' => $data['level'],
                 'user_id' => Auth::id(),
@@ -142,6 +144,48 @@ class ContestService
         }
 
     }
+    //
+
+    /**
+     * @throws ServerErrorException
+     * @throws \Throwable
+     */
+    public function CreateProgrammingContest($data): void
+    {
+
+        db::beginTransaction();
+        try {
+            $contest = Contest::create([
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'time' => $data['time'],
+                'type' => 'programming',
+                'status' => 'coming',
+                'level' => $data['level'],
+                'user_id' => Auth::id(),
+                'start_at' => $data['start_at'],
+            ]);
+            foreach ($data['problems'] as $problemData) {
+                 $contest->problems()->create([
+                    'title'=>$problemData['title'],
+                     'description'=>$problemData['description'],
+                     'time_limit'=>$problemData['time_limit'],
+                     'memory_limit'=>$problemData['memory_limit'],
+                     'input' => $problemData['input'],
+                     'output' => $problemData['output'],
+                     'test_input'=>$problemData['test_input'],
+                     'expected_output'=>$problemData['expected_output'],
+                ]);
+            }
+            db::commit();
+
+        } catch (\Exception $exception) {
+            db::rollBack();
+            throw new ServerErrorException($exception->getMessage());
+        }
+
+    }
+
 
     public function UpdateContestRequestStatus(Contest $contest, string $requestStatus): bool
     {

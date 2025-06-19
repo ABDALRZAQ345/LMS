@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\CountQuizContestResults;
+
+use App\Jobs\CountContestResults;
 use App\Models\Contest;
+use App\Repositories\Contest\ContestsRepository;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -13,36 +15,32 @@ class UpdateContestStatuses extends Command
 
     protected $description = 'Update contest statuses and delete unverified contests after start time';
 
+    protected ContestsRepository $contestsRepository;
+
     public function handle(): void
     {
-        $now = Carbon::now()->toDateTimeString();
+        $this->contestsRepository = new ContestsRepository();
 
-        $this->updateComingToActive($now);
 
-        $this->UpdateActiveToEnded($now);
+        $this->updateToActive();
+        $this->UpdateToEnded();
 
-        $this->info('Contest statuses updated and unverified contests deleted.');
+        $this->info('Contest statuses updated ');
     }
 
-    public function updateComingToActive(string $now): void
+    public function updateToActive(): void
     {
-        Contest::where('status', 'coming')->where('start_at', '<=', $now)
+      $this->contestsRepository->getAllActiveContests()
+            ->where('status','!=','active')
             ->update(['status' => 'active']);
     }
 
-    public function UpdateActiveToEnded(string $now): void
+    public function UpdateToEnded(): void
     {
-        $contests = Contest::where('status', 'active')
-            ->whereRaw('DATE_ADD(start_at, INTERVAL time MINUTE) <= ?', [$now])
-            ->get();
+        $contests = $this->contestsRepository->getAllEndedContests()->where('status','!=','ended')->get();
 
         foreach ($contests as $contest) {
-            if($contest->type=='quiz'){
-                CountQuizContestResults::dispatch($contest);
-            }
-            else {
-
-            }
+                CountContestResults::dispatch($contest);
         }
 
     }

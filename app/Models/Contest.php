@@ -41,9 +41,6 @@ class Contest extends Model
 
 
 
-
-
-
     public function problems(): HasMany
     {
         return $this->hasMany(Problem::class);

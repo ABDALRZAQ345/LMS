@@ -30,6 +30,7 @@ return new class extends Migration
                 ->default('beginner');
             $table->string('google_id')->nullable()->unique();
             $table->enum('role', ['admin', 'student', 'teacher'])->default('student');
+            $table->integer('age')->nullable()->default(null);
             $table->rememberToken();
 
 

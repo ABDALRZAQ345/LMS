@@ -19,10 +19,10 @@ class ContestTypeMiddleware
         if ($contest->type == $type) {
             return $next($request);
         } else {
-            return \response()->json([
+            return response()->json([
                 'status' => false,
                 'message' => "Contest Type must be $type",
-            ]);
+            ],400);
         }
     }
 }

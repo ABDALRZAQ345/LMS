@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
 
-class CountQuizContestResults implements ShouldQueue
+class CountContestResults implements ShouldQueue
 {
     use Queueable;
 
@@ -66,7 +66,7 @@ class CountQuizContestResults implements ShouldQueue
     public function getPointsForUser(int $UserOrder, int $studentsCount): int|float
     {
         $percentage = $UserOrder * 100 / $studentsCount;
-        return $percentage <= 50 ? (100 - $percentage) : -1 * $percentage;
+        return $percentage <= 50 ? (101 - $percentage) : -1 * $percentage;
 
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class MakeContestRequest extends FormRequest
+class MakeProgrammingContestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,10 +29,15 @@ class MakeContestRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'level' => ['required', 'in:beginner,intermediate,advanced,expert'],
             'start_at' => ['required', 'date', 'date_format:Y-m-d H:i', 'after:now'],
-            'questions' => ['required', 'array', 'min:1'],
-            'questions.*.question' => ['required', 'string'],
-            'questions.*.options' => ['required', 'array', 'min:2'],
-            'questions.*.options.*' => ['required', 'string'],
+            'problems' => ['required', 'array', 'min:1'],
+            'problems.*.title' => ['required', 'string'],
+            'problems.*.description' => ['required', 'string'],
+            'problems.*.time_limit' => ['required', 'integer', 'min:1', 'max:5'],
+            'problems.*.memory_limit' => ['required', 'integer', 'min:1', 'max:512'],
+            'problems.*.input' => ['required', 'string'],
+            'problems.*.output' => ['required', 'string'],
+            'problems.*.test_input' => ['required', 'string'],
+            'problems.*.expected_output' => ['required', 'string'],
         ];
     }
     public function failedValidation(Validator $validator)

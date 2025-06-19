@@ -11,7 +11,6 @@ class Problem extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-
     protected $hidden = [
         'test_input',
         'expected_output',
@@ -22,5 +21,10 @@ class Problem extends Model
     public function submissions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Submission::class);
+    }
+
+    public function contest(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Contest::class);
     }
 }

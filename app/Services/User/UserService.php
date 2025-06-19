@@ -45,6 +45,7 @@ class UserService
             'image' => $data['image'] ?? null,
             'bio' => $data['bio'] ?? null,
             'gitHub_account' => $data['gitHub_account'] ?? null,
+            'age' => $data['age'] ?? null
         ]);
 
         return $user;

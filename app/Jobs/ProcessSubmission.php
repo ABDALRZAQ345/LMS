@@ -54,6 +54,7 @@ class ProcessSubmission implements ShouldQueue
             'cpu_time_limit' => $problem->time_limit,
             'memory_limit' => $problem->memory_limit * 1024,
         ]);
+        Log::channel('verification_code')->info($response);
 
         $result = $response->json();
 
@@ -80,6 +81,7 @@ class ProcessSubmission implements ShouldQueue
             $output = 'some thing wrong from our side';
         } elseif ($normalizedOutput === $normalizedExpected) {
             $status = 'accepted';
+            $this->updateUserResult($problem);
         } else {
             $status = 'wrong_answer';
         }
@@ -88,5 +90,21 @@ class ProcessSubmission implements ShouldQueue
             'status' => $status,
             'output' => $output,
         ]);
+    }
+
+    /**
+     * @param mixed $problem
+     * @return void
+     */
+    public function updateUserResult(mixed $problem): void
+    {
+        \DB::table('contest_user')
+            ->where('user_id', $this->submission->user_id)
+            ->where('contest_id', $problem->contest_id)
+            ->update([
+                'correct_answers' => \DB::raw('correct_answers + 1'),
+                'end_time' => now(),//end time in programming contest is the time for the last submission
+            ]);
+
     }
 }

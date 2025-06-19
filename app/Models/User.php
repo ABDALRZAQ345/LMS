@@ -32,7 +32,7 @@ class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'email', 'image', 'bio', 'role', 'password', 'fcm_token', 'gitHub_account', 'points', 'last_online', 'email_verified', 'github_id', 'github_token',
+        'name', 'email', 'image', 'bio', 'role', 'password', 'fcm_token', 'gitHub_account', 'points', 'last_online', 'email_verified', 'github_id', 'github_token','age'
     ];
 
     protected $guarded = [
@@ -260,5 +260,10 @@ class User extends Authenticatable implements JWTSubject
     public function HasFriend(User $friend)
     {
         return $this->friends()->where('friend_id', $friend->id)->exists();
+    }
+
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(Submission::class);
     }
 }
