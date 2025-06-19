@@ -15,11 +15,15 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         Route::get('/contests/{contest}/standing', [ContestController::class, 'standing']);
 
         // todo test and refactor and complete  those  requests
-        Route::get('/contests/{contest}/problems', [ContestController::class, 'problems'])->middleware('contest:programming')->name('submissions.index');
-        Route::get('/contests/{contest}/problems/{problem}', [ProblemContainer::class, 'show'])->middleware('contest:programming')->name('submissions.index');
-        Route::post('/contests/{contest}/problems/{problem}/submissions', [SubmissionController::class, 'submitProblem'])->middleware('contest:programming');
-        Route::get('/contests/{contest}/problems/{problem}/submissions',[SubmissionController::class, 'showProblemSubmissions'])->middleware('contest:programming');
-        Route::get('/contests/{contest}/submissions',[SubmissionController::class, 'showContestSubmissions'])->middleware('contest:programming');
+        Route::group(['middleware' => ['contest:programming']], function () {
+            Route::get('/contests/{contest}/problems', [ContestController::class, 'problems'])->name('submissions.index');
+            Route::get('/contests/{contest}/problems/{problem}', [ProblemContainer::class, 'show'])->name('submissions.index');
+            Route::post('/contests/{contest}/problems/{problem}/submissions', [SubmissionController::class, 'submitProblem'])->middleware(['role:student']);
+            Route::get('/contests/{contest}/problems/{problem}/submissions',[SubmissionController::class, 'showProblemSubmissions']);
+            Route::get('/contests/{contest}/submissions',[SubmissionController::class, 'showContestSubmissions']);
+
+        });
+
     });
     Route::get('/contests', [ContestController::class, 'index'])->name('contests.index');
     Route::get('/contests/{contest}', [ContestController::class, 'show'])->name('contests.show');

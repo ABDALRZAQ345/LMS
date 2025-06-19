@@ -19,9 +19,8 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->text('description')->nullable();
             $table->json('technologies')->nullable();
-            $table->string('gitHub_url')->nullable();
-            $table->string('url')->nullable();
-
+            $table->json('links')->nullable();
+            $table->integer('likes')->default(0);
             $table->enum('status', ['pending', 'accepted', 'refused'])->default('pending');
             $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
             $table->timestamps();

@@ -28,8 +28,8 @@ class AddProjectRequest extends FormRequest
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'technologies' => ['nullable', 'array'],
-            'gitHub_url' => ['nullable', 'string', new ValidGithubRepository],
             'tag_id' => ['required', 'exists:tags,id'],
+            'links' => ['nullable'],
         ];
     }
 

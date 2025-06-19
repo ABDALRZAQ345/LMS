@@ -96,10 +96,11 @@ class ContestController extends Controller
         $validated=$request->validated();
 
         $students =$this->contestService->GetContestResults($contest,$validated['justFriends']) ;
-
+        $currentUser=$students->where('id',\Auth::id())->first() ;
         return response()->json([
             'status' => true,
             'message' => "results might not be calculated yet  ",
+            'your_order' => $currentUser ? $currentUser->pivot->rank : null,
             'students' => StudentStandingResource::collection($students),
             'meta' => getMeta($students)
         ]);
