@@ -4,6 +4,7 @@ namespace App\Services\Courses;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\Courses\CourseResource;
+use App\Http\Resources\Courses\CourseResourceDescription;
 use App\Repositories\Courses\CoursesRepository;
 
 class CoursesService
@@ -19,7 +20,8 @@ class CoursesService
     {
 
         $courses = $this->coursesRepository->getAllCourses($validated);
-
+        //todo data[]=getmeta($courses)
+        //? mkmk
         $data = [
             'courses' => CourseResource::collection($courses),
             'total_pages' => $courses->lastPage(),
@@ -29,12 +31,21 @@ class CoursesService
 
         return ResponseHelper::jsonResponse($data, 'Get All Courses Successfully');
     }
+    public function showCourseDescription($id){
+        $course = $this->coursesRepository->showCourseDescription($id);
 
-    public function showCourse($id)
-    {
+        return ResponseHelper::jsonResponse(CourseResourceDescription::make($course) ,'Get Course Description Successfully');
+    }
+    public function showCourseContent($courseId){
+        $content = $this->coursesRepository->showCourseContent($courseId);
+
+        return ResponseHelper::jsonResponse( [],'Get Course Content Successfully');
+    }
+
+    public function showCourse($id){
         $course = $this->coursesRepository->showCourse($id);
 
-        return ResponseHelper::jsonResponse(CourseResource::make($course), 'Get Course Successfully');
+        return ResponseHelper::jsonResponse(CourseResource::make($course) ,'Get Course Successfully');
     }
 
     public function getAllCoursesInLearningPath($learningPathTitle, $learningPathId)
@@ -53,4 +64,6 @@ class CoursesService
         return ResponseHelper::jsonResponse($course, 'Get Course In Learning Path '
             .$learningPathName.' Successfully');
     }
+
+
 }

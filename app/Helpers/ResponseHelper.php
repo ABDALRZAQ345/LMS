@@ -12,7 +12,6 @@ class ResponseHelper
             'successful' => $successful,
             'message' => $message,
             'data' => $data,
-            'status_code' => $statusCode,
         ];
 
         if (is_null($data) || (is_array($data) && empty($data))) {

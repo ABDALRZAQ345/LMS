@@ -5,16 +5,13 @@ namespace App\Http\Resources\Courses;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CourseWithContentResource extends JsonResource
+class CourseResourceDescription extends JsonResource
 {
-    protected $content;
-
-    public function __construct($resource, $content)
-    {
-        parent::__construct($resource);
-        $this->content = $content;
-    }
-
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
         $imageOfTeacher = $this->teacher->image
@@ -22,9 +19,6 @@ class CourseWithContentResource extends JsonResource
                 ? $this->teacher->image
                 : config('app.url').'/storage/'.$this->teacher->image)
             : null;
-
-
-
 
         return [
             'id' => $this->id,
@@ -39,6 +33,7 @@ class CourseWithContentResource extends JsonResource
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
+            'teacher_bio' => $this->teacher->bio ?? null,
             'learning_paths' => $this->learningPaths->map(function ($path) {
                 return [
                     'id' => $path->id,
@@ -49,27 +44,7 @@ class CourseWithContentResource extends JsonResource
                             : config('app.url') . '/storage/' . $path->image)
                         : null,
                 ];
-            }),
+            }) ];
 
-
-            'content' => $this->content->map(function ($item) {
-                $contentItem = [
-                    'id' => $item->id,
-                    'title' => $item->title,
-                    'type' => $item instanceof \App\Models\Video ? 'video' : 'test',
-                    'order' => $item->order,
-                ];
-
-                if ($item instanceof \App\Models\Video) {
-                    $contentItem['is_free'] = (bool) $item->free;
-                }
-
-                if ($item instanceof \App\Models\Test) {
-                    $contentItem['is_final'] = (bool) $item->is_final;
-                }
-
-                return $contentItem;
-            })->values(),
-        ];
     }
 }

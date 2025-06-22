@@ -29,4 +29,9 @@ class Video extends Model
     {
         return $this->HasMany(Comment::class)->whereNull('comment_id');
     }
+
+    public function students(){
+        return $this->belongsToMany(User::class,'user_video_progress')
+            ->withPivot('progress', 'is_completed','last_watched_at');
+    }
 }

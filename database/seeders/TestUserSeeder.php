@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use App\Models\Test;
 use App\Models\User;
 use Carbon\Carbon;
@@ -32,6 +33,7 @@ class TestUserSeeder extends Seeder
                     'correct_answers' => rand(0, $test->questions()->count()),
                     'start_time' => $startTime,
                     'end_time' => $endTime,
+                    'course_id' => rand(1,5),
                 ]);
             }
         }

@@ -20,6 +20,7 @@ class getAllCoursesRequest extends FormRequest
             'direction' => ['nullable', 'string', 'in:asc,desc'],
             'orderBy' => ['nullable', 'string', 'in:title,rate,date'],
             'status' => ['nullable', 'string', 'in:all,finished,enrolled,watch_later'],
+            'search' => ['nullable', 'string'],
         ];
     }
 
@@ -34,6 +35,7 @@ class getAllCoursesRequest extends FormRequest
             'items' => $this->input('items', 20),
             'direction' => $this->input('direction', 'asc'),
             'status' => $this->input('status', 'all'),
+            'search' => $this->input('search', ''),
             'orderBy' => $orderBy,
         ]);
     }

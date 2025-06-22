@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\Test;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->dateTime('end_time')->nullable();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Test::class)->constrained()->cascadeOnDelete();
+        //    $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

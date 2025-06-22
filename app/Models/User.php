@@ -142,6 +142,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Contest::class, 'contest_user')
             ->withPivot('end_time', 'correct_answers', 'gained_points', 'rank');
     }
+    public function createdContests(): HasMany
+    {
+        return $this->hasMany(Contest::class)
+            ->withCount('students');
+    }
 
     public function AcceptedCreatedContests(): HasMany
     {
@@ -149,6 +154,7 @@ class User extends Authenticatable implements JWTSubject
             ->where('request_status','accepted')
             ->withCount('students');
     }
+
     public function AllCreatedContests(): HasMany
     {
         return $this->hasMany(Contest::class)
@@ -174,6 +180,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Course::class)->where('verified', true);
     }
+
+
 
     public function unVerifiedCourses(): HasMany
     {
@@ -233,12 +241,18 @@ class User extends Authenticatable implements JWTSubject
 
         return $streak ? $streak->current_streak : 0;
     }
-
-    public function allLearningPaths(): BelongsToMany
+    public function allLearningPaths():BelongsToMany
     {
         return $this->belongsToMany(LearningPath::class, 'learning_path_user')
             ->withPivot('paid', 'status');
     }
+
+    public function videos()
+    {
+        return $this->belongsToMany(Video::class,'user_video_progress')
+            ->withPivot('progress', 'is_completed','last_watched_at');
+    }
+
 
     public function finishedLearningPaths(): BelongsToMany
     {
