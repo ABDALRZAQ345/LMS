@@ -14,20 +14,12 @@ class ValidCourseAmount implements ValidationRule
         $this->courseId = $courseId;
     }
 
-    /**
-     * Perform the validation rule.
-     *
-     * @param  string    $attribute
-     * @param  mixed     $value
-     * @param  \Closure  $fail
-     * @return void
-     */
     public function validate(string $attribute, $value, \Closure $fail): void
     {
         $course = Course::find($this->courseId);
 
         if (! $course || $value !== ($course->price * 100)) {
-            $fail('المبلغ المدفوع لا يطابق سعر الكورس.');
+            $fail('The amount paid does not match the course price.');
         }
     }
 }

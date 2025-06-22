@@ -4,6 +4,7 @@ namespace App\Services\Courses;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\Courses\CourseResource;
+use App\Http\Resources\Courses\CourseResourceDescription;
 use App\Repositories\Courses\CoursesRepository;
 
 class CoursesService
@@ -29,10 +30,16 @@ class CoursesService
         return ResponseHelper::jsonResponse($data, 'Get All Courses Successfully');
     }
 
-    public function showCourse($id){
-        $course = $this->coursesRepository->showCourse($id);
+    public function showCourseDescription($id){
+        $course = $this->coursesRepository->showCourseDescription($id);
 
-        return ResponseHelper::jsonResponse($course ,'Get Course Successfully');
+        return ResponseHelper::jsonResponse(CourseResourceDescription::make($course) ,'Get Course Description Successfully');
+    }
+
+    public function showCourseContent($courseId){
+        $content = $this->coursesRepository->showCourseContent($courseId);
+
+        return ResponseHelper::jsonResponse( [],'Get Course Content Successfully');
     }
 
     public function getAllCoursesInLearningPath($learningPathTitle,$learningPathId){

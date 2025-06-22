@@ -24,8 +24,12 @@ class CourseController extends Controller
         return $this->courseService->getAllCourses($validated);
     }
 
-    public function showCourse(Course $course){
-        return $this->courseService->showCourse($course->id);
+    public function showCourseDescription(Course $course){
+        return $this->courseService->showCourseDescription($course->id);
+    }
+
+    public function showCourseContent(Course $course){
+        return $this->courseService->showCourseContent($course->id);
     }
 
     public function getAllCoursesInLearningPath(LearningPath $learningPath){

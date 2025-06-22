@@ -10,8 +10,8 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 Route::middleware('auth:api')->group(function () {
 
     Route::get('/courses', [CourseController::class, 'index']);
-    Route::get('/courses/{course}', [CourseController::class, 'showCourse'])->name('courses.show');;
-
+    Route::get('/courses/{course}/description', [CourseController::class, 'showCourseDescription'])->name('courses.show');;
+    Route::get('courses/{course}/content', [CourseController::class, 'showCourseContent']);
     Route::post('courses/{course}/enroll', [StripePaymentController::class, 'enrollCourse']);
 
 

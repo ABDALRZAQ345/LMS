@@ -16,8 +16,8 @@ class CoursesRepository
         $query=Course::orderBy($validated['orderBy'], $validated['direction'])
             ->with('teacher')
             ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
-            ->with(['videos.students' => fn($q) => $q->where('user_id', auth()->id())])
-            ->with(['tests.students' => fn($q) => $q->where('user_id', auth()->id())])
+            ->with(['videos.students' => fn($q) => $q->where('user_id', $user->id )])
+            ->with(['tests.students' => fn($q) => $q->where('user_id', $user->id )])
             ->where('verified',true);
         if($validated['status'] != 'all'){
             $query->wherePivot('status', $validated['status']);
@@ -30,14 +30,25 @@ class CoursesRepository
     }
 
 
-    public function showCourse($id){
-        $course = auth()->user()->verifiedCourses()
+    public function showCourseDescription($id){
+        $user = auth()->user();
+        $course = $user->verifiedCourses()
             ->with('teacher')
             ->with('learningPaths')
             ->findOrFail($id);
-        $content = $course->content();
 
-        return new CourseWithContentResource($course, $content);
+        return $course;
+    }
+
+    public function showCourseContent($cousreId){
+        $user = auth()->user();
+        $course = Course::findOrFail($cousreId);
+        $content = $course->content()
+            ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
+            ->with(['videos.students' => fn($q) => $q->where('user_id',  $user->id)])
+            ->with(['tests.students' => fn($q) => $q->where('user_id', $user->id)])
+            ->where('verified',true);
+        return $content;
     }
 
     public function getAllCoursesInLearningPath($id) {
