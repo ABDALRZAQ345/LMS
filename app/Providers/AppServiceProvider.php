@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Contest;
+use App\Models\Course;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\Submission;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Observers\ReviewObserver;
 use App\Observers\SubmissionObserver;
 use App\Policies\ContestPolicy;
+use App\Policies\CoursePolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -44,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Contest::class, ContestPolicy::class);
         Gate::policy(Project::class, ProjectPolicy::class);
         Gate::policy(User::class,UserPolicy::class);
+        Gate::policy(Course::class,CoursePolicy::class);
     }
 
     private function observers(): void

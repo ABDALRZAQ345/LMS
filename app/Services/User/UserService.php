@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Http\Resources\Users\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -81,7 +82,7 @@ class UserService
 
     }
 
-    public function CreateTeacher($data): \Illuminate\Http\JsonResponse
+    public function CreateTeacher($data): JsonResponse
     {
 
         $data['role'] = 'teacher';
@@ -91,12 +92,21 @@ class UserService
         return response()->json([
             'status' => true,
             'message' => 'Teacher created successfully',
+            'data'=> [
+                'email'=> $data['email'],
+                'password'=>$data['password']
+            ]
         ]);
 
     }
 
     public function UpdateFcmToken($token): void
     {
-
+        $user=Auth::user();
+        if($user){
+            $user->update([
+                'fcm_token' => $token
+            ]);
+        }
     }
 }

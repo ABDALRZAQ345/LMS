@@ -27,11 +27,11 @@ class ContestUserSeeder extends Seeder
             foreach ($randomContests as $contest) {
                 $startTime = Carbon::parse($contest->start_at);
                 $endTime = $startTime->copy()->addHours(rand(1, 3));
-
                 $student->contests()->attach($contest->id, [
                     'end_time' => $endTime,
                     'correct_answers' => rand(0, 20),
                     'gained_points' => rand(0, 100),
+                    'is_official' => 1,
                     'rank' => rand(1, 50),
                 ]);
             }

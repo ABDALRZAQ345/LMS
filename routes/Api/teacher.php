@@ -10,5 +10,9 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
         Route::post('/contests/quiz', [ContestController::class, 'CreateQuizContest']);
         Route::post('/contests/programming',[ContestController::class, 'CreateProgrammingContest']);
         Route::get('/my_contests', [TeacherController::class, 'myContests']);
+
+        Route::post('/courses/{course}/tests',[TeacherController::class, 'createTest']);
+        Route::put('/courses/{course}/tests/{test}',[TeacherController::class, 'updateTest']);
+        Route::delete('courses/{course}/tests/{test}',[TeacherController::class, 'deleteTest']);
     });
-Route::post('/contests/programming',[ContestController::class, 'CreateProgrammingContest']);
+

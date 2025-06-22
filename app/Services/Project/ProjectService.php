@@ -22,7 +22,9 @@ class ProjectService
             });
         }
 
-        return $projects->where('title', 'like', '%'.$data['search'].'%')->with(['user', 'tag'])->where('status', 'accepted')->paginate(20);
+        return $projects->where('title', 'like', '%'.$data['search'].'%')->with(['user', 'tag'])->where('status', 'accepted')
+            ->orderByDesc('likes')
+            ->paginate(20);
 
     }
 

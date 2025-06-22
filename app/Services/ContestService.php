@@ -122,6 +122,7 @@ class ContestService
                 'user_id' => Auth::id(),
                 'start_at' => $data['start_at'],
             ]);
+
             foreach ($data['questions'] as $questionData) {
                 $question = $contest->questions()->create([
                     'text' => $questionData['question'],
