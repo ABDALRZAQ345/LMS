@@ -17,7 +17,7 @@ class UserContestResource extends JsonResource
      return [
             'id' => $this->id,
             'name' => $this->name,
-            'data' => $this->start_at,
+            'date' => $this->start_at,
             'rank' => $this->pivot->rank,
             'points' => $this->pivot->gained_points,
             'type' => $this->type,

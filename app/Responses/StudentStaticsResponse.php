@@ -10,7 +10,7 @@ class StudentStaticsResponse
 {
     public static function response(User $user): JsonResponse
     {
-
+    $bestContest=$user->contests()->orderByPivot('rank', 'desc')->without('pivot')->first();
         return response()->json([
             'status' => true,
             'completed_courses' => $user->finishedCourses()->count(),
@@ -18,7 +18,7 @@ class StudentStaticsResponse
             'contests' => $user->contests()->count(),
             'points' => $user->points,
             'achievements' => $user->achievements()->count(),
-            'best_contest' => new UserContestResource($user->contests()->orderByPivot('rank', 'desc')->without('pivot')->first()),
+            'best_contest' =>$bestContest != null ? new UserContestResource( $bestContest) :null,
             'max_streak' => $user->LongestStreak(),
             'current_streak' => $user->CurrentStreak(),
         ]);

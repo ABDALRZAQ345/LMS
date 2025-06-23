@@ -43,7 +43,6 @@ class CheckVerificationCodeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $isRegistration = filter_var($this->input('registration'), FILTER_VALIDATE_BOOLEAN);
 
         return [
             'email' => ['required'],

@@ -33,7 +33,6 @@ class PasswordController extends BaseController
     public function forget(ForgetPasswordRequest $request): JsonResponse
     {
         $validated = $request->validated();
-
         $this->verificationCodeService->Check($validated['email'], $validated['code'], false);
 
         $user = User::where('email', $validated['email'])->firstOrFail();

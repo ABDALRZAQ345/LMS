@@ -99,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
             'admin.php',
             'teacher.php',
             'contest.php',
-
+            'autoTest.php'
         ];
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')

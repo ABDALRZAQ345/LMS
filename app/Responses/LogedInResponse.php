@@ -16,7 +16,7 @@ class LogedInResponse
         }
 
         return response()->json([
-            'message' => true,
+            'status' => true,
             'user_id' => $user['id'],
             'token' => $token,
             'role' => $user['role'],
