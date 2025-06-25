@@ -25,11 +25,12 @@ class PaymentService
                 ], 'Payment requires additional authentication.');
             }
 
-            return ResponseHelper::jsonResponse([], 'Payment initiated successfully');
+            return ResponseHelper::jsonResponse([], 'Payment initiated successfully.');
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse([], $e->getMessage(), 422, false);
         }
     }
+
 
 
 

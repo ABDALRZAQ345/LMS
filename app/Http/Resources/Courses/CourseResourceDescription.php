@@ -14,6 +14,8 @@ class CourseResourceDescription extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $countOfVideos = $this->videos->count();
+        $duration = $this->videos->sum('duration');
         $imageOfTeacher = $this->teacher->image
             ? (str_starts_with($this->teacher->image, 'https://via.placeholder.com')
                 ? $this->teacher->image
@@ -29,11 +31,14 @@ class CourseResourceDescription extends JsonResource
             'price' => $this->price == 0 ? 'free' : $this->price,
             'level'=> $this->level,
             'status' => $this->pivot->status ?? null,
+            'number_of_videos' => $countOfVideos,
+            'duration' => $duration,
             'student_paid' => $this->pivot->paid ?? null,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
             'teacher_bio' => $this->teacher->bio ?? null,
+            'number_of_teacher_courses' => $this->teacher->verified_courses_count,
             'learning_paths' => $this->learningPaths->map(function ($path) {
                 return [
                     'id' => $path->id,

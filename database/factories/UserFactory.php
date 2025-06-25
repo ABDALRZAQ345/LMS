@@ -18,16 +18,21 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'github_id' => $this->faker->unique()->userName(),
+            'github_token' => $this->faker->uuid(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => \Hash::make($this->faker->password()),
             'fcm_token' => $this->faker->uuid(),
             'image' => $this->faker->imageUrl(),
             'gitHub_account' => $this->faker->url(),
             'bio' => $this->faker->text(),
-            'points' => $this->faker->randomNumber(),
+            'points' => $this->faker->numberBetween(0, 10000),
             'last_online' => $this->faker->dateTime(),
+            'email_verified' => $this->faker->boolean(),
+            'level' => $this->faker->randomElement(['beginner', 'intermediate', 'advanced', 'expert']),
+            'google_id' => $this->faker->unique()->uuid(),
             'role' => $this->faker->randomElement(['admin', 'student', 'teacher']),
-
+            'age' => $this->faker->numberBetween(16, 60),
         ];
     }
 }

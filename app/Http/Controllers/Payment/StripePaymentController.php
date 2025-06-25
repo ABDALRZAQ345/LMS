@@ -16,27 +16,34 @@ class StripePaymentController extends Controller
         $this->paymentService = $paymentService;
     }
 
-    public function enrollCourse(EnrollCourseRequest $request, Course $course){
-
+    public function enrollCourse(EnrollCourseRequest $request, Course $course)
+    {
         $user = auth()->user();
+        if (!$course->verified) {
+            return ResponseHelper::jsonResponse([], 'This course is not verified yet.');
+        }
 
-        if ($user->verifiedCourses()->where('course_id', $course->id)->exists()) {
+        if ($user->studentCourses()->where('course_id', $course->id)->exists()) {
             return ResponseHelper::jsonResponse([], 'You are already enrolled in this course.');
         }
 
         if ($course->price == 0) {
-            $user->verifiedCourses()->syncWithoutDetaching([
+            $user->studentCourses()->syncWithoutDetaching([
                 $course->id => [
                     'paid' => 0,
                     'status' => 'enrolled',
+                    'verified' => true,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]
             ]);
+
             return ResponseHelper::jsonResponse([], 'You have been enrolled for free.');
         }
 
         $validated = $request->validated();
-        return $this->paymentService->enrollCourse($validated,$course);
+        return $this->paymentService->enrollCourse($validated, $course);
     }
+
+
 }
