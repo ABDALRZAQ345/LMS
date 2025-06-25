@@ -5,11 +5,13 @@ use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\TeacherController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
+Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
 
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::get('/me', [UserController::class, 'getCurrentUser']);
+        Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');
+    });
 
-    Route::get('/me', [UserController::class, 'getCurrentUser']);
-    Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 

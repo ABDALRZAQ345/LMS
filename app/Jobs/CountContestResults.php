@@ -78,6 +78,9 @@ class CountContestResults implements ShouldQueue
      */
     public function UpdateUserPointsAndRank(mixed $student, int $i, float|int $gainedPoints): void
     {
+        if( $student->points- $gainedPoints<0){
+            $gainedPoints=$student->points;
+        }
         db::table('contest_user')->where('contest_id', $this->contest->id)
             ->where('user_id', $student->id)
             ->update([

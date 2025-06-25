@@ -15,7 +15,7 @@ class AuthService
 {
     protected VerificationCodeService $verificationCodeService;
 
-    public function __construct(verificationCodeService $verificationCodeService)
+    public function __construct(VerificationCodeService $verificationCodeService)
     {
         $this->verificationCodeService = $verificationCodeService;
     }

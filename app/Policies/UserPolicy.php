@@ -13,8 +13,7 @@ class UserPolicy
      */
     public function viewUser(?User $user, User $accessedUser): bool
     {
-
-        if ($accessedUser->role == 'admin' &&$user &&  $user->role != 'admin') {
+        if ($accessedUser->role == 'admin' && $user &&  $user->role != 'admin') {
             return false;
         }
         return true;

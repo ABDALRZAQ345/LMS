@@ -26,7 +26,6 @@ class UserResource extends JsonResource
             'bio' => $this->bio,
             'last_online' => $this->last_online,
             'role' => $this->role,
-            'level' => $this->level,
             'joined'=> $this->created_at->format('Y-m-d'),
             'age' => $this->age
         ];
@@ -35,8 +34,11 @@ class UserResource extends JsonResource
         if ($this->role == 'student') {
             $data['points'] = $this->points;
             $data['role']=$this->role;
+            $data['level']=$this->level;
+            $data['current_streak']=  $this->CurrentStreak();
             $data['completed_courses'] = $this->finishedCourses()->count();
             $data['completed_learning_paths'] = $this->finishedLearningPaths()->count();
+            if(\Auth::user())
             $data['is_friend'] = db::table('friends')->where('user_id', \Auth::id())->where('friend_id', $data['id'])->exists() ? 1 : 0;
         }
 

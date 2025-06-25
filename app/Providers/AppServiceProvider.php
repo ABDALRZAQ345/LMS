@@ -101,6 +101,9 @@ class AppServiceProvider extends ServiceProvider
             'contest.php',
 
         ];
+        if(config('app.env')!='production') {
+            $apiRouteFiles[]=   'autoTest.php';
+        }
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')
                 ->middleware('api')
