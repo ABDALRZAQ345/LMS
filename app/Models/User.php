@@ -206,7 +206,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function learningPaths(): BelongsToMany
     {
-        return $this->belongsToMany(LearningPath::class, 'learning_path_user');
+        return $this->belongsToMany(LearningPath::class, 'learning_path_user')
+            ->withTimestamps();
 
     }
 

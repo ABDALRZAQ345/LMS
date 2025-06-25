@@ -14,6 +14,7 @@ class LearningPathRepository
         $query = LearningPath::where('verified', true)
             ->with('teacher')
             ->withCount('courses')
+            ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
             ->withSum('courses', 'price')
             ->withSum('courses', 'rate');
         if ($validated['search']) {
@@ -30,58 +31,15 @@ class LearningPathRepository
             return $query->paginate($validated['items']);
 
     }
-//        if(!$validated['search']){
-//            if($validated['status']=='all'){
-//                return LearningPath::where('verified', true)
-//                    ->with('teacher')
-//                    ->withCount('courses')
-//                    ->withSum('courses', 'price')
-//                    ->withSum('courses','rate')
-//                    ->orderBy($validated['orderBy'], $validated['direction'])
-//                    ->paginate($validated['items']);
-//            }else{
-//                $user = \Auth::user();
-//                return  LearningPath::where('verified', true)->orderBy($validated['orderBy'],$validated['direction'])
-//                    ->where('status',$validated['status'])
-//                    ->with('teacher')
-//                    ->withCount('courses')
-//                    ->withSum('courses', 'price')
-//                    ->withSum('courses','rate')
-//                    ->paginate($validated['items']);
-//            }
-//        }
-//        else{
-//            if($validated['status']=='all'){
-//                return LearningPath::where('title','like','%'.$validated['search'].'%')
-//                    ->where('verified', true)
-//                    ->with('teacher')
-//                    ->withCount('courses')
-//                    ->withSum('courses', 'price')
-//                    ->withSum('courses','rate')
-//                    ->orderBy($validated['orderBy'], $validated['direction'])
-//                    ->paginate($validated['items']);
-//            }else{
-//                $user = \Auth::user();
-//                return LearningPath::where('verified', true)->where('title','like','%'.$validated['search'].'%')
-//                    ->where('status',$validated['status'])
-//                    ->orderBy($validated['orderBy'],$validated['direction'])
-//                    ->with('teacher')
-//                    ->withCount('courses')
-//                    ->withSum('courses', 'price')
-//                    ->withSum('courses','rate')
-//                    ->paginate($validated['items']);
-//            }
-//
-//        }
-//    }
 
     public function showLearningPath($id)
     {
-        return LearningPath::find($id)
+        return LearningPath::where('id',$id)
             ->with('teacher')
             ->withCount('courses')
             ->withSum('courses', 'price')
-            ->withSum('courses', 'rate');
+            ->withSum('courses', 'rate')
+            ->first();
     }
 
     public function updateStatusLearningPath($validated, $learningPathId)
@@ -97,7 +55,6 @@ class LearningPathRepository
         } else {
             $user->learningPaths()->attach($learningPathId, [
                 'status' => $validated['status'],
-                'paid' => false,
             ]);
         }
 
