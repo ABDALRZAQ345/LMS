@@ -26,7 +26,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'image' => ['nullable', 'image'],
+            'image' => ['nullable', 'image','max:4096'],
             'bio' => ['nullable'],
             'gitHub_account' => ['nullable', 'string', new ValidGitHubAccount],
             'age' => ['nullable', 'integer', 'between:1,200'],

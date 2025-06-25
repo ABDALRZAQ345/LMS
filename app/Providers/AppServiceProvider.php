@@ -99,8 +99,11 @@ class AppServiceProvider extends ServiceProvider
             'admin.php',
             'teacher.php',
             'contest.php',
-            'autoTest.php'
+
         ];
+        if(config('app.env')!='production') {
+            $apiRouteFiles[]=   'autoTest.php';
+        }
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')
                 ->middleware('api')

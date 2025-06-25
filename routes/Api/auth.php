@@ -16,7 +16,6 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
 
         Route::post('/verificationCode/send', [VerificationCodeController::class, 'send'])->middleware('throttle:send_confirmation_code')->name('verificationCode.check');
         Route::post('/verificationCode/check', [VerificationCodeController::class, 'check'])->middleware('throttle:check_verification_code')->name('verificationCode.check');
-
         Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
 
@@ -24,7 +23,6 @@ Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
 
         Route::get('/auth/github/redirect', [GithubController::class, 'redirectToGithub']);
         Route::get('/auth/github/callback', [GithubController::class, 'callback']);
-
     });
     Route::middleware('auth:api')->group(function () {
         Route::post('password/reset', [PasswordController::class, 'reset'])->name('password.reset');

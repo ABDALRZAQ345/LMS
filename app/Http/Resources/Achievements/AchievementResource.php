@@ -20,6 +20,7 @@ class AchievementResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'image' => $this->image,
+            'description' => $this->description,
             'achieve_date' => optional($this->pivot?->created_at)->format('Y-m-d'),
         ];
     }

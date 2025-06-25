@@ -35,8 +35,10 @@ class UserResource extends JsonResource
             $data['points'] = $this->points;
             $data['role']=$this->role;
             $data['level']=$this->level;
+            $data['current_streak']=  $this->CurrentStreak();
             $data['completed_courses'] = $this->finishedCourses()->count();
             $data['completed_learning_paths'] = $this->finishedLearningPaths()->count();
+            if(\Auth::user())
             $data['is_friend'] = db::table('friends')->where('user_id', \Auth::id())->where('friend_id', $data['id'])->exists() ? 1 : 0;
         }
 
