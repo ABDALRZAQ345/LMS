@@ -30,7 +30,7 @@ class LearningPathResource extends JsonResource
             'teacher_id' => $this->teacher->id,
             'total_courses_price' => $this->courses_sum_price,
             'teacher_name' => $this->teacher->name,
-            'verified' => $this->verified,
+            'status'=> optional($this->students->first()?->pivot)->status,
         ];
     }
 }

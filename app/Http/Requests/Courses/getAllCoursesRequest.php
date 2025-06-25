@@ -20,21 +20,18 @@ class getAllCoursesRequest extends FormRequest
             'direction' => ['nullable', 'string', 'in:asc,desc'],
             'orderBy' => ['nullable', 'string', 'in:title,rate,date'],
             'status' => ['nullable', 'string', 'in:all,finished,enrolled,watch_later'],
+            'search' => ['nullable', 'string'],
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        $orderBy = $this->input('orderBy', 'rate');
-        if ($orderBy === 'date') {
-            $orderBy = 'created_at';
-        }
-
         $this->merge([
             'items' => $this->input('items', 20),
             'direction' => $this->input('direction', 'asc'),
             'status' => $this->input('status', 'all'),
-            'orderBy' => $orderBy,
+            'search' => $this->input('search', ''),
+            'orderBy' => $this->input('orderBy', 'rate'),
         ]);
     }
 

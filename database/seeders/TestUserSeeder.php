@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Course;
 use App\Models\Test;
 use App\Models\User;
 use Carbon\Carbon;

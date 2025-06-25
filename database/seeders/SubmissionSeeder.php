@@ -11,6 +11,6 @@ class SubmissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        \App\Models\Submission::factory(30)->create();
     }
 }

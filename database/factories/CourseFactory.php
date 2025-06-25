@@ -22,6 +22,7 @@ class CourseFactory extends Factory
             'image' => $this->faker->imageUrl(300, 200, 'education'),
             'description' => $this->faker->paragraph(3),
             'user_id' => User::factory()->state(['role' => 'teacher']),
+            'level' => $this->faker->randomElement(['beginner', 'intermediate', 'advanced', 'expert']),
             'price' => $this->faker->numberBetween(0, 200),
             'verified' => $this->faker->boolean(80),
             'rate' => $this->faker->numberBetween(0, 5),

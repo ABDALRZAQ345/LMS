@@ -18,18 +18,19 @@
         "laravel/telescope": "^5.7",
         "laravel/tinker": "^2.10.1",
         "socialiteproviders/github": "^4.1",
+        "stripe/stripe-php": "^17.3",
         "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
+        "darkaonline/l5-swagger": "^9.0",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3",
-        "darkaonline/l5-swagger": "^9.0"
+        "phpunit/phpunit": "^11.5.3"
     },
     "autoload": {
         "psr-4": {
