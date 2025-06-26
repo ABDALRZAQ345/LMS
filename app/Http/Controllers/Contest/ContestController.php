@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\Contest;
 
-use App\Exceptions\NotFoundException;
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contest\GetAllContestsRequest;
 use App\Http\Requests\Contest\MakeContestRequest;
 use App\Http\Requests\Contest\MakeProgrammingContestRequest;
-use App\Http\Requests\ShowContestProblemsRequest;
-use App\Http\Requests\ShowContestRequest;
+use App\Http\Requests\Contest\ShowContestProblemsRequest;
+use App\Http\Requests\Contest\ShowContestRequest;
+use App\Http\Requests\Contest\StandingRequest;
 use App\Http\Requests\ShowQuestionsRequest;
-use App\Http\Requests\StandingRequest;
 use App\Http\Resources\ContestResource;
-use App\Http\Resources\StudentStandingResource;
 use App\Models\Contest;
 use App\Responses\ContestStandingResponse;
 use App\Services\ContestService;

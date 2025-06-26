@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Contest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteQuizRequest extends FormRequest
+class ShowContestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return \Gate::allows('editCourse',$this->route('course'));
+        return  \Gate::allows('viewContest', $this->route('contest'));
     }
 
     /**

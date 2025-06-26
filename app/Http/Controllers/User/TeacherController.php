@@ -4,9 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\createQuizRequest;
-use App\Http\Requests\DeleteQuizRequest;
-use App\Http\Requests\UpdateQuizRequest;
+use App\Http\Requests\Quiz\createQuizRequest;
+use App\Http\Requests\Quiz\DeleteQuizRequest;
+use App\Http\Requests\Quiz\UpdateQuizRequest;
 use App\Http\Resources\ContestResource;
 use App\Models\Course;
 use App\Models\Test;
@@ -14,7 +14,6 @@ use App\Models\User;
 use App\Services\TestService;
 use App\Services\User\TeacherService;
 use Illuminate\Http\JsonResponse;
-use OpenApi\Annotations\Delete;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TeacherController extends Controller

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -65,8 +66,7 @@ class UserService
     public function GetUsers($friends = 0, $role = 'student', $search = '', $orderBy = 'points', $direction = 'desc'): \Illuminate\Pagination\LengthAwarePaginator
     {
 
-        $user = Auth::user();
-
+        $user = auth('api')->user();
         if ($user && $friends) {
             $users = $user->friends();
         } else {

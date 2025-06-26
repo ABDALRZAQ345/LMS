@@ -20,7 +20,7 @@ class LocaleMiddleware
     {
 
 
-        $user = \Auth::user();
+        $user = auth('api')->user();
         if ($user) {
             if($user->last_online && $user->last_online <  now()->subYear()->toDateTimeString()){
                 $this->achievementsService->ReturnAfterYear($user);
