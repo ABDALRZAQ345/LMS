@@ -8,7 +8,7 @@ class ReviewsRepository
 {
     public function getAllReviewsInCourse($courseId)
     {
-        $userId = auth()->id();
+        $userId = auth('api')->id();
         $userReview = Review::with(['student:id,name,image'])
             ->where('course_id', $courseId)
             ->where('user_id', $userId)

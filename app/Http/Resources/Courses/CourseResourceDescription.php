@@ -22,7 +22,7 @@ class CourseResourceDescription extends JsonResource
                 : config('app.url').'/storage/'.$this->teacher->image)
             : null;
 
-
+        $countOfParticipant = $this->students()->count();
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -40,6 +40,7 @@ class CourseResourceDescription extends JsonResource
                     ?? null,
             'number_of_videos' => $countOfVideos,
             'duration' => $duration,
+            'number_of_participants' => $countOfParticipant,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
