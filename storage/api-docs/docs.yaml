@@ -1,0 +1,1891 @@
+  openapi: 3.0.0
+  info:
+    title: LMs
+    version: 1.0.0
+  servers:
+    - url: http://{{baseurl}}
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+  tags:
+    - name: Auth
+    - name: User
+    - name: Courses
+    - name: Learning paths
+    - name: Friends
+    - name: Reviews
+    - name: Project
+    - name: Admin
+    - name: Admin > Contest Requests
+    - name: Admin > Project Requests
+    - name: Admin > Statistics
+    - name: Contest
+    - name: Contest > Not Tested yet
+    - name: Teacher
+  paths:
+    /api/login:
+      post:
+        tags:
+          - Auth
+        summary: Login
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                  password:
+                    type: string
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  message: true
+                  user_id: 42
+                  token: >-
+                    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzQ5NTYzMDU5LCJleHAiOjE3NTIxNTUwNTksIm5iZiI6MTc0OTU2MzA1OSwianRpIjoiOXBXNmliN3pxd0syY0JYSCIsInN1YiI6IjQyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.JqHI18c1aPgDnz1XiDpaFbfD6_-w9-cQkqP7UwlJlN0
+                  role: student
+          '422':
+            description: Unprocessable Content
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                examples:
+                  example-0:
+                    summary: no account Login
+                    value:
+                      errors:
+                        email:
+                          - there no account with this email
+                  example-1:
+                    summary: wrong request
+                    value:
+                      errors:
+                        password:
+                          - The password field must be at least 8 characters.
+                          - >-
+                            The password field must contain at least one uppercase
+                            and one lowercase letter.
+                          - The password field must contain at least one symbol.
+                          - The password field must contain at least one number.
+                        email:
+                          - The email field is required.
+    /api/register:
+      post:
+        tags:
+          - Auth
+        summary: Register
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: abdooo
+                  email:
+                    type: string
+                    example: abdsarhan519@gmail.com
+                  password:
+                    type: string
+                    example: 1234/*-+Asa
+                  password_confirmation:
+                    type: string
+                    example: 1234/*-+Asa
+                  image:
+                    type: string
+                    format: binary
+                  fcm_token:
+                    type: string
+                  gitHub_account:
+                    type: string
+                    example: https://github.com/ABDALRZAQ345
+                  bio:
+                    type: string
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: true
+                  message: verification code sent successfully
+          '422':
+            description: Unprocessable Content
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  errors:
+                    password:
+                      - The password field confirmation does not match.
+                      - The password field must be at least 8 characters.
+                      - >-
+                        The password field must contain at least one uppercase and
+                        one lowercase letter.
+                      - The password field must contain at least one letter.
+                    email:
+                      - there is already an account with this email address.
+                    gitHub_account:
+                      - >-
+                        gitHub_account must be a valid GitHub account like
+                        https://github.com/ABDALRZAQ345
+          '429':
+            description: Too Many Requests
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: Too Many Attempts try again later .
+    /api/verificationCode/check:
+      post:
+        tags:
+          - Auth
+        summary: Check Verification code
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: jmalj6564@gmail.com
+                  code:
+                    type: integer
+                    example: '488791'
+                  registration:
+                    type: integer
+                    example: '1'
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  message: true
+                  user_id: 43
+                  token: >-
+                    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3ZlcmlmaWNhdGlvbkNvZGUvY2hlY2siLCJpYXQiOjE3NDk4MjM3NDIsImV4cCI6MTc1MjQxNTc0MiwibmJmIjoxNzQ5ODIzNzQyLCJqdGkiOiI5WklRT3VqTm9kV01PbjIzIiwic3ViIjoiNDMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.OMSHeqUuGqNAfP0B-CogHnDTzN-f_S-nGkg48IU_V3g
+                  role: student
+          '401':
+            description: Unauthorized
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: incorrect code
+          '422':
+            description: Unprocessable Content
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                examples:
+                  example-0:
+                    summary: Check Verification code
+                    value:
+                      errors:
+                        email:
+                          - There is no user with this email
+                  example-1:
+                    summary: Check Verification code
+                    value:
+                      errors:
+                        code:
+                          - The code field must be 6 digits.
+                        email:
+                          - This user is already verified.
+                  example-2:
+                    summary: Check Verification code
+                    value:
+                      errors:
+                        email:
+                          - This email is not registered or not verified.
+          '429':
+            description: Too Many Requests
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: Too Many Attempts try again later .
+    /api/verificationCode/send:
+      post:
+        tags:
+          - Auth
+        summary: Send Verification code
+        description: >-
+          عندما تريد كود لانشاء حساب جديد او اعادة ارسال الكود الخاص بانشاء حساب
+          جديد اجعل registration = 1
+
+          والا ان كنت تريد الكود لتغيير كلمة المرور فاجعلها 0
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: jmalj6564@gmail.com
+                  registration:
+                    type: integer
+                    example: '0'
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: true
+                  message: Verification code send successfully to sse@gmail.com
+          '422':
+            description: Unprocessable Content
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                examples:
+                  example-0:
+                    summary: Send Verification code
+                    value:
+                      errors:
+                        email:
+                          - This user is already verified.
+                  example-1:
+                    summary: Send Verification code
+                    value:
+                      errors:
+                        email:
+                          - This email is not registered or not verified.
+                  example-2:
+                    summary: Send Verification code
+                    value:
+                      errors:
+                        registration:
+                          - The selected registration is invalid.
+                        email:
+                          - This email is not registered or not verified.
+          '429':
+            description: Too Many Requests
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: Too Many Attempts try again later .
+    /api/password/forget:
+      post:
+        tags:
+          - Auth
+        summary: Forget Password
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: jmalj6564@gmail.com
+                  code:
+                    type: integer
+                    example: '228954'
+                  password:
+                    type: string
+                    example: 1234/*-+Asas
+                  password_confirmation:
+                    type: string
+                    example: 1234/*-+Asas
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  message: true
+                  user_id: 42
+                  token: >-
+                    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3Bhc3N3b3JkL2ZvcmdldCIsImlhdCI6MTc0OTgyNTQyMywiZXhwIjoxNzUyNDE3NDIzLCJuYmYiOjE3NDk4MjU0MjMsImp0aSI6ImJ4V1l0V2UzM0Z1N0gxUGciLCJzdWIiOiI0MiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CDTWH_rx8-e4Bmh-uqtwNIz0c983aTv69Fv-tdY959o
+                  role: student
+          '401':
+            description: Unauthorized
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: incorrect code
+          '422':
+            description: Unprocessable Content
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  errors:
+                    email:
+                      - there is no user with this email
+                    code:
+                      - The code field must be 6 digits.
+    /api/logout:
+      post:
+        tags:
+          - Auth
+        summary: Log out
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: true
+                  message: Logged out successfully
+          '401':
+            description: Unauthorized
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  message: Unauthenticated.
+    /api/token/refresh:
+      post:
+        tags:
+          - Auth
+        summary: Refresh token
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  message: true
+                  user_id: 42
+                  token: >-
+                    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3Rva2VuL3JlZnJlc2giLCJpYXQiOjE3NDk1NjU4NzEsImV4cCI6MTc1MjQxODI4NywibmJmIjoxNzQ5ODI2Mjg3LCJqdGkiOiJ6TE83eFY5WnhMMXZDdjZBIiwic3ViIjoiNDIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.x-ft-bV4CSNBS17lo_SbTZHOWXMgNuZcc8IpGRo7ufU
+                  role: student
+          '400':
+            description: Bad Request
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: Token has expired and can no longer be refreshed
+          '429':
+            description: Too Many Requests
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: Too Many Attempts try again later .
+    /api/send_fcm:
+      post:
+        tags:
+          - Auth
+        summary: Update Fcm token
+        description: bbb
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  fcm_token:
+                    type: string
+                    example: dd
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: OK
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: true
+                  message: token Updated successfully
+          '401':
+            description: Unauthorized
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  message: Unauthenticated.
+          '429':
+            description: Too Many Requests
+            headers:
+              Content-Type:
+                schema:
+                  type: string
+                  example: application/json
+            content:
+              application/json:
+                schema:
+                  type: object
+                example:
+                  status: false
+                  message: Too Many Attempts try again later .
+    /api/auth/google:
+      post:
+        tags:
+          - Auth
+        summary: Auth With Google
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  id_token:
+                    type: string
+                    example: dd
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/auth/github/redirect:
+      get:
+        tags:
+          - Auth
+        summary: Auth with Github
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/me/update:
+      post:
+        tags:
+          - User
+        summary: Update Profile
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: ddd
+                  bio:
+                    type: string
+                  gitHub_account:
+                    type: string
+                    example: https://github.com/ABDALRZAQ345
+                  image:
+                    type: string
+                    format: binary
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/password/reset:
+      post:
+        tags:
+          - User
+        summary: Reset Password
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: jmalj6564@gmail.com
+                  code:
+                    type: integer
+                    example: '878689'
+                  old_password:
+                    type: string
+                    example: 1234/*-+Asas
+                  new_password:
+                    type: string
+                    example: 1234/*-+Asass
+                  new_password_confirmation:
+                    type: string
+                    example: 1234/*-+Asass
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/17:
+      get:
+        tags:
+          - User
+        summary: User Profile
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/15/achievements:
+      get:
+        tags:
+          - User
+        summary: User achivements
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/7/projects:
+      get:
+        tags:
+          - User
+        summary: User projects
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/5/certificates:
+      get:
+        tags:
+          - User
+        summary: User certificates
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/5/contests:
+      get:
+        tags:
+          - User
+        summary: User contest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/5/streaks:
+      get:
+        tags:
+          - User
+        summary: User streak
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/5/statistics:
+      get:
+        tags:
+          - User
+        summary: User statistics
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/35/created_courses:
+      get:
+        tags:
+          - User
+        summary: Teacher 's paths
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/7/created_contest:
+      get:
+        tags:
+          - User
+        summary: Teacher 's contests
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users:
+      get:
+        tags:
+          - User
+        summary: Users
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: page
+            in: query
+            schema:
+              type: integer
+            example: '1'
+          - name: friends
+            in: query
+            schema:
+              type: integer
+            example: '0'
+          - name: role
+            in: query
+            schema:
+              type: string
+            example: student
+          - name: search
+            in: query
+            schema:
+              type: string
+          - name: orderBy
+            in: query
+            schema:
+              type: string
+            description: 'points , name '
+            example: points
+          - name: direction
+            in: query
+            schema:
+              type: string
+            example: desc
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/me:
+      get:
+        tags:
+          - User
+        summary: me
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/courses:
+      get:
+        tags:
+          - Courses
+        summary: Get all courses and watch later...
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: orderBy
+            in: query
+            schema:
+              type: string
+            example: rate
+          - name: direction
+            in: query
+            schema:
+              type: string
+            example: desc
+          - name: status
+            in: query
+            schema:
+              type: string
+            example: all
+          - name: search
+            in: query
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/learningPath/2/courses:
+      get:
+        tags:
+          - Courses
+        summary: Get courses in learning path
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/learningPath/2/courses/9:
+      get:
+        tags:
+          - Courses
+        summary: Show one course in learning path
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/courses/4:
+      get:
+        tags:
+          - Courses
+        summary: Show course without learning path
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/learningPath:
+      get:
+        tags:
+          - Learning paths
+        summary: Get all learning path
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: direction
+            in: query
+            schema:
+              type: string
+            example: asc
+          - name: orderBy
+            in: query
+            schema:
+              type: string
+            example: title
+          - name: status
+            in: query
+            schema:
+              type: string
+            example: all
+          - name: search
+            in: query
+            schema:
+              type: string
+            example: 'Magni minima '
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/learningPath/2:
+      put:
+        tags:
+          - Learning paths
+        summary: Update status of learning path
+        requestBody:
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                properties:
+                  status:
+                    type: string
+                    example: watch_later
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/users/5/friends:
+      get:
+        tags:
+          - Friends
+        summary: get user s friends
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/friends/9:
+      post:
+        tags:
+          - Friends
+        summary: add new friend
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: jmalj6564@gmail.com
+                  code:
+                    type: integer
+                    example: '149142'
+                  registration:
+                    type: integer
+                    example: '1'
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+      delete:
+        tags:
+          - Friends
+        summary: delete  friend
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/courses/4/reviews:
+      get:
+        tags:
+          - Reviews
+        summary: Get all reviews in course
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+      post:
+        tags:
+          - Reviews
+        summary: add review
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string
+                    example: this is the first review
+                  rate:
+                    type: integer
+                    example: '4'
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/courses/5/reviews:
+      put:
+        tags:
+          - Reviews
+        summary: update review
+        requestBody:
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                properties:
+                  comment:
+                    type: string
+                    example: update review
+                  rate:
+                    type: integer
+                    example: '1'
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/courses/2/reviews:
+      delete:
+        tags:
+          - Reviews
+        summary: delete review
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/projects/10:
+      get:
+        tags:
+          - Project
+        summary: show project
+        description: هذا الركوست ممكن ينضرب من طرف guest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/projects:
+      post:
+        tags:
+          - Project
+        summary: add project
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  title: dd
+                  description: ddd
+                  technologies:
+                    - c++
+                    - opengl
+                  gitHub_url: https://github.com/ABDALRZAQ345/Lms
+                  tag_id: 1
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+      get:
+        tags:
+          - Project
+        summary: projects
+        description: هذا الركوست ممكن ينضرب من طرف guest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: tag
+            in: query
+            schema:
+              type: string
+            description: '// name of the tag or all to get all '
+            example: all
+          - name: search
+            in: query
+            schema:
+              type: string
+          - name: page
+            in: query
+            schema:
+              type: integer
+            example: '1'
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/tags:
+      get:
+        tags:
+          - Project
+        summary: projects tags
+        description: هذا الركوست ممكن ينضرب من طرف guest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/requests/contests/17:
+      post:
+        tags:
+          - Admin > Contest Requests
+        summary: Accept Contest
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/requests/contests/22:
+      delete:
+        tags:
+          - Admin > Contest Requests
+        summary: Reject Contest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/requests/contests:
+      get:
+        tags:
+          - Admin > Contest Requests
+        summary: Contests Requests
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/requests/projects:
+      get:
+        tags:
+          - Admin > Project Requests
+        summary: projects requests
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/requests/projects/16:
+      post:
+        tags:
+          - Admin > Project Requests
+        summary: Accept Project
+        requestBody:
+          content: {}
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/requests/projects/5:
+      delete:
+        tags:
+          - Admin > Project Requests
+        summary: Reject Project
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/statistics:
+      get:
+        tags:
+          - Admin > Statistics
+        summary: statistics (overview)
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/statistics/students/perMonth:
+      get:
+        tags:
+          - Admin > Statistics
+        summary: students statistics PerMonth
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/statistics/students/lastWeek:
+      get:
+        tags:
+          - Admin > Statistics
+        summary: students statistics LastWeek
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/statistics/projects:
+      get:
+        tags:
+          - Admin > Statistics
+        summary: statistics projects
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/admin/teachers:
+      post:
+        tags:
+          - Admin
+        summary: add teacher
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: teacher 1
+                  email:
+                    type: string
+                    example: ss@gmail.com
+                  password:
+                    type: string
+                    example: 123456/*-+asdA
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests/1/problems:
+      get:
+        tags:
+          - Contest > Not Tested yet
+        summary: contest problems
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests/3/problems/2:
+      get:
+        tags:
+          - Contest > Not Tested yet
+        summary: contest problems Copy
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/submit:
+      post:
+        tags:
+          - Contest > Not Tested yet
+        summary: submit problem
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  problem_id:
+                    type: integer
+                    example: '2'
+                  language:
+                    type: string
+                    description: cpp python java csharp
+                    example: cpp
+                  code:
+                    type: string
+                    example: |
+                      #include<iostream>
+                      using namespace std;
+
+
+                      int main() {
+                          int t; cin>>t;
+
+                          while(t--) {
+                              string h; cin>>h;
+                              if(h=="abd" || h=="ali")
+                                  cout<<"boy"<<endl;
+                              else
+                                  cout<<"girl"<<endl;
+                          }
+
+
+
+                      }
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: X-RapidAPI-Key
+            in: header
+            schema:
+              type: string
+            example: 2bd7b8fbcamsh82d59b6f082e3cbp182ee9jsnd8d0b72c1d4e
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests:
+      get:
+        tags:
+          - Contest
+        summary: contests
+        description: هذا الركوست ممكن ينضرب من طرف guest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: type
+            in: query
+            schema:
+              type: string
+            description: all quiz programming
+            example: all
+          - name: status
+            in: query
+            schema:
+              type: string
+            description: coming active ended
+            example: active
+          - name: search
+            in: query
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests/17:
+      get:
+        tags:
+          - Contest
+        summary: show contest
+        description: هذا الركوست ممكن ينضرب من طرف guest
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests/17/standing:
+      get:
+        tags:
+          - Contest
+        summary: show contest standing Copy
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+          - name: justFriends
+            in: query
+            schema:
+              type: integer
+            description: 1 or 0
+            example: '0'
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests/17/questions:
+      get:
+        tags:
+          - Contest
+        summary: contest questions
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/contests/2/questions:
+      post:
+        tags:
+          - Contest
+        summary: contest questions submit
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  answers:
+                    '486': 1941
+                    '487': 1944
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/teacher/contests:
+      post:
+        tags:
+          - Teacher
+        summary: Create quiz Contest
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  name: name of contest
+                  time: 10
+                  description: description of contest
+                  type: quiz
+                  level: beginner
+                  start_at: 2025-06-31 19:00
+                  questions:
+                    - question: what is the sum of two and three
+                      options:
+                        - '5'
+                        - '6'
+                        - '7'
+                    - question: what is cout
+                      options:
+                        - print
+                        - do nothing
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+    /api/teacher/my_contests:
+      get:
+        tags:
+          - Teacher
+        summary: My created contests
+        security:
+          - bearerAuth: []
+        parameters:
+          - name: Accept
+            in: header
+            schema:
+              type: string
+            example: application/json
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json: {}
+
