@@ -31,8 +31,13 @@ class CourseResourceDescription extends JsonResource
             'image' => $this->image,
             'price' => $this->price == 0 ? 'free' : $this->price,
             'level'=> $this->level,
-            'status' => $this->pivot->status?? null,
-            'student_paid' => $this->pivot->paid ?? null,
+            'status' => $this->pivot->status
+                ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status
+                    ?? null,
+
+            'student_paid' => $this->pivot->paid
+                ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->paid
+                    ?? null,
             'number_of_videos' => $countOfVideos,
             'duration' => $duration,
             'teacher_id' => $this->teacher->id,

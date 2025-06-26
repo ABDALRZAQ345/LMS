@@ -31,7 +31,7 @@ class LearningPathResource extends JsonResource
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image'=>$this->teacher->image,
-            'status'=> optional($this->students->first()?->pivot)->status,
+            'status'=> optional($this->students?->pivot->status),
         ];
     }
 }

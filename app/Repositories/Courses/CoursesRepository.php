@@ -48,8 +48,12 @@ class CoursesRepository
 
         $course = Course::where('verified', true)
             ->with(['students' => fn($q) => $q->where('user_id', $userId)])
-            ->with(['videos.students' => fn($q) => $q->where('user_id', $userId )])
-            ->with(['tests.students' => fn($q) => $q->where('user_id', $userId )])
+            ->with(['videos' => function ($q) use ($userId) {
+                $q->with(['students' => fn($q2) => $q2->where('user_id', $userId)]);
+            }])
+            ->with(['tests' => function ($q) use ($userId) {
+                $q->with(['students' => fn($q2) => $q2->where('user_id', $userId)]);
+            }])
             ->with('teacher')
             ->with('learningPaths')
             ->findOrFail($id);

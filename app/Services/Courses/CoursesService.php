@@ -35,7 +35,6 @@ class CoursesService
     }
     public function showCourseDescription($id){
         $course = $this->coursesRepository->showCourseDescription($id);
-
         return ResponseHelper::jsonResponse(CourseResourceDescription::make($course) ,'Get Course Description Successfully');
     }
     public function showCourseContent($courseId){
