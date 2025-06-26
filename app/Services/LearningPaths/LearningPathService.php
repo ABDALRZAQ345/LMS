@@ -33,7 +33,6 @@ class LearningPathService
     public function showLearningPath($id)
     {
         $learningPath = $this->learningPathRepository->showLearningPath($id);
-
         return ResponseHelper::jsonResponse(LearningPathResource::make($learningPath), 'get learning path successfully');
 
     }

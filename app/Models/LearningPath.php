@@ -32,7 +32,7 @@ class LearningPath extends Model
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'learning_path_user')
-            ->withPivot('paid', 'status')
+            ->withPivot( 'status')
             ->withTimestamps();
     }
 }

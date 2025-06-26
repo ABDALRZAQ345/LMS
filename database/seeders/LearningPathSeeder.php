@@ -16,6 +16,7 @@ class LearningPathSeeder extends Seeder
     {
         // Create 3 learning paths
         $teachers = User::where('role', 'teacher')->pluck('id');
+        $students = User::where('role', 'student')->pluck('id');
 
         $learningPaths = LearningPath::factory(10)->create()->each(function ($learningPath) use ($teachers) {
             $learningPath->user_id = $teachers->random();
@@ -31,6 +32,22 @@ class LearningPathSeeder extends Seeder
             // Attach courses to learning path with order
             foreach ($courses as $order => $course) {
                 $learningPath->courses()->attach($course->id, ['order' => $order + 1]);
+            }
+        }
+
+        // Seed learning_path_user table
+        foreach ($learningPaths as $learningPath) {
+            // Attach 5 random students to each learning path with random status
+            $randomStudents = $students->random(min(5, $students->count()));
+            foreach ($randomStudents as $studentId) {
+                $status = collect(['enroll', 'watch_later'])->random();
+                \DB::table('learning_path_user')->insert([
+                    'user_id' => $studentId,
+                    'learning_path_id' => $learningPath->id,
+                    'status' => $status,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
         }
     }
