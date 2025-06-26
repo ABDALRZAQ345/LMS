@@ -56,11 +56,11 @@ class CourseResource extends JsonResource
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $teacherImageUrl,
             'status' => $this->pivot->status
-                ?? optional($this->students->firstWhere('id', auth()->id()))?->pivot?->status
+                ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status
                     ?? null,
 
             'student_paid' => $this->pivot->paid
-                ?? optional($this->students->firstWhere('id', auth()->id()))?->pivot?->paid
+                ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->paid
                     ?? null,
 
         ];

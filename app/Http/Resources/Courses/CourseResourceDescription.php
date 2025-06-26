@@ -22,6 +22,7 @@ class CourseResourceDescription extends JsonResource
                 : config('app.url').'/storage/'.$this->teacher->image)
             : null;
 
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -30,10 +31,10 @@ class CourseResourceDescription extends JsonResource
             'image' => $this->image,
             'price' => $this->price == 0 ? 'free' : $this->price,
             'level'=> $this->level,
-            'status' => $this->pivot->status ?? null,
+            'status' => $this->pivot->status?? null,
+            'student_paid' => $this->pivot->paid ?? null,
             'number_of_videos' => $countOfVideos,
             'duration' => $duration,
-            'student_paid' => $this->pivot->paid ?? null,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,

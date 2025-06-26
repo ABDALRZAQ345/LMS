@@ -54,9 +54,7 @@ class CoursesService
     {
         $coursesInLearningPath = $this->coursesRepository->getAllCoursesInLearningPath($learningPath->id);
 
-        return ResponseHelper::jsonResponse(CourseResource::collection($coursesInLearningPath), 'Get All Courses In '
-            .$learningPath->title.
-            ' Successfully');
+        return ResponseHelper::jsonResponse(CourseResource::collection($coursesInLearningPath), 'Get All Courses In ' .$learningPath->title. ' Successfully');
     }
 
 //    public function showCourseInLearningPath($learningPathName, $courseId)

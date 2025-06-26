@@ -18,7 +18,7 @@ class ContestResource extends JsonResource
         $data = parent::toArray($request);
         $data['teacher_id'] = $data['user_id'];
 
-        $user=\Auth::user();
+        $user=auth('api')->user();
 
         if(!$user || ( ( $user->role!='admin' &&  $data['teacher_id']!=$user->id) && isset($data['request_status']))){
             unset($data['request_status']);

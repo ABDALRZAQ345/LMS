@@ -14,17 +14,17 @@ class CourseResourceContent extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $user = auth()->user();
+        $userId = auth('api')->id();
 
-        $isEnrolled = $this->students->contains($user?->id);
+        $isEnrolled = $this->students->contains($userId);
 
         $videos = $this->videos;
         $tests = $this->tests;
 
         $totalVideos = $videos->count();
 
-        $watchedVideos = $videos->filter(function ($video) use ($user) {
-            $studentProgress = $video->students->firstWhere('id', $user->id);
+        $watchedVideos = $videos->filter(function ($video) use ($userId) {
+            $studentProgress = $video->students->firstWhere('id', $userId);
             return $studentProgress?->pivot?->is_completed == true;
         })->count();
 
@@ -32,20 +32,20 @@ class CourseResourceContent extends JsonResource
             ? round(($watchedVideos / $totalVideos) * 100)
             : 0;
 
-        $content = $videos->map(function ($video) use ($user,$isEnrolled) {
-            $studentProgress = $video->students->firstWhere('id', $user->id);
+        $content = $videos->map(function ($video) use ($userId,$isEnrolled) {
+            $studentProgress = $video->students->firstWhere('id', $userId);
             return [
                 'id' => $video->id,
                 'title' => $video->title,
                 'type' => 'video',
                 'order' => $video->order,
-                'progress' => $studentProgress?->pivot?->progress .' %',
-                'is_free' => $isEnrolled ? true : (bool) $video->free,
+                'progress' => $studentProgress?->pivot?->progress ?? 0 .' %',
+                'is_free' => $isEnrolled || $video->free,
                 'watched' => $studentProgress?->pivot?->is_completed == true,
             ];
         })->merge(
-            $tests->map(function ($test) use ($user) {
-                $studentProgress = $test->students->firstWhere('id', $user->id);
+            $tests->map(function ($test) use ($userId) {
+                $studentProgress = $test->students->firstWhere('id', $userId);
                 return [
                     'id' => $test->id,
                     'title' => $test->title,

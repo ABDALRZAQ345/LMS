@@ -10,18 +10,19 @@ class LearningPathRepository
 
     public function getAllLearningPaths($validated)
     {
-        $user = auth()->user();
+        $userId = auth('api')->id();
         $query = LearningPath::where('verified', true)
             ->with('teacher')
             ->withCount('courses')
             ->withSum('courses', 'price')
+            ->with('students')
             ->withSum('courses', 'rate');
         if ($validated['search']) {
-            $query->wher('title', 'like', '%' . $validated['search'] . '%');
+            $query->where('title', 'like', '%' . $validated['search'] . '%');
         }
         if ($validated['status'] !== 'all') {
-            $query->whereHas('students', function ($q) use ($user, $validated) {
-                $q->where('user_id', $user->id)
+            $query->whereHas('students', function ($q) use ($userId, $validated) {
+                $q->where('user_id', $userId)
                     ->where('learning_path_user.status', $validated['status']);
             });
         }

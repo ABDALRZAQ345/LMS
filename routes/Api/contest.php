@@ -23,10 +23,9 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
             Route::get('/contests/{contest}/submissions',[SubmissionController::class, 'showContestSubmissions']);
         });
 
-        Route::get('/contests', [ContestController::class, 'index'])->name('contests.index');
-        Route::get('/contests/{contest}', [ContestController::class, 'show'])->name('contests.show');
-
     });
+    Route::get('/contests', [ContestController::class, 'index'])->name('contests.index');
+    Route::get('/contests/{contest}', [ContestController::class, 'show'])->name('contests.show');
 
 
 

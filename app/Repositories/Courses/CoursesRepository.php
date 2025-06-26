@@ -12,24 +12,24 @@ class CoursesRepository
 
     public function getAllCourses($validated)
     {
-        $user = auth()->user();
+        $userId = auth('api')->id();
 
         $query = Course::orderBy($validated['orderBy'], $validated['direction'])
             ->where('verified', true)
             ->with('teacher')
             ->with('learningPaths')
-            ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
-            ->with(['videos' => function ($q) use ($user) {
-                $q->with(['students' => fn($q2) => $q2->where('user_id', $user->id)]);
+            ->with(['students' => fn($q) => $q->where('user_id', $userId)])
+            ->with(['videos' => function ($q) use ($userId) {
+                $q->with(['students' => fn($q2) => $q2->where('user_id', $userId)]);
             }])
-            ->with(['tests' => function ($q) use ($user) {
-                $q->with(['students' => fn($q2) => $q2->where('user_id', $user->id)]);
+            ->with(['tests' => function ($q) use ($userId) {
+                $q->with(['students' => fn($q2) => $q2->where('user_id', $userId)]);
             }])
             ->withSum('videos', 'duration');
 
-        if($validated['status'] !== 'all'){
-            $query->whereHas('students', function ($q) use ($user, $validated) {
-                $q->where('user_id', $user->id)
+        if($userId && $validated['status'] !== 'all'){
+            $query->whereHas('students', function ($q) use ($userId, $validated) {
+                $q->where('user_id', $userId)
                     ->where('course_user.status', $validated['status']);
             });
         }
@@ -44,12 +44,12 @@ class CoursesRepository
 
     public function showCourseDescription($id)
     {
-        $user = auth()->user();
+        $userId = auth('api')->id();
 
         $course = Course::where('verified', true)
-            ->with(['students' => fn($q) => $q->where('user_id', $user->id)])
-            ->with(['videos.students' => fn($q) => $q->where('user_id', $user->id )])
-            ->with(['tests.students' => fn($q) => $q->where('user_id', $user->id )])
+            ->with(['students' => fn($q) => $q->where('user_id', $userId)])
+            ->with(['videos.students' => fn($q) => $q->where('user_id', $userId )])
+            ->with(['tests.students' => fn($q) => $q->where('user_id', $userId )])
             ->with('teacher')
             ->with('learningPaths')
             ->findOrFail($id);
@@ -59,13 +59,15 @@ class CoursesRepository
     }
 
     public function showCourseContent($cousreId){
-        $user = auth()->user();
-        $course = Course::where('verified',true)->with([
-            'videos.students' => fn($q) => $q->where('user_id', $user->id),
-            'tests.students' => fn($q) => $q->where('user_id', $user->id),
-            'students' => fn($q) => $q->where('user_id', $user->id),
-        ])->findOrFail($cousreId);
+        $userId = auth('api')->id();
+        $courseQuery = Course::where('verified',true)->with([
+                'videos.students' => fn($q) => $q->where('user_id', $userId),
+                'tests.students' => fn($q) => $q->where('user_id', $userId),
+                'students' => fn($q) => $q->where('user_id', $userId),
+            ]);
 
+
+        $course = $courseQuery->findOrFail($cousreId);
         return $course;
     }
 
@@ -80,7 +82,7 @@ class CoursesRepository
 
     public function getAllCoursesInLearningPath($id)
     {
-        $user = auth()->user();
+        $userId = auth('api')->id();
         $learningPath = LearningPath::findOrFail($id);
 
         return $learningPath->courses()->where('verified', true)
@@ -88,13 +90,13 @@ class CoursesRepository
             ->withCount('tests')
             ->withSum('videos', 'duration')
             ->with([
-                'students' => fn($q) => $q->where('user_id', $user->id),
+                'students' => fn($q) => $q->where('user_id', $userId),
                 'teacher',
                 'videos' => fn($q) => $q->with([
-                    'students' => fn($q2) => $q2->where('user_id', $user->id)
+                    'students' => fn($q2) => $q2->where('user_id', $userId)
                 ]),
                 'tests' => fn($q) => $q->with([
-                    'students' => fn($q2) => $q2->where('user_id', $user->id)
+                    'students' => fn($q2) => $q2->where('user_id', $userId)
                 ]),
             ])
             ->with('learningPaths')

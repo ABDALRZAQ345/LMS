@@ -9,7 +9,7 @@ class ReviewResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $authId = auth()->id();
+        $authId = auth('api')->id();
 
         return [
             'id' => $this->id,

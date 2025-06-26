@@ -19,8 +19,7 @@ class ReviewService
     {
         $reviews = $this->reviewRepository->getAllReviewsInCourse($course->id);
 
-        return ResponseHelper::jsonResponse(ReviewResource::collection($reviews), 'Get All Reviews In '.
-        $course->title.' Course Successfully');
+        return ResponseHelper::jsonResponse(ReviewResource::collection($reviews), 'Get All Reviews In '. $course->title.' Course Successfully');
     }
 
     public function addNewReviewInCourse($course, $validated)
