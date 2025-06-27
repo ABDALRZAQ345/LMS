@@ -84,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perDay(3)->by($request->user()?->id ?: $request->ip());
         });
 
+
     }
 
     private function routes(): void
@@ -99,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
             'admin.php',
             'teacher.php',
             'contest.php',
-
+            'test.php',
         ];
         if(config('app.env')!='production') {
             $apiRouteFiles[]=   'autoTest.php';

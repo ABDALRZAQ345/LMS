@@ -2,26 +2,33 @@
 
 namespace App\Services;
 
+use App\Exceptions\BadRequestException;
+use App\Exceptions\ServerErrorException;
 use App\Jobs\ProcessSubmission;
+use App\Models\Certificate;
 use App\Models\Contest;
 use App\Models\Problem;
 use App\Models\Submission;
 use App\Models\User;
+use Carbon\Carbon;
+use Doctrine\DBAL\Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Log;
+
 
 class SubmissionService
 {
     // Add your service methods here
-    public function CheckUserSolvedProblem(User $user,Problem $problem): bool
+    public function CheckUserSolvedProblem(User $user, Problem $problem): bool
     {
-        return  $user->submissions()
-            ->where('problem_id',$problem->id)
-            ->where('status','accepted')->exists();
+        return $user->submissions()
+            ->where('problem_id', $problem->id)
+            ->where('status', 'accepted')->exists();
 
     }
 
-    public function createProblemSubmission(Problem $problem,$data)
+    public function createProblemSubmission(Problem $problem, $data)
     {
         $submission = Submission::create([
             'problem_id' => $problem->id,
@@ -36,21 +43,21 @@ class SubmissionService
     }
 
     /// submit the contest solution and get the percentage from 100 for correct answers
-    public function SubmitQuizContest($data,$contest): string
+    public function SubmitQuizContest($data, $contest): string
     {
         $questions = $contest->questions()->get();
 
         $correct = $this->getNumberOfCorrectAnswers($data['answers'], $questions, $contest);
 
-        $this->AddUserToParticipants($contest,$correct);
+        $this->AddUserToParticipants($contest, $correct);
 
         $questionsCount = $questions->count();
 
-        return getPercentege($correct, $questionsCount);
+        return getPercentage($correct, $questionsCount);
     }
 
 
-    protected function getNumberOfCorrectAnswers($answers, \Illuminate\Database\Eloquent\Collection $questions, Contest $contest): int
+    protected function getNumberOfCorrectAnswers($answers, \Illuminate\Database\Eloquent\Collection $questions): int
     {
 
         $correct = 0;
@@ -64,7 +71,8 @@ class SubmissionService
 
         return $correct;
     }
-    protected function AddUserToParticipants($contest,$correct): void
+
+    protected function AddUserToParticipants($contest, $correct): void
     {
 
         db::table('contest_user')->insert([
@@ -73,5 +81,74 @@ class SubmissionService
             'contest_id' => $contest->id,
             'is_official' => $contest->status == 'active',
         ]);
+
+    }
+
+    /**
+     * @throws ServerErrorException
+     * @throws \Throwable
+     */
+    public function submitTest($data, $test): string
+    {
+        $questions = $test->questions()->get();
+        $test->loadCount('questions');
+
+        $questionsCount = $test->questions_count;
+
+        $this->HandleFinalTest($test);
+        $correct = $this->getNumberOfCorrectAnswers($data['answers'], $questions);
+        db::beginTransaction();
+        try {
+            $this->UpdateUserTestStatus($data['start_time'], $test, $correct);
+
+            $percentage = getPercentage($correct, $questionsCount, true);
+            $this->HandelCertificate($test, $percentage);
+            db::commit();
+            return $percentage;
+        } catch (Exception $exception) {
+            db::rollBack();
+            throw new ServerErrorException($exception->getMessage());
+        }
+
+    }
+
+    protected function UpdateUserTestStatus($startTime, $test, $correct): void
+    {
+        db::table('test_user')->insert([
+            'end_time' => now(),
+            'correct_answers' => $correct,
+            'user_id' => auth('api')->id(),
+            'test_id' => $test->id,
+            'start_time' => $startTime
+        ]);
+
+    }
+
+    protected function HandelCertificate($test, $percentage): void
+    {
+
+        if ($test->is_final && $percentage >= 60) {
+            Certificate::create([
+                'course_id' => $test->course_id,
+                'user_id' => auth('api')->id()
+            ]);
+        }
+    }
+
+    protected function HandleFinalTest($test)
+    {
+        $pivot = $test->students()->where('user_id', auth('api')->id())
+            ->orderBy('correct_answers', 'desc')
+            ->first()->pivot;
+        if (getPercentage($pivot->correct_answers, $test->questions_count, true) >= 60) {
+            throw new BadRequestException('you cant retake final test when you pass it');
+        }
+        if ($pivot->updated_at->gt(now()->subDay())) {
+            throw new BadRequestException('you cant take the final test more than once per day back again in ' .
+                $pivot->updated_at->addDay()->diffForHumans()
+            );
+        }
+
     }
 }
+
