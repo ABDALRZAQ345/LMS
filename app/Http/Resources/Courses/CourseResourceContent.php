@@ -32,30 +32,36 @@ class CourseResourceContent extends JsonResource
             ? round(($watchedVideos / $totalVideos) * 100)
             : 0;
 
-        $content = $videos->map(function ($video) use ($userId,$isEnrolled) {
-            $studentProgress = $video->students->firstWhere('id', $userId);
-            return [
-                'id' => $video->id,
-                'title' => $video->title,
-                'type' => 'video',
-                'order' => $video->order,
-                'progress' => $studentProgress?->pivot?->progress ?? 0 .' %',
-                'is_free' => $isEnrolled || $video->free,
-                'watched' => $studentProgress?->pivot?->is_completed == true,
-            ];
-        })->merge(
-            $tests->map(function ($test) use ($userId) {
-                $studentProgress = $test->students->firstWhere('id', $userId);
-                return [
-                    'id' => $test->id,
-                    'title' => $test->title,
-                    'type' => 'test',
-                    'order' => $test->order,
-                    'is_final' => (bool) $test->is_final,
-                    'completed' => $studentProgress !== null,
-                ];
-            })
-        )->sortBy('order')->values();
+        $content = collect()
+            ->merge(
+                $videos->map(function ($video) use ($userId,$isEnrolled) {
+                    $studentProgress = $video->students->firstWhere('id', $userId);
+                    return [
+                        'id' => $video->id,
+                        'title' => $video->title,
+                        'type' => 'video',
+                        'order' => $video->order,
+                        'progress' => ($studentProgress?->pivot?->progress ?? 0) . ' %',
+                        'is_free' => $isEnrolled || $video->free,
+                        'watched' => $studentProgress?->pivot?->is_completed == true,
+                    ];
+                })
+            )
+            ->merge(
+                $tests->map(function ($test) use ($userId) {
+
+                    return [
+                        'id' => $test->id,
+                        'title' => $test->title,
+                        'type' => 'test',
+                        'order' => $test->order,
+                        'is_final' => (bool) $test->is_final,
+                        'completed' => ($test->getPercentageOfStudent($userId) >= 60),
+                    ];
+                })
+            )
+            ->sortBy('order')
+            ->values();
 
         return [
             'id' => $this->id,

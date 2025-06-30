@@ -74,7 +74,7 @@ class StreakService
         $todayStreak = $user->streaks()->where('date', $today)->first();
 
 
-        if ($todayStreak->status == 0) {
+        if ($todayStreak &&  $todayStreak->status == 0) {
             $yesterday = now()->subDay()->toDateString();
             $yesterdayStreak = $user->streaks()->where('date', $yesterday)->first();
             $newStreakCount = $yesterdayStreak ? $yesterdayStreak->current_streak + 1 : 1;

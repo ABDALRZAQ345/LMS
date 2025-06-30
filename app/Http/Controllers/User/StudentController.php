@@ -49,7 +49,9 @@ class StudentController extends Controller
     public function certificates(User $user): JsonResponse
     {
 
-        $certificates=$user->certificates()->paginate(20);
+        $certificates=$user->certificates()
+           // ->with('course')
+            ->paginate(20);
         return response()->json([
             'status' => true,
             'certificates' => CertificateResource::collection($certificates),

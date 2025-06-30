@@ -30,9 +30,9 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
             ProjectSeeder::class,
             CertificateSeeder::class,
-            StreakSeeder::class,
             ProblemSeeder::class,
             LikeSeeder::class,
+            StreakSeeder::class,
         ]);
     }
 }

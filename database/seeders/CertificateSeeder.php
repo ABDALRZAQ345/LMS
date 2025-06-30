@@ -17,7 +17,7 @@ class CertificateSeeder extends Seeder
         $students = User::where('role', 'student')->get();
         $course=Course::all();
         foreach ($students as $student) {
-            Certificate::factory(2)->create(['user_id' => $student->id,
+            Certificate::factory(1)->create(['user_id' => $student->id,
             'course_id' => $course->random()->id
             ]);
         }

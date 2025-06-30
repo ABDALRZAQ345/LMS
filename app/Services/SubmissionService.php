@@ -96,7 +96,9 @@ class SubmissionService
         $questionsCount = $test->questions_count;
 
         $this->HandleFinalTest($test);
+
         $correct = $this->getNumberOfCorrectAnswers($data['answers'], $questions);
+
         db::beginTransaction();
         try {
             $this->UpdateUserTestStatus($data['start_time'], $test, $correct);
@@ -119,7 +121,8 @@ class SubmissionService
             'correct_answers' => $correct,
             'user_id' => auth('api')->id(),
             'test_id' => $test->id,
-            'start_time' => $startTime
+            'start_time' => $startTime,
+            'updated_at' => now(),
         ]);
 
     }
@@ -135,18 +138,27 @@ class SubmissionService
         }
     }
 
-    protected function HandleFinalTest($test)
+    /**
+     * @throws BadRequestException
+     */
+    protected function HandleFinalTest($test): void
     {
-        $pivot = $test->students()->where('user_id', auth('api')->id())
-            ->orderBy('correct_answers', 'desc')
-            ->first()->pivot;
-        if (getPercentage($pivot->correct_answers, $test->questions_count, true) >= 60) {
+        if (!$test->is_final) return;
+
+
+        if ( $test->getPercentageOfStudent(auth('api')->id()) >=60 ) {
             throw new BadRequestException('you cant retake final test when you pass it');
         }
-        if ($pivot->updated_at->gt(now()->subDay())) {
-            throw new BadRequestException('you cant take the final test more than once per day back again in ' .
-                $pivot->updated_at->addDay()->diffForHumans()
+
+        $pivot = $test->students()->where('user_id', auth('api')->id())
+            ->orderByPivot('updated_at', 'desc')
+            ->first()?->pivot;
+
+        if ($pivot && $pivot->updated_at > (now()->subDay())->toDateTimeString() ) {
+            throw new BadRequestException('you can`t take the final test more than once per day back again in ' .
+                carbon::parse($pivot->updated_at)->addDay()->diffForHumans()
             );
+
         }
 
     }
