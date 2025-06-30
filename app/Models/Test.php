@@ -33,7 +33,7 @@ class Test extends Model
             ->withPivot('start_time', 'end_time', 'correct_answers','updated_at');
     }
 
-    //todo use it in other get percentage
+
     public function getPercentageOfStudent($userId)
     {
 

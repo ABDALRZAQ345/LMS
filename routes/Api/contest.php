@@ -14,7 +14,7 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         Route::get('/contests/{contest}/questions', [ContestController::class, 'questions'])->middleware('contest:quiz')->name('submissions.index');
         Route::get('/contests/{contest}/standing', [ContestController::class, 'standing']);
 
-        // todo test and refactor and complete  those  requests
+
         Route::group(['middleware' => ['contest:programming']], function () {
             Route::get('/contests/{contest}/problems', [ContestController::class, 'problems'])->name('submissions.index');
             Route::get('/contests/{contest}/problems/{problem}', [ProblemContainer::class, 'show'])->name('submissions.index');

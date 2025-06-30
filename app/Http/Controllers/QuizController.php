@@ -25,7 +25,8 @@ class QuizController extends Controller
     {
         if ($test->course_id != $course->id) throw new NotFoundException();
 
-        $currentUser = $test->students()->wherePivot('user_id', auth('api')->id())->orderByPivot('correct_answers','desc')->first();
+        $currentUser = $test->students()->wherePivot('user_id', auth('api')->id())->orderByPivot('correct_answers','desc')
+            ->first();
         $test->load('questions.options');
         $test->loadCount('questions');
 

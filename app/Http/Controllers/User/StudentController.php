@@ -50,7 +50,7 @@ class StudentController extends Controller
     {
 
         $certificates=$user->certificates()
-           // ->with('course')
+         ->with('course')
             ->paginate(20);
         return response()->json([
             'status' => true,
