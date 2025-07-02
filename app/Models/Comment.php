@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Comment extends Model
 {
@@ -29,8 +30,14 @@ class Comment extends Model
         return $this->belongsTo(Video::class);
     }
 
-    public function replies(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Comment::class);
+    public function replies() {
+        return $this->hasMany(Comment::class, 'comment_id')
+            ->with('user','replies');
     }
+
+    public function like(): MorphMany
+    {
+        return $this->morphmany(Like::class, 'likeable');
+    }
+
 }

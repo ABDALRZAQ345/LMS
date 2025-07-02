@@ -7,6 +7,7 @@ use App\Http\Requests\Reviews\storeReviewRequest;
 use App\Http\Requests\Reviews\updateReviewRequest;
 use App\Models\Course;
 use App\Services\Reviews\ReviewService;
+use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
@@ -17,9 +18,10 @@ class ReviewController extends Controller
         $this->reviewService = $reviewService;
     }
 
-    public function getAllReviewsInCourse(Course $course)
+    public function getAllReviewsInCourse(Course $course,Request $request)
     {
-        return $this->reviewService->getAllReviewsInCourse($course);
+        $items = $request->get('items',10);
+        return $this->reviewService->getAllReviewsInCourse($course , $items);
     }
 
     public function addNewReviewInCourse(Course $course, storeReviewRequest $request)
