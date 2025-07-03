@@ -30,8 +30,18 @@ class UserSeeder extends Seeder
             'email_verified' => true,
             'role' => 'student',
         ]);
+        User::firstOrCreate([
+            'email' => 'teacher@teacher.com',
+        ], [
+            'name' => 'teacher',
+            'email' => 'teacher@teacher.com',
+            'password' => \Hash::make('1234/*-+Asa'),
+            'email_verified' => true,
+            'role' => 'teacher',
+        ]);
 
-
+    // todo add pages and items for per page
+    // todo add page to postman
         User::factory()->count(20)->create([
             'role' => 'student',
             'email_verified' => true,
