@@ -107,6 +107,40 @@ class CoursesRepository
             ->get();
     }
 
+    public function addToWatchLater($userId,$course){
+
+        $exists = $course->students()
+            ->wherePivot('user_id', $userId)
+            ->wherePivot('status', 'watch_later')
+            ->exists();
+
+        if (!$exists) {
+            $course->students()->attach($userId, [
+                'status' => 'watch_later',
+                'paid' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function removeFromWatchLater($userId,$course){
+
+        $query = $course->students()
+            ->wherePivot('user_id', $userId)
+            ->wherePivot('status', 'watch_later');
+
+        if ($query->exists()) {
+            $query->detach();
+            return true;
+        }
+
+        return false;
+    }
+
 
 //    public function showCourseInLearningPath($courseId){
 //        $course =  auth()->user()->verifiedCourses()

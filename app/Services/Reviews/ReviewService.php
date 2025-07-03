@@ -15,11 +15,16 @@ class ReviewService
         $this->reviewRepository = $reviewRepository;
     }
 
-    public function getAllReviewsInCourse($course)
+    public function getAllReviewsInCourse($course, $items)
     {
-        $reviews = $this->reviewRepository->getAllReviewsInCourse($course->id);
-
-        return ResponseHelper::jsonResponse(ReviewResource::collection($reviews), 'Get All Reviews In '. $course->title.' Course Successfully');
+        $reviews = $this->reviewRepository->getAllReviewsInCourse($course->id, $items);
+        $data = [
+            'reviews' => ReviewResource::collection($reviews),
+            'total_pages' => $reviews->lastPage(),
+            'current_page' => $reviews->currentPage(),
+            'hasMorePages' => $reviews->hasMorePages(),
+        ];
+        return ResponseHelper::jsonResponse($data, 'Get All Reviews In '. $course->title.' Course Successfully');
     }
 
     public function addNewReviewInCourse($course, $validated)

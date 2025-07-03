@@ -6,22 +6,27 @@ use App\Models\Review;
 
 class ReviewsRepository
 {
-    public function getAllReviewsInCourse($courseId)
+    public function getAllReviewsInCourse($courseId, $items)
     {
         $userId = auth('api')->id();
+
         $userReview = Review::with(['student:id,name,image'])
             ->where('course_id', $courseId)
             ->where('user_id', $userId)
             ->first();
 
         $otherReviews = Review::with(['student:id,name,image'])
+            ->where('course_id', $courseId)
             ->where('user_id', '!=', $userId)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate($items);
 
-        return $userReview
-            ? collect([$userReview])->merge($otherReviews)
-            : $otherReviews;
+        if ($userReview) {
+            $merged = collect([$userReview])->merge($otherReviews->items());
+            $otherReviews->setCollection($merged);
+        }
+
+        return $otherReviews;
     }
 
     public function addNewReviewInCourse($courseId, $validated)

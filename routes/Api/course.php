@@ -12,6 +12,8 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 
     Route::middleware(['auth:api'])->group(function () {
         Route::post('courses/{course}/enroll', [StripePaymentController::class, 'enrollCourse']);
+        Route::post('courses/{course}/watch_later',[CourseController::class, 'addToWatchLater']);
+        Route::delete('courses/{course}/watch_later',[CourseController::class, 'removeFromWatchLater']);
     });
     Route::get('/courses', [CourseController::class, 'index']);
     Route::get('/courses/{course}/description', [CourseController::class, 'showCourseDescription'])->name('courses.show');;

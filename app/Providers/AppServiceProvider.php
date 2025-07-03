@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Models\Contest;
 use App\Models\Course;
+use App\Models\Like;
 use App\Models\Project;
 use App\Models\Review;
 use App\Models\Submission;
 use App\Models\User;
+use App\Observers\LikeObserver;
 use App\Observers\ReviewObserver;
 use App\Observers\SubmissionObserver;
 use App\Policies\ContestPolicy;
@@ -53,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Review::observe(ReviewObserver::class);
         Submission::observe(SubmissionObserver::class);
+        Like::observe(LikeObserver::class);
     }
 
     private function rateLimiters(): void
@@ -101,6 +104,9 @@ class AppServiceProvider extends ServiceProvider
             'teacher.php',
             'contest.php',
             'test.php',
+            'video.php',
+            'comment.php',
+
         ];
         if(config('app.env')!='production') {
             $apiRouteFiles[]=   'autoTest.php';
