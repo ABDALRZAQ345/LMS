@@ -3,24 +3,16 @@
 namespace App\Http\Controllers\Contest;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Contest\ShowProblemSubmissionsRequest;
 use App\Http\Requests\Contest\SubmitContestRequest;
 use App\Http\Requests\Contest\SubmitProblemRequest;
-use App\Http\Requests\ShowProblemSubmissionsRequest;
-use App\Http\Resources\StudentStandingCollection;
-use App\Http\Resources\StudentStandingResource;
 use App\Http\Resources\SubmissionResource;
-use App\Jobs\ProcessSubmission;
 use App\Models\Contest;
 use App\Models\Problem;
-use App\Models\Submission;
-use App\Responses\StudentStaticsResponse;
 use App\Services\ProblemService;
 use App\Services\SubmissionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 class SubmissionController extends Controller
 {
@@ -38,7 +30,7 @@ class SubmissionController extends Controller
         $validated = $request->validated();
         $problem = $contest->problems()->findOrFail($problem->id);
 
-        $submissions = $this->problemService->getObjectSubmissions($problem, $validated['user_id'] ?? 'all', $validated['language'], $validated['status']);
+        $submissions = $this->problemService->getObjectSubmissions($problem, $validated['user_id'] ?? 'all', $validated['language'], $validated['status'],$validated['items']);
 
         return response()->json([
             'status' => true,

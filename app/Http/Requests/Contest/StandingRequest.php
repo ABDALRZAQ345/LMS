@@ -1,22 +1,19 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Contest;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class createQuizRequest extends FormRequest
+class StandingRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return \Gate::allows('editCourse',$this->route('course'));
+        return \Gate::allows('seeStanding', $this->route('contest'));;
     }
 
     /**
@@ -24,20 +21,20 @@ class createQuizRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
-
-
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'is_final' => ['required', 'in:0,1'],
-            'questions' => ['required', 'array', 'min:1'],
-            'questions.*.question' => ['required', 'string'],
-            'questions.*.options' => ['required', 'array', 'min:2'],
-            'questions.*.options.*' => ['required', 'string'],
+            'justFriends' => ['required','in:0,1,true,false'],
+            'items' => ['nullable', 'integer', 'min:10', 'max:30'],
         ];
     }
-
+    public function prepareForValidation(): void
+    {
+        $this->merge([
+            'items' => $this->filled('items') ? $this->input('items') : 30,
+        ]);
+    }
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

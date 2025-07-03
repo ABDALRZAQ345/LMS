@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('learning_path_user', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['finished', 'watch_now', 'watch_later']);
+            $table->enum('status', ['enroll', 'watch_later']);
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(LearningPath::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

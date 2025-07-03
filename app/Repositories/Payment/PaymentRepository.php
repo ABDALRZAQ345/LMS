@@ -7,7 +7,8 @@ use Stripe\PaymentIntent;
 use Stripe\Stripe;
 class PaymentRepository
 {
-    public function enrollCourse($paymentMethod,$course){
+    public function enrollCourse($paymentMethod, $course)
+    {
         $user = auth()->user();
 
         Stripe::setApiKey(config('services.stripe.secret'));
@@ -28,10 +29,9 @@ class PaymentRepository
             ],
         ]);
 
-
-
         return $intent;
     }
+
 
     public function attachCourse(Course $course, int $amountInCents)
     {

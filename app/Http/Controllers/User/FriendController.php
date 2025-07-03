@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ShowFriendsRequest;
 use App\Http\Resources\Users\UserResource;
 use App\Models\User;
 use App\Services\User\FriendService;
@@ -21,9 +22,10 @@ class FriendController extends Controller
     /**
      * @throws ServerErrorException
      */
-    public function index(User $user): JsonResponse
+    public function index(User $user,ShowFriendsRequest $request): JsonResponse
     {
-        $friends = $user->friends()->paginate(20);
+        $validated = $request->validated();
+        $friends = $user->friends()->paginate($validated['items']);
 
         return response()->json([
             'status' => true,

@@ -26,17 +26,12 @@ class getAllCoursesRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $orderBy = $this->input('orderBy', 'rate');
-        if ($orderBy === 'date') {
-            $orderBy = 'created_at';
-        }
-
         $this->merge([
             'items' => $this->input('items', 20),
             'direction' => $this->input('direction', 'asc'),
             'status' => $this->input('status', 'all'),
             'search' => $this->input('search', ''),
-            'orderBy' => $orderBy,
+            'orderBy' => $this->input('orderBy', 'rate'),
         ]);
     }
 

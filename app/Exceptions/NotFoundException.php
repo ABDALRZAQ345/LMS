@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NotFoundException extends Exception
 {
-    public function __construct(string $message = 'Object Not found')
+    public function __construct(string $message = 'Object not found')
     {
         parent::__construct($message);
     }

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GetAllContestsRequest extends FormRequest
+class ShowProblemSubmissionsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,22 @@ class GetAllContestsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['required', 'string', 'in:quiz,programming,all'],
-            'status' => ['required', 'string', 'in:active,ended,coming,all'],
-            'search' => ['nullable', 'string'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'language' => ['nullable','in:cpp,csharp,java,python,all'],
+            'status' => ['nullable','in:wrong_answer,accepted,pending,runtime_error,memory_limit_exceeded,time_limit_exceeded,compile_error,all'],
             'items' => ['nullable', 'integer', 'min:10', 'max:30'],
+
         ];
     }
     public function prepareForValidation(): void
     {
         $this->merge([
+            'language' => $this->filled('language') ? $this->input('language') : 'all',
+            'status' => $this->filled('status') ? $this->input('status') : 'all',
             'items' => $this->filled('items') ? $this->input('items') : 30,
-            'search' => $this->filled('search') ? $this->input('search') : '',
         ]);
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(

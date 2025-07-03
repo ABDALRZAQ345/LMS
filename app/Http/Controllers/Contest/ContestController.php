@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\Contest;
 
-use App\Exceptions\NotFoundException;
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contest\GetAllContestsRequest;
 use App\Http\Requests\Contest\MakeContestRequest;
 use App\Http\Requests\Contest\MakeProgrammingContestRequest;
-use App\Http\Requests\ShowContestProblemsRequest;
-use App\Http\Requests\ShowContestRequest;
+use App\Http\Requests\Contest\ShowContestProblemsRequest;
+use App\Http\Requests\Contest\ShowContestRequest;
+use App\Http\Requests\Contest\StandingRequest;
 use App\Http\Requests\ShowQuestionsRequest;
-use App\Http\Requests\StandingRequest;
 use App\Http\Resources\ContestResource;
-use App\Http\Resources\StudentStandingResource;
 use App\Models\Contest;
 use App\Responses\ContestStandingResponse;
 use App\Services\ContestService;
@@ -32,7 +30,7 @@ class ContestController extends Controller
     public function index(GetAllContestsRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'], $validated['search']);
+        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'], $validated['search'],$validated['items']);
 
         return response()->json([
             'status' => true,
@@ -91,7 +89,7 @@ class ContestController extends Controller
     {
 
         $validated = $request->validated();
-        $students = $this->contestService->GetContestResults($contest, $validated['justFriends']);
+        $students = $this->contestService->GetContestResults($contest, $validated['justFriends'],$validated['items']);
         $currentUser = $students->where('id', \Auth::id())->first();
 
         return ContestStandingResponse::response($students,$currentUser);

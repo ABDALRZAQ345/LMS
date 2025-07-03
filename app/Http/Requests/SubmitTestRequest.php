@@ -2,16 +2,18 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Contest\SubmitQuizRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteQuizRequest extends FormRequest
+class SubmitTestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return \Gate::allows('editCourse',$this->route('course'));
+        //todo authorize the user paid or the course is free
+        return true;
     }
 
     /**
@@ -21,8 +23,12 @@ class DeleteQuizRequest extends FormRequest
      */
     public function rules(): array
     {
+        $test = $this->route('test');
+
         return [
-            //
+            'answers' => ['required', 'array', new SubmitQuizRule($test)],
+            'answers.*' => ['required', 'integer', 'exists:options,id'],
+            'start_time' => ['required', 'date','before_or_equal:now'],
         ];
     }
 }

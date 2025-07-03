@@ -38,8 +38,8 @@ class UserResource extends JsonResource
             $data['current_streak']=  $this->CurrentStreak();
             $data['completed_courses'] = $this->finishedCourses()->count();
             $data['completed_learning_paths'] = $this->finishedLearningPaths()->count();
-            if(\Auth::user())
-            $data['is_friend'] = db::table('friends')->where('user_id', \Auth::id())->where('friend_id', $data['id'])->exists() ? 1 : 0;
+            if(auth('api')->user() != null)
+            $data['is_friend'] = db::table('friends')->where('user_id', auth('api')->id())->where('friend_id', $data['id'])->exists() ? 1 : 0;
         }
 
 

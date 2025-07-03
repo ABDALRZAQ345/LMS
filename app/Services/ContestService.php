@@ -196,10 +196,10 @@ class ContestService
 
     }
 
-    public function GetContestResults(Contest $contest,$justFriends=false): \Illuminate\Pagination\LengthAwarePaginator
+    public function GetContestResults(Contest $contest,$justFriends=false,$items=30): \Illuminate\Pagination\LengthAwarePaginator
     {
         if(!$justFriends || !Auth::user()){
-          return  $contest->students()->paginate(20);
+          return  $contest->students()->paginate($items);
         }
         else{
             return $this->contestsRepository->friendsResults($contest,Auth::user())->paginate(25);

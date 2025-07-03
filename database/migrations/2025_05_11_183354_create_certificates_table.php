@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->comment('
-                its the name of the completed course
-            ');
+            $table->foreignIdFor(Course::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->string('url')->nullable();
             $table->timestamps();

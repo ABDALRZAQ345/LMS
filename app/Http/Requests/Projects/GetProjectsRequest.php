@@ -26,6 +26,7 @@ class GetProjectsRequest extends FormRequest
         return [
             'tag' => ['nullable', 'string'],
             'search' => ['nullable', 'string'],
+            'items' => ['nullable', 'integer', 'min:10', 'max:30'],
         ];
     }
 
@@ -34,6 +35,7 @@ class GetProjectsRequest extends FormRequest
         $this->merge([
             'tag' => $this->filled('tag') ? $this->input('tag') : 'all',
             'search' => $this->filled('search') ? $this->input('search') : '',
+            'items' => $this->filled('items') ? $this->input('items') : 30,
         ]);
     }
 

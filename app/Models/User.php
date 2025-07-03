@@ -117,12 +117,13 @@ class User extends Authenticatable implements JWTSubject
             ->withPivot('paid', 'status');
     }
 
-    public function enrolledCourses()
+    public function enrolledCourses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'course_user')
-            ->wherePivot('status', 'enrolled')
-            ->withPivot('paid', 'status');
+            ->withPivot('paid', 'status')
+            ->withTimestamps();
     }
+
 
     public function watchLaterCourses()
     {
@@ -205,7 +206,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function learningPaths(): BelongsToMany
     {
-        return $this->belongsToMany(LearningPath::class, 'learning_path_user');
+        return $this->belongsToMany(LearningPath::class, 'learning_path_user')
+            ->withTimestamps();
 
     }
 
@@ -280,4 +282,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Submission::class);
     }
+
+    public function studentCourses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_user')
+            ->withPivot('paid', 'status')
+            ->withTimestamps();
+    }
+
+
 }

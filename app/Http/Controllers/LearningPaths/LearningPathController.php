@@ -19,6 +19,9 @@ class LearningPathController extends Controller
 
     public function index(getAllLearningPathRequest $request){
         $validated = $request->validated();
+        if ($validated['orderBy'] === 'date') {
+            $validated['orderBy'] = 'created_at';
+        }
         return $this->learningPathServices->getAllLearningPaths($validated);
     }
 

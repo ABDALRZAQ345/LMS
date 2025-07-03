@@ -23,9 +23,9 @@ return new class extends Migration
             $table->enum('level', ['beginner', 'intermediate', 'advanced', 'expert'])
                 ->nullable()
                 ->default('beginner');
-            $table->integer('price')->default(0);
+            $table->decimal('price')->default(0);
             $table->boolean('verified')->default(false);
-            $table->integer('rate')->default(0);
+            $table->decimal('rate')->default(0);
             $table->timestamps();
         });
     }

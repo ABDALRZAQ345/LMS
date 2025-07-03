@@ -34,17 +34,17 @@ class CourseController extends Controller
     }
 
     public function getAllCoursesInLearningPath(LearningPath $learningPath){
-        return $this->courseService->getAllCoursesInLearningPath($learningPath->title,$learningPath->id);
+        return $this->courseService->getAllCoursesInLearningPath($learningPath);
     }
 
-    public function showCourseInLearningPath(LearningPath $learningPath, Course $course){
-        if (!$learningPath->courses()->where('courses.id', $course->id)->exists()) {
-            return ResponseHelper::jsonResponse([], 'Course not found in this learning path',404,false);
-        }
-        if($course->verified == 0)
-            return ResponseHelper::jsonResponse([], 'Course not verified',404,false);
-        return $this->courseService->showCourseInLearningPath($learningPath->title,$course->id);
-    }
+//    public function showCourseInLearningPath(LearningPath $learningPath, Course $course){
+//        if (!$learningPath->courses()->where('courses.id', $course->id)->exists()) {
+//            return ResponseHelper::jsonResponse([], 'Course not found in this learning path',404,false);
+//        }
+//        if($course->verified == 0)
+//            return ResponseHelper::jsonResponse([], 'Course not verified',404,false);
+//        return $this->courseService->showCourseInLearningPath($learningPath->title,$course->id);
+//    }
 
 
 }

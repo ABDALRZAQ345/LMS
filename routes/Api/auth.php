@@ -8,7 +8,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\VerificationCodeController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
+Route::middleware(['throttle:api', 'locale'])->group(function () {
 
     Route::post('/password/forget', [PasswordController::class, 'forget'])->middleware('throttle:change_password')->name('forget_password');
 

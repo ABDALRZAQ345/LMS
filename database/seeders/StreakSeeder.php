@@ -18,6 +18,7 @@ class StreakSeeder extends Seeder
         $endOfYear = now()->endOfYear();
 
         foreach ($users as $user) {
+            \Log::channel('verification_code')->info('Starting Streak: ' . $user->id);
             $date = $startOfYear->copy();
             $streaks = [];
 
@@ -35,8 +36,9 @@ class StreakSeeder extends Seeder
                 ];
                 $date->addDay();
             }
-
-            Streak::insert($streaks);
+            foreach (array_chunk($streaks, 500) as $chunk) {
+                Streak::insert($chunk);
+            }
         }
     }
 }

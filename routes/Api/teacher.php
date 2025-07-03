@@ -13,6 +13,6 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
 
         Route::post('/courses/{course}/tests',[TeacherController::class, 'createTest']);
         Route::put('/courses/{course}/tests/{test}',[TeacherController::class, 'updateTest']);
-        Route::delete('courses/{course}/tests/{test}',[TeacherController::class, 'deleteTest']);
+        Route::delete('/courses/{course}/tests/{test}',[TeacherController::class, 'deleteTest']);
     });
 

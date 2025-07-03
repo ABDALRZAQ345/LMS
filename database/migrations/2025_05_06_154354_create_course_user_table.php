@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('course_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('paid')
+            $table->decimal('paid')
                 ->default(0)
                 ->comment('how much student paid that course');
             $table->enum('status', ['finished', 'enrolled', 'watch_later']);

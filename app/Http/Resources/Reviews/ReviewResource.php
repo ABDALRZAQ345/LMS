@@ -9,15 +9,15 @@ class ReviewResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $authId = auth()->id();
+        $authId = auth('api')->id();
 
         return [
             'id' => $this->id,
             'comment' => $this->comment,
             'rate' => $this->rate,
-            'created_at' => $this->updated_at->gt($this->created_at)
+            'created_at' => ($this->updated_at->gt($this->created_at)
                 ? $this->updated_at
-                : $this->created_at,
+                : $this->created_at)->toDateTimeString(),
             'your_review' => $this->student->id === $authId,
             'student' => [
                 'id' => $this->student->id,

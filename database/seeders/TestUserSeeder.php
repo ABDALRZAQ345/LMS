@@ -33,7 +33,6 @@ class TestUserSeeder extends Seeder
                     'correct_answers' => rand(0, $test->questions()->count()),
                     'start_time' => $startTime,
                     'end_time' => $endTime,
-                    'course_id' => rand(1,5),
                 ]);
             }
         }

@@ -24,7 +24,7 @@ class updateStatusLearningPathRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'sometimes|string|in:watch_now,watch_later',
+            'status' => 'sometimes|string|in:enroll,watch_later',
         ];
     }
 

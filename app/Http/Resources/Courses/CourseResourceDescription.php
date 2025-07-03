@@ -14,12 +14,15 @@ class CourseResourceDescription extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $countOfVideos = $this->videos->count();
+        $duration = $this->videos->sum('duration');
         $imageOfTeacher = $this->teacher->image
             ? (str_starts_with($this->teacher->image, 'https://via.placeholder.com')
                 ? $this->teacher->image
                 : config('app.url').'/storage/'.$this->teacher->image)
             : null;
 
+        $countOfParticipant = $this->students()->count();
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -28,12 +31,21 @@ class CourseResourceDescription extends JsonResource
             'image' => $this->image,
             'price' => $this->price == 0 ? 'free' : $this->price,
             'level'=> $this->level,
-            'status' => $this->pivot->status ?? null,
-            'student_paid' => $this->pivot->paid ?? null,
+            'status' => $this->pivot->status
+                ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status
+                    ?? null,
+
+            'student_paid' => $this->pivot->paid
+                ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->paid
+                    ?? null,
+            'number_of_videos' => $countOfVideos,
+            'duration' => $duration,
+            'number_of_participants' => $countOfParticipant,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $imageOfTeacher,
             'teacher_bio' => $this->teacher->bio ?? null,
+            'number_of_teacher_courses' => $this->teacher->verified_courses_count,
             'learning_paths' => $this->learningPaths->map(function ($path) {
                 return [
                     'id' => $path->id,

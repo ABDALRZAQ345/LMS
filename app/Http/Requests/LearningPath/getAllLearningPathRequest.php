@@ -27,24 +27,20 @@ class getAllLearningPathRequest extends FormRequest
             'items' => ['nullable', 'integer', 'min:10', 'max:20'],
             'direction' => ['nullable', 'string', 'in:asc,desc'],
             'orderBy' => ['nullable', 'string', 'in:title,date'],
-            'status' => ['nullable', 'string', 'in:all,finished,watch_now,watch_later'],
+            'status' => ['nullable', 'string', 'in:all,enroll,watch_later'],
             'search' => ['nullable', 'string'],
         ];
     }
 
     protected function prepareForValidation(): void
     {
-        $orderBy = $this->input('orderBy', 'title');
-        if ($orderBy === 'date') {
-            $orderBy = 'created_at';
-        }
 
         $this->merge([
             'items' => $this->input('items', 20),
             'direction' => $this->input('direction', 'asc'),
             'status' => $this->input('status', 'all'),
             'search' => $this->input('search', ''),
-            'orderBy' => $orderBy,
+            $orderBy = $this->input('orderBy', 'title'),
         ]);
     }
 

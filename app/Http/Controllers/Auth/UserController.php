@@ -39,7 +39,7 @@ class UserController extends BaseController
     {
         $validated = $request->validated();
 
-        $users =$this->userService->GetUsers($validated['friends'], $validated['role'], $validated['search'], $validated['orderBy'], $validated['direction']);
+        $users =$this->userService->GetUsers($validated['friends'], $validated['role'], $validated['search'], $validated['orderBy'], $validated['direction'],$validated['items']);
 
 
         return response()->json([

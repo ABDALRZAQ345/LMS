@@ -29,6 +29,7 @@ class GetUsersRequest extends FormRequest
             'search' => ['string'],
             'orderBy' => ['string', 'in:points,name'],
             'direction' => ['string', 'in:asc,desc'],
+            'items' => ['nullable', 'integer', 'min:10', 'max:30'],
         ];
     }
 
@@ -40,6 +41,7 @@ class GetUsersRequest extends FormRequest
             'search' => $this->filled('search') ? $this->input('search') : '',
             'orderBy' => $this->filled('orderBy') ? $this->input('orderBy') : 'points',
             'direction' => $this->filled('direction') ? $this->input('direction') : 'desc',
+            'items' => $this->filled('items') ? $this->input('items') : 30,
         ]);
     }
 
