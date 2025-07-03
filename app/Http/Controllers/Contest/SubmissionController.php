@@ -30,7 +30,7 @@ class SubmissionController extends Controller
         $validated = $request->validated();
         $problem = $contest->problems()->findOrFail($problem->id);
 
-        $submissions = $this->problemService->getObjectSubmissions($problem, $validated['user_id'] ?? 'all', $validated['language'], $validated['status']);
+        $submissions = $this->problemService->getObjectSubmissions($problem, $validated['user_id'] ?? 'all', $validated['language'], $validated['status'],$validated['items']);
 
         return response()->json([
             'status' => true,

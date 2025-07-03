@@ -40,8 +40,9 @@ class UserSeeder extends Seeder
             'role' => 'teacher',
         ]);
 
-    // todo add pages and items for per page
-    // todo add page to postman
+
+        //todo merge with sarhan
+        //todo push and send account to users
         User::factory()->count(20)->create([
             'role' => 'student',
             'email_verified' => true,

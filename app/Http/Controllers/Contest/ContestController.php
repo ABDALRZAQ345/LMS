@@ -30,7 +30,7 @@ class ContestController extends Controller
     public function index(GetAllContestsRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'], $validated['search']);
+        $contests = $this->contestService->getAllAcceptedContests($validated['status'], $validated['type'], $validated['search'],$validated['items']);
 
         return response()->json([
             'status' => true,
@@ -89,7 +89,7 @@ class ContestController extends Controller
     {
 
         $validated = $request->validated();
-        $students = $this->contestService->GetContestResults($contest, $validated['justFriends']);
+        $students = $this->contestService->GetContestResults($contest, $validated['justFriends'],$validated['items']);
         $currentUser = $students->where('id', \Auth::id())->first();
 
         return ContestStandingResponse::response($students,$currentUser);

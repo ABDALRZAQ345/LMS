@@ -9,7 +9,7 @@ class ProblemService
 {
 
 
-    public function getObjectSubmissions(Contest|Problem $object,$user_id='all',$language='all',$status='all'): \Illuminate\Pagination\LengthAwarePaginator
+    public function getObjectSubmissions(Contest|Problem $object,$user_id='all',$language='all',$status='all',$items=30): \Illuminate\Pagination\LengthAwarePaginator
     {
         $submissions=$object->submissions()->with('problem');
 
@@ -22,6 +22,6 @@ class ProblemService
         if($status != 'all'){
             $submissions = $submissions->where('status',$status);
         }
-        return $submissions->paginate(20);
+        return $submissions->paginate($items);
     }
 }

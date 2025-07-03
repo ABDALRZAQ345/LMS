@@ -27,11 +27,13 @@ class GetAllContestsRequest extends FormRequest
             'type' => ['required', 'string', 'in:quiz,programming,all'],
             'status' => ['required', 'string', 'in:active,ended,coming,all'],
             'search' => ['nullable', 'string'],
+            'items' => ['nullable', 'integer', 'min:10', 'max:30'],
         ];
     }
     public function prepareForValidation(): void
     {
         $this->merge([
+            'items' => $this->filled('items') ? $this->input('items') : 30,
             'search' => $this->filled('search') ? $this->input('search') : '',
         ]);
     }

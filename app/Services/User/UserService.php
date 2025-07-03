@@ -63,7 +63,7 @@ class UserService
 
     }
 
-    public function GetUsers($friends = 0, $role = 'student', $search = '', $orderBy = 'points', $direction = 'desc'): \Illuminate\Pagination\LengthAwarePaginator
+    public function GetUsers($friends = 0, $role = 'student', $search = '', $orderBy = 'points', $direction = 'desc',$items=30): \Illuminate\Pagination\LengthAwarePaginator
     {
 
         $user = auth('api')->user();
@@ -75,7 +75,7 @@ class UserService
 
         return $users->where('role', $role)->orderBy($orderBy, $direction)
         ->where('name', 'like', '%'.$search.'%')
-        ->paginate(20);
+        ->paginate($items);
 
 
 
