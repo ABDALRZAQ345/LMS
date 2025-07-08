@@ -22,6 +22,7 @@ class ContestSeeder extends Seeder
             Contest::factory()->create([
                 'user_id' => $teachers->random()->id,
                 'type' => $i % 2 ? 'quiz' : 'programming',
+                'request_status' => 'accepted'
             ]);
         }
     }
