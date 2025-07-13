@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Videos;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Videos\CreateUrlVedioRequest;
 use App\Models\Course;
 use App\Models\Video;
 use App\Services\Videos\VideoService;
@@ -31,4 +32,6 @@ class VideoController extends Controller
     public function finishedVideo(Course $course , Video $video){
         return $this->videoService->finishedVideo($course,$video);
     }
+
+
 }

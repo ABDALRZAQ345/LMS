@@ -3,9 +3,11 @@
 namespace App\Services\Courses;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Resources\Courses\AdminRequestCoursesResource;
 use App\Http\Resources\Courses\CourseResource;
 use App\Http\Resources\Courses\CourseResourceContent;
 use App\Http\Resources\Courses\CourseResourceDescription;
+use App\Http\Resources\Courses\TeacherCourseResource;
 use App\Repositories\Courses\CoursesRepository;
 
 class CoursesService
@@ -97,6 +99,8 @@ class CoursesService
 //        return ResponseHelper::jsonResponse($course, 'Get Course In Learning Path '
 //            .$learningPathName.' Successfully');
 //    }
+
+
 
 
 }

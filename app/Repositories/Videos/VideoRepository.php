@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Videos;
 
+use App\Models\Course;
 use App\Models\Video;
 
 class VideoRepository
@@ -41,7 +42,6 @@ class VideoRepository
                 ]);
             return $created;
         }
-
-
     }
+
 }

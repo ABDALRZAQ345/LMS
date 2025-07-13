@@ -125,5 +125,5 @@ return [
     'data' => [
 
     ],
-    'url' => env('APP_URL', 'http://localhost'),
+
 ];

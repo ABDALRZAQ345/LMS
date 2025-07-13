@@ -20,7 +20,7 @@ class CourseWithContentResource extends JsonResource
         $imageOfTeacher = $this->teacher->image
             ? (str_starts_with($this->teacher->image, 'https://via.placeholder.com')
                 ? $this->teacher->image
-                : config('app.url').'/storage/'.$this->teacher->image)
+                : config('app.url').$this->teacher->image)
             : null;
 
 
@@ -46,7 +46,7 @@ class CourseWithContentResource extends JsonResource
                     'image' => $path->image
                         ? (str_starts_with($path->image, 'https://via.placeholder.com')
                             ? $path->image
-                            : config('app.url') . '/storage/' . $path->image)
+                            : config('app.url') . $path->image)
                         : null,
                 ];
             }),
