@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Videos;
 
+use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateUrlVedioRequest extends FormRequest
@@ -11,14 +12,12 @@ class CreateUrlVedioRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return \Gate::allows('editCourse',$this->route('course'));
+        $courseId = $this->input('course_id');
+        $course = Course::find($courseId);
+
+        return \Gate::allows('editCourse', $course);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -26,7 +25,7 @@ class CreateUrlVedioRequest extends FormRequest
             'title' => 'required|string|max:100',
             'description' => 'required|string',
             'free' => 'required|boolean',
-            'duration' => 'required|integer',
+            'duration' => 'required|integer|min:1',
             'course_id' => 'required|integer',
         ];
     }

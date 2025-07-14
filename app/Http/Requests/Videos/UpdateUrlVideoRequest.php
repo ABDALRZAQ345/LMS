@@ -2,23 +2,19 @@
 
 namespace App\Http\Requests\Videos;
 
+use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateUrlVideoRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return \Gate::allows('editCourse',$this->route('course'));
+        $courseId = $this->input('course_id');
+        $course = Course::find($courseId);
+
+        return \Gate::allows('editCourse', $course);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -26,7 +22,7 @@ class UpdateUrlVideoRequest extends FormRequest
             'title' => 'sometimes|string|max:100',
             'description' => 'sometimes|string',
             'free' => 'sometimes|boolean',
-            'duration' => 'sometimes|integer',
+            'duration' => 'sometimes|integer|min:1',
             'course_id' => 'sometimes|integer',
         ];
     }

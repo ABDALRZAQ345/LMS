@@ -29,14 +29,13 @@ class TeacherVideoService
        return ResponseHelper::jsonResponse($theVideo , 'Get Video In Course');
     }
     public function createUrl($validate){
-        $teacherId = auth()->id();
-        $validate['user_id'] = $teacherId;
+
         $video = $this->teacherVideoRepository->createUrl($validate);
 
         return ResponseHelper::jsonResponse($video, 'Add video to course successfully.');
     }
 
-    public function updateUrl($validate, $video){
+    public function updateUrl($video, $validate){
         $video->update($validate);
 
         return ResponseHelper::jsonResponse($video,'Updated Video Successfully');

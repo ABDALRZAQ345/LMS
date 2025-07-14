@@ -10,7 +10,7 @@ class TeacherVideoRepository
 
     public function showOneVideoInCourse($course, $video){
         return Video::where('course_id', $course->id)
-            ->where('video_id', $video->id)
+            ->where('id', $video->id)
             ->get();
     }
     public function createUrl($validate){
