@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Courses;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\CreateCourseRequest;
+use App\Http\Requests\Courses\ReorderCourseContentRequest;
 use App\Http\Requests\Courses\UpdateCourseRequest;
 use App\Models\Course;
+use App\Models\Test;
+use App\Models\Video;
 use App\Services\Courses\TeacherCoursesService;
 use Illuminate\Http\Request;
 
@@ -58,8 +61,31 @@ class TeacherCourseContrller extends Controller
         return ResponseHelper::jsonResponse([],'Deleted Course Successfully');
     }
 
-    public function order(Course $course){
+    public function reorderContent(ReorderCourseContentRequest $request ,Course $course){
+        $orderItems = $request->input('order');
 
+        foreach ($orderItems as $index => $item) {
+            [$type, $id] = explode('_', $item);
+
+            $newOrder = $index + 1;
+
+            if ($type === 'video') {
+                $video = Video::where('id', $id)->where('course_id', $course->id)->first();
+                if ($video) {
+                    $video->order = $newOrder;
+                    $video->save();
+                }
+            } elseif ($type === 'test') {
+                $test = Test::where('id', $id)->where('course_id', $course->id)->first();
+                if ($test) {
+                    $test->order = $newOrder;
+                    $test->save();
+                }
+            }
+        }
+
+        return ResponseHelper::jsonResponse([], 'Course content reordered successfully');
     }
+
 
 }

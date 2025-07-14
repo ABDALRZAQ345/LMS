@@ -36,7 +36,7 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
         Route::post('courses/{course}',[TeacherCourseContrller::class, 'update']);
         Route::delete('courses/{course}',[TeacherCourseContrller::class , 'delete']);
 
-        Route::put('courses/{course}/content/order',[TeacherCourseContrller::class, 'order']);
+        Route::post('courses/{course}/reorder-contest',[TeacherCourseContrller::class, 'reorderContent']);
 
     });
 
