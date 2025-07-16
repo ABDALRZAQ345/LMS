@@ -29,7 +29,7 @@ class CourseResourceDescription extends JsonResource
             'description' => $this->description,
             'rate' => $this->rate,
             'image' => $this->image,
-            'price' => $this->price == 0 ? 'free' : $this->price,
+            'price' => $this->price,
             'level'=> $this->level,
             'status' => $this->pivot->status
                 ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status

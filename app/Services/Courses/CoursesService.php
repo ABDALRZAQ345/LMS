@@ -24,7 +24,7 @@ class CoursesService
         }
         $courses = $this->coursesRepository->getAllCourses($validated);
         //todo data[]=getmeta($courses)
-        $data = [
+               $data = [
             'courses' => CourseResource::collection($courses),
             'total_pages' => $courses->lastPage(),
             'current_page' => $courses->currentPage(),
@@ -54,6 +54,40 @@ class CoursesService
         $coursesInLearningPath = $this->coursesRepository->getAllCoursesInLearningPath($learningPath->id);
 
         return ResponseHelper::jsonResponse(CourseResource::collection($coursesInLearningPath), 'Get All Courses In ' .$learningPath->title. ' Successfully');
+    }
+
+    public function addToWatchLater($course){
+        $userId = auth()->id();
+
+        $isEnrolled = $course->students()
+            ->where('user_id', $userId)
+            ->where('course_id', $course->id)
+            ->whereIn('status', ['enrolled', 'finished'])
+            ->exists();
+
+        if ($isEnrolled) {
+            return ResponseHelper::jsonResponse([], 'You are already enrolled in this course', 400, false);
+        }
+
+        $success = $this->coursesRepository->addToWatchLater($userId,$course);
+        if(!$success){
+            return ResponseHelper::jsonResponse([],'It is already in watch later');
+        }
+        else{
+            return ResponseHelper::jsonResponse([],'Added to watch later Successfully');
+        }
+
+    }
+    public function removeFromWatchLater($course){
+        $userId = auth()->id();
+        $success =  $this->coursesRepository->removeFromWatchLater($userId,$course);
+
+        if($success){
+            return ResponseHelper::jsonResponse([],'Removed from watch later Successfully');
+        }
+        else{
+            return ResponseHelper::jsonResponse([],'It is not in watch later',404,false);
+        }
     }
 
 //    public function showCourseInLearningPath($learningPathName, $courseId)
