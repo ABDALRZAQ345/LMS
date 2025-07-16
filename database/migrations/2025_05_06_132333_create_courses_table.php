@@ -25,6 +25,7 @@ return new class extends Migration
                 ->default('beginner');
             $table->decimal('price')->default(0);
             $table->boolean('verified')->default(false);
+            $table->enum('request_status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->decimal('rate')->default(0);
             $table->timestamps();
         });
