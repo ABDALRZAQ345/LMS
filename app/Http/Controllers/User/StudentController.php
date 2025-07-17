@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Exceptions\ServerErrorException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Projects\GetProjectsRequest;
 use App\Http\Resources\Achievements\AchievementResource;
 use App\Http\Resources\CertificateResource;
 use App\Http\Resources\Projects\ProjectResource;
@@ -92,9 +93,10 @@ class StudentController extends Controller
 
     }
 
-    public function projects(User $user): JsonResponse
+    public function projects(GetProjectsRequest $request,User $user): JsonResponse
     {
-        $projects=$this->projectService->GetUserProjects($user);
+        $validated=$request->validated();
+        $projects=$this->projectService->GetUserProjects($user,$validated);
         return  response()->json([
            'status'=> true,
            'projects'=> ProjectResource::collection($projects),

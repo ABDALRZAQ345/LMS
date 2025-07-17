@@ -37,14 +37,16 @@ class ProjectService
 
     }
 
-    public function GetUserProjects(User $user): \Illuminate\Pagination\LengthAwarePaginator
+    public function GetUserProjects(User $user,$data): \Illuminate\Pagination\LengthAwarePaginator
     {
         $currentUser=Auth::user();
         if ($currentUser && ( $currentUser->id == $user->id || $currentUser->role == 'admin')) {
             return $user->projects()
+                ->where('title', 'like', '%'.$data['search'].'%')
                 ->with(['user', 'tag'])->paginate(20);
         } else {
             return $user->projects()->where('status', 'accepted')
+                ->where('title', 'like', '%'.$data['search'].'%')
                 ->with(['user', 'tag'])->paginate(20);
         }
 
