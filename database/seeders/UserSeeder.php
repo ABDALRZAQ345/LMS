@@ -41,7 +41,6 @@ class UserSeeder extends Seeder
         ]);
 
 
-        //todo merge with sarhan
         //todo push and send account to users
         User::factory()->count(20)->create([
             'role' => 'student',
