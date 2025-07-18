@@ -13,8 +13,8 @@ class TagSeeder extends Seeder
     public function run(): void
     {
         $tags = [
-            'web', 'mobile', 'Data', 'Game ', 'Desktop',
-            'AI ', 'DevOps', 'Other',
+            'web', 'mobile', 'Data', 'Game', 'Desktop',
+            'AI', 'DevOps', 'Other',
         ];
         foreach ($tags as $tag) {
             Tag::create([
