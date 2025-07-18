@@ -18,10 +18,16 @@ class LearningPathSeeder extends Seeder
         $teachers = User::where('role', 'teacher')->pluck('id');
         $students = User::where('role', 'student')->pluck('id');
 
-        $learningPaths = LearningPath::factory(10)->create()->each(function ($learningPath) use ($teachers) {
+         LearningPath::factory(30)->create()->each(function ($learningPath) use ($teachers) {
             $learningPath->user_id = $teachers->random();
             $learningPath->save();
         });
+        LearningPath::factory(2)->create()->each(function ($learningPath) use ($teachers) {
+            $learningPath->user_id = 3;
+            $learningPath->save();
+        });
+        $learningPaths = LearningPath::all();
+
 
         // For each learning path, create 5 courses and attach them
         foreach ($learningPaths as $index => $learningPath) {
