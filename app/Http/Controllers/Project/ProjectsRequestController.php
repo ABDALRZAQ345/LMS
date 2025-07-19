@@ -33,6 +33,12 @@ class ProjectsRequestController extends Controller
 
     public function accept(Project $project): JsonResponse
     {
+        if($project->status!='pending'){
+            return response()->json([
+                'status' => false,
+                'message' => 'project already '.$project->status,
+            ],400);
+        }
         $project->update(['status' => 'accepted']);
         // todo send notification to student
         $this->achievementsService->ProjectAccepted($project);
@@ -44,6 +50,12 @@ class ProjectsRequestController extends Controller
 
     public function reject(Project $project): JsonResponse
     {
+        if($project->status!='pending'){
+            return response()->json([
+                'status' => false,
+                'message' => 'project already '.$project->status,
+            ],400);
+        }
         $project->update(['status' => 'refused']);
         // todo send notification to student
         return response()->json([
