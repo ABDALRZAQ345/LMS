@@ -29,7 +29,7 @@ class ProjectController extends Controller
         $projects = $this->projectService->GetAllProjects($validated);
         return response()->json([
             'status' => true,
-            'data' => ProjectResource::collection($projects),
+            'projects' => ProjectResource::collection($projects),
             'meta' => getMeta($projects)
         ]);
 
