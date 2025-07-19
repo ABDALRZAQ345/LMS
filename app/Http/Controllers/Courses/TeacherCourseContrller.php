@@ -6,7 +6,9 @@ use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\CreateCourseRequest;
 use App\Http\Requests\Courses\ReorderCourseContentRequest;
+use App\Http\Requests\Courses\TeacherVerifiedCourseRequest;
 use App\Http\Requests\Courses\UpdateCourseRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Course;
 use App\Models\Test;
 use App\Models\Video;
@@ -15,16 +17,22 @@ use Illuminate\Http\Request;
 
 class TeacherCourseContrller extends Controller
 {
+    use AuthorizesRequests;
     protected $teacherCoursesService;
     public function __construct(TeacherCoursesService $teacherCoursesService)
     {
         $this->teacherCoursesService = $teacherCoursesService;
     }
 
-    public function index(Request $request){
+    public function myCourses(Request $request){
         $items = $request->input('items', 10);
 
         return $this->teacherCoursesService->getTeacherCourses($items);
+    }
+    public function getAllVerifiedCourses(TeacherVerifiedCourseRequest $request){
+       $validated = $request->validated();
+
+        return $this->teacherCoursesService->getAllVerifiedCourses($validated);
     }
 
     public function getMyVerifiedCourses(){
@@ -32,10 +40,12 @@ class TeacherCourseContrller extends Controller
     }
 
     public function showCourseDescription(Course $course){
+        $this->authorize('view', $course);
         return $this->teacherCoursesService->showCourseDescription($course);
     }
 
     public function showCourseContent(Course $course){
+        $this->authorize('view', $course);
         return $this->teacherCoursesService->showCourseContent($course);
     }
 
@@ -57,6 +67,7 @@ class TeacherCourseContrller extends Controller
         if($course->image){
             $this->teacherCoursesService->deleteOldImage($course->image);
         }
+        $this->authorize('editCourse', $course);
         $course->delete();
         return ResponseHelper::jsonResponse([],'Deleted Course Successfully');
     }

@@ -7,6 +7,7 @@ use App\Http\Resources\Courses\AdminRequestCoursesResource;
 use App\Http\Resources\Courses\TeacherCourseContentResource;
 use App\Http\Resources\Courses\TeacherCourseDescriptionResource;
 use App\Http\Resources\Courses\TeacherCourseResource;
+use App\Http\Resources\Courses\TeachersAllCoursesResource;
 use App\Models\Course;
 use App\Repositories\Courses\TeacherCoursesRepository;
 use Illuminate\Support\Facades\Storage;
@@ -29,6 +30,15 @@ class TeacherCoursesService
         ];
         return ResponseHelper::jsonResponse($data,'Get Teacher Courses Successfully');
 
+    }
+
+    public function getAllVerifiedCourses($validated){
+        $courses = $this->teacherCoursesRepository->getAllVerifiedCourses($validated);
+        $data = [
+            'courses' => TeachersAllCoursesResource::collection($courses),
+            'meta' => getMeta($courses)
+        ];
+        return ResponseHelper::jsonResponse($data ,'Get All Verified Courses Successfully');
     }
 
     public function getTeacherVerifiedCourses(){

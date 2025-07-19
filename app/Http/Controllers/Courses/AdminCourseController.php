@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Courses;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Courses\AdminGetAllCoursesRequest;
 use App\Models\Course;
 use App\Services\Courses\AdminCourseService;
 use Illuminate\Http\Request;
@@ -16,9 +17,12 @@ class AdminCourseController extends Controller
         $this->adminCourseService = $adminCourseService;
     }
 
-    public function requests(Request $request){
-        $items = $request->input('items', 10);
-        return $this->adminCourseService->requestsCourses($items);
+    public function index(AdminGetAllCoursesRequest $request){
+        $validated = $request->validated();
+        if($validated['orderBy'] == 'date') {
+            $validated['orderBy'] = 'created_at';
+        }
+        return $this->adminCourseService->requestsCourses($validated);
 
     }
 

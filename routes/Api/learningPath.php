@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\LearningPaths\AdminLearningPathController;
 use App\Http\Controllers\LearningPaths\LearningPathController;
+use App\Http\Controllers\LearningPaths\TeacherLearningPathController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale'])->group(function () {
@@ -14,6 +16,22 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 
     });
 
-
-
 });
+
+Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
+    ->prefix('teacher')->group(function () {
+        Route::get('myLearningPaths',[TeacherLearningPathController::class,'myLearningPaths']);
+        Route::get('learningPaths/{learningPath}',[TeacherLearningPathController::class,'show']);
+        Route::post('learningPaths',[TeacherLearningPathController::class,'create']);
+        Route::post('learningPaths/{learningPath}',[TeacherLearningPathController::class,'update']);
+        Route::delete('learningPaths/{learningPath}',[TeacherLearningPathController::class,'delete']);
+
+    });
+
+Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
+    ->prefix('/admin')->group(function () {
+        Route::get('learningPaths',[AdminLearningPathController::class,'index']);
+        Route::post('learningPaths/{learningPath}',[AdminLearningPathController::class,'accept']);
+        Route::delete('learningPaths/{learningPath}',[AdminLearningPathController::class,'reject']);
+
+    });
