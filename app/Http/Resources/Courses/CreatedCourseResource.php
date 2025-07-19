@@ -34,7 +34,8 @@ class CreatedCourseResource extends JsonResource
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image' => $teacherImageUrl,
-
+            'level' => $this->level,
+            'course_duration' => $this->formatDuration($this->videos_sum_duration),
         ];
         if ($request->is('api/courses/*')) {
             $data['learning_paths'] = $this->whenLoaded('learningPaths', function () {
@@ -53,5 +54,13 @@ class CreatedCourseResource extends JsonResource
         }
 
         return $data;
-    }
+    } private function formatDuration($minutes)
+{
+    $hours = floor($minutes / 60);
+    $remainingMinutes = $minutes % 60;
+
+    return sprintf('%d:%02d h', $hours, $remainingMinutes);
 }
+
+}
+
