@@ -27,6 +27,7 @@ class TeacherCreatedLearningPathResource extends JsonResource
             'total_courses_price' => $this->courses_sum_price,
             'teacher_name' => $this->teacher->name,
             'verified' => $this->verified,
+            'price' => $this->courses_sum_price,
         ];
     }
 }
