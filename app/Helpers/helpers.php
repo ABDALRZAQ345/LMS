@@ -6,10 +6,18 @@ if (! function_exists('NewPublicPhoto')) {
     function NewPublicPhoto($photo, $folder = 'images'): string
     {
         $photoPath = $photo->store($folder, 'public');
-        $photoPath = env('APP_URL').'/storage/'.$photoPath;
+        $photoPath ='/storage/'.$photoPath;
 
         return $photoPath;
     }
+}
+function  getPhoto($image)
+{
+     return $image
+        ? (str_starts_with($image, 'https://via.placeholder.com')
+        ? $image
+        : config('app.url') . $image)
+        : null;
 }
 if (! function_exists('DeletePublicPhoto')) {
     function DeletePublicPhoto($path): void

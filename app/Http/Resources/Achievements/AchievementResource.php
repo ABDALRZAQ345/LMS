@@ -19,7 +19,7 @@ class AchievementResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => $this->image,
+            'image' => getPhoto($this->image),
             'description' => $this->description,
             'achieve_date' => optional($this->pivot?->created_at)->format('Y-m-d'),
         ];
