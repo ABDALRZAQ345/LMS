@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Courses;
 
+use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateCourseRequest extends FormRequest
@@ -11,7 +12,7 @@ class CreateCourseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return \Gate::allows('create', Course::class);
     }
 
     /**

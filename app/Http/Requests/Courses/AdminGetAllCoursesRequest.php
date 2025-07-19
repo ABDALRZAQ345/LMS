@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\LearningPath;
+namespace App\Http\Requests\Courses;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class getAllLearningPathRequest extends FormRequest
+class AdminGetAllCoursesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,7 @@ class getAllLearningPathRequest extends FormRequest
             'items' => ['nullable', 'integer', 'min:10', 'max:20'],
             'direction' => ['nullable', 'string', 'in:asc,desc'],
             'orderBy' => ['nullable', 'string', 'in:title,date'],
-            'status' => ['nullable', 'string', 'in:all,enroll,watch_later'],
+            'status' => ['nullable', 'string', 'in:all,pending,accepted,rejected'],
             'search' => ['nullable', 'string'],
         ];
     }

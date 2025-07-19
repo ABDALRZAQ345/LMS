@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\LearningPath;
+namespace App\Http\Requests\Courses;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class getAllLearningPathRequest extends FormRequest
+class TeacherVerifiedCourseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,22 +25,14 @@ class getAllLearningPathRequest extends FormRequest
     {
         return [
             'items' => ['nullable', 'integer', 'min:10', 'max:20'],
-            'direction' => ['nullable', 'string', 'in:asc,desc'],
-            'orderBy' => ['nullable', 'string', 'in:title,date'],
-            'status' => ['nullable', 'string', 'in:all,enroll,watch_later'],
-            'search' => ['nullable', 'string'],
+            'filter' => ['nullable' , 'string', 'in:public,own']
         ];
     }
 
-    protected function prepareForValidation(): void
-    {
-
+    public function prepareForValidation(): void{
         $this->merge([
             'items' => $this->input('items', 20),
-            'direction' => $this->input('direction', 'asc'),
-            'status' => $this->input('status', 'all'),
-            'search' => $this->input('search', ''),
-            'orderBy' => $this->input('orderBy', 'title'),
+            'filter' =>$this->input('filter','public'),
         ]);
     }
 

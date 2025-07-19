@@ -28,7 +28,8 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
 
 Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
     ->prefix('teacher')->group(function () {
-        Route::get('myCourses', [TeacherCourseContrller::class, 'index']);
+        Route::get('myCourses', [TeacherCourseContrller::class, 'myCourses']);
+        Route::get('courses', [TeacherCourseContrller::class, 'getAllVerifiedCourses']);
         Route::get('courses/{course}/description', [TeacherCourseContrller::class, 'showCourseDescription']);
         Route::get('courses/{course}/content', [TeacherCourseContrller::class, 'showCourseContent']);
         Route::get('courses/myVerifiedCourses', [TeacherCourseContrller::class, 'getMyVerifiedCourses']);
@@ -43,7 +44,7 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
     ->prefix('/admin')->group(function () {
-        Route::get('requests/courses', [AdminCourseController::class, 'requests']);
+        Route::get('courses', [AdminCourseController::class, 'index']);
         Route::post('requests/courses/{course}',[AdminCourseController::class, 'accept']);
         Route::delete('requests/courses/{course}',[AdminCourseController::class, 'reject']);
 

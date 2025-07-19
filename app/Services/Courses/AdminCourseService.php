@@ -14,10 +14,10 @@ class AdminCourseService
         $this->adminCourseRepo = $adminCourseRepo;
     }
 
-    public function requestsCourses($items){
-        $courses = $this->adminCourseRepo->requestsCourses($items);
+    public function requestsCourses($validated){
+        $courses = $this->adminCourseRepo->requestsCourses($validated);
         $data = [
-            'requests_courses' => AdminRequestCoursesResource::collection($courses),
+            'courses' => AdminRequestCoursesResource::collection($courses),
             'meta' => getMeta($courses),
         ];
 

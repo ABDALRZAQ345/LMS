@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Contest;
 use App\Models\Course;
+use App\Models\LearningPath;
 use App\Models\Like;
 use App\Models\Project;
 use App\Models\Review;
@@ -15,6 +16,7 @@ use App\Observers\ReviewObserver;
 use App\Observers\SubmissionObserver;
 use App\Policies\ContestPolicy;
 use App\Policies\CoursePolicy;
+use App\Policies\LearningPathPolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\VideoPolicy;
@@ -52,6 +54,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class,UserPolicy::class);
         Gate::policy(Course::class,CoursePolicy::class);
         Gate::policy(Video::class, VideoPolicy::class);
+        Gate::policy(LearningPath::class,LearningPathPolicy::class);
+
     }
 
     private function observers(): void
