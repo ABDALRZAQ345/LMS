@@ -40,7 +40,13 @@ class UserResource extends JsonResource
             $data['completed_learning_paths'] = $this->finishedLearningPaths()->count();
             if(auth('api')->user() != null)
             $data['is_friend'] = db::table('friends')->where('user_id', auth('api')->id())->where('friend_id', $data['id'])->exists() ? 1 : 0;
+
         }
+        if($this->role == 'teacher'){
+            $data['created_courses']= $this->verifiedCourses()->count();
+            $data['created_paths']=$this->verifiedLearningPaths()->count();
+            $data['created_contests']=$this->AcceptedCreatedContests()->count();
+            }
 
 
         return $data;

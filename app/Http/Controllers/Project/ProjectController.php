@@ -9,7 +9,7 @@ use App\Http\Resources\Projects\ProjectResource;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Services\Project\ProjectService;
-use http\Env\Response;
+
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 
@@ -29,7 +29,7 @@ class ProjectController extends Controller
         $projects = $this->projectService->GetAllProjects($validated);
         return response()->json([
             'status' => true,
-            'data' => ProjectResource::collection($projects),
+            'projects' => ProjectResource::collection($projects),
             'meta' => getMeta($projects)
         ]);
 

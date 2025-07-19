@@ -29,7 +29,7 @@ class AddProjectRequest extends FormRequest
             'description' => ['required', 'string'],
             'technologies' => ['nullable', 'array'],
             'tag_id' => ['required', 'exists:tags,id'],
-            'links' => ['nullable'],
+            'links' => ['required'],
         ];
     }
 

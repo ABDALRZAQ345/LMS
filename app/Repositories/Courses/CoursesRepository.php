@@ -158,7 +158,11 @@ class CoursesRepository
         return $user->verifiedCourses()
             ->withCount('videos')
             ->withCount('tests')
-            ->with('teacher')->paginate(20);
+            ->with('teacher')
+            ->withSum('videos', 'duration')
+            ->paginate(20);
     }
+
+
 
 }

@@ -5,6 +5,8 @@ namespace App\Services\Videos;
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\Videos\ShowVideoResource;
 use App\Repositories\Videos\VideoRepository;
+use OpenApi\OpenApiException;
+use PharIo\Manifest\Exception;
 
 class VideoService
 {

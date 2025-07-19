@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Review;
 use App\Models\Submission;
 use App\Models\User;
+use App\Models\Video;
 use App\Observers\LikeObserver;
 use App\Observers\ReviewObserver;
 use App\Observers\SubmissionObserver;
@@ -16,6 +17,7 @@ use App\Policies\ContestPolicy;
 use App\Policies\CoursePolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\VideoPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -49,6 +51,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Project::class, ProjectPolicy::class);
         Gate::policy(User::class,UserPolicy::class);
         Gate::policy(Course::class,CoursePolicy::class);
+        Gate::policy(Video::class, VideoPolicy::class);
     }
 
     private function observers(): void

@@ -5,7 +5,7 @@ namespace App\Services\User;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\ServerErrorException;
 use App\Http\Resources\ContestResource;
-use App\Http\Resources\Courses\CourseResource;
+use App\Http\Resources\Courses\CreatedCourseResource;
 use App\Http\Resources\LearningPaths\LearningPathResource;
 use App\Models\Course;
 use App\Models\Test;
@@ -31,7 +31,7 @@ class TeacherService
 
     public function getTeacherCourses(User $user): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return CourseResource::collection($this->coursesRepository->getAllCoursesForUser($user));
+        return CreatedCourseResource::collection($this->coursesRepository->getAllCoursesForUser($user));
     }
 
     public function getTeacherLearningPaths(User $user): \Illuminate\Http\Resources\Json\AnonymousResourceCollection

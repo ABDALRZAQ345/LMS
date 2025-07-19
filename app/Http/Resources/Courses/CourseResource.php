@@ -30,13 +30,13 @@ class CourseResource extends JsonResource
         $imageUrl = $this->image
             ? (str_starts_with($this->image, 'https://via.placeholder.com')
                 ? $this->image
-                : config('app.url').'/storage/'.$this->image)
+                : config('app.url').$this->image)
             : null;
 
         $teacherImageUrl = $this->teacher->image
             ? (str_starts_with($this->teacher->image, 'https://via.placeholder.com')
                 ? $this->teacher->image
-                : config('app.url').'/storage/'.$this->teacher->image)
+                : config('app.url').$this->teacher->image)
             : null;
 
         $data = [
@@ -72,7 +72,7 @@ class CourseResource extends JsonResource
                     'image' => $path->image
                         ? (str_starts_with($path->image, 'https://via.placeholder.com')
                             ? $path->image
-                            : config('app.url') . '/storage/' . $path->image)
+                            : config('app.url') . $path->image)
                         : null,
                 ];
             });

@@ -78,7 +78,7 @@ class Course extends Model
         return $all;
     }
 
-    public function rate()
+    public function rates()
     {
         $count = $this->reviews()->count();
         if ($count == 0) {

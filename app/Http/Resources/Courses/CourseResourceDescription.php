@@ -19,8 +19,10 @@ class CourseResourceDescription extends JsonResource
         $imageOfTeacher = $this->teacher->image
             ? (str_starts_with($this->teacher->image, 'https://via.placeholder.com')
                 ? $this->teacher->image
-                : config('app.url').'/storage/'.$this->teacher->image)
+                : config('app.url').$this->teacher->image)
             : null;
+
+        $imageUrl = config('app.url').$this->image;
 
         $countOfParticipant = $this->students()->count();
         return [
@@ -28,7 +30,7 @@ class CourseResourceDescription extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'rate' => $this->rate,
-            'image' => $this->image,
+            'image' => $imageUrl,
             'price' => $this->price,
             'level'=> $this->level,
             'status' => $this->pivot->status
@@ -53,7 +55,7 @@ class CourseResourceDescription extends JsonResource
                     'image' => $path->image
                         ? (str_starts_with($path->image, 'https://via.placeholder.com')
                             ? $path->image
-                            : config('app.url') . '/storage/' . $path->image)
+                            : config('app.url'). $path->image)
                         : null,
                 ];
             }) ];

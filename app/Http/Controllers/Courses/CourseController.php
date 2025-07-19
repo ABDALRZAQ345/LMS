@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Courses;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Courses\CreateCourseRequest;
 use App\Http\Requests\Courses\getAllCoursesRequest;
 use App\Models\Course;
 use App\Models\LearningPath;
@@ -53,6 +54,8 @@ class CourseController extends Controller
 //            return ResponseHelper::jsonResponse([], 'Course not verified',404,false);
 //        return $this->courseService->showCourseInLearningPath($learningPath->title,$course->id);
 //    }
+
+
 
 
 }

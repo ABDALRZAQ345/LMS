@@ -21,6 +21,7 @@ return new class extends Migration
                 ->comment('teacher id creator ')
                 ->constrained()->cascadeOnDelete();
             $table->boolean('verified')->default(false);
+            $table->enum('request_status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }
