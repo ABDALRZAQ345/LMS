@@ -7,6 +7,7 @@ use App\Exceptions\ServerErrorException;
 use App\Http\Resources\ContestResource;
 use App\Http\Resources\Courses\CreatedCourseResource;
 use App\Http\Resources\LearningPaths\LearningPathResource;
+use App\Http\Resources\TeacherCreatedLearningPathResource;
 use App\Models\Course;
 use App\Models\Test;
 use App\Models\User;
@@ -36,7 +37,7 @@ class TeacherService
 
     public function getTeacherLearningPaths(User $user): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return LearningPathResource::collection($this->learningPathRepository->TeacherLearningPaths($user));
+        return TeacherCreatedLearningPathResource::collection($this->learningPathRepository->TeacherLearningPaths($user));
     }
 
     public function getCreatedContests(User $user): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
