@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('fcm_token')->nullable();
-            $table->string('image')->nullable();
+            $table->longText('image')->nullable();
             $table->string('gitHub_account')->nullable();
             $table->string('bio')->nullable();
             $table->integer('points')->default(0);
