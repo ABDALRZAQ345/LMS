@@ -27,24 +27,12 @@ class CourseResource extends JsonResource
             ? $finalTest->students->isNotEmpty()
             : false;
 
-        $imageUrl = $this->image
-            ? (str_starts_with($this->image, 'https://via.placeholder.com')
-                ? $this->image
-                : config('app.url').$this->image)
-            : null;
-
-        $teacherImageUrl = $this->teacher->image
-            ? (str_starts_with($this->teacher->image, 'https://via.placeholder.com')
-                ? $this->teacher->image
-                : config('app.url').$this->teacher->image)
-            : null;
-
         $data = [
             'id' => $this->id,
             'title_of_course' => $this->title,
             'description_of_course' => $this->description,
             'rate' => (double) $this->rate,
-            'image_of_course' => $imageUrl,
+            'image_of_course' => getPhoto($this->image),
             'course_duration' => $this->formatDuration($this->videos_sum_duration),
             'number_of_video' => $countOfVideos,
             'video_progress' => $videoProgressPercentage,
@@ -54,7 +42,7 @@ class CourseResource extends JsonResource
             'price' => (double)$this->price,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
-            'teacher_image' => $teacherImageUrl,
+            'teacher_image' => getPhoto($this->teacher->image),
             'status' => $this->pivot->status
                 ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status
                     ?? null,
@@ -69,11 +57,7 @@ class CourseResource extends JsonResource
                 return [
                     'id'    => $path->id,
                     'name'  => $path->title,
-                    'image' => $path->image
-                        ? (str_starts_with($path->image, 'https://via.placeholder.com')
-                            ? $path->image
-                            : config('app.url') . $path->image)
-                        : null,
+                    'image' => getPhoto($path->image)
                 ];
             });
         });

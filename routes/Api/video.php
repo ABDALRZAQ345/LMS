@@ -20,4 +20,9 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
         Route::put('video_url/{video}',[TeacherVideoController::class,'updateUrl']);
         Route::delete('video_url/{video}',[TeacherVideoController::class,'deleteUrl']);
 
+        Route::post('upload_video',[TeacherVideoController::class,'uploadVideo']);
+        Route::post('upload_video/{video}',[TeacherVideoController::class,'updateUploadVideo']);
+        Route::delete('upload_video/{video}',[TeacherVideoController::class,'deleteUploadVideo']);
+
+
 });

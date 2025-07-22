@@ -18,13 +18,11 @@ class TeachersAllCoursesResource extends JsonResource
             'id' =>$this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'image' => config('app.url').$this->image,
+            'image' => getPhoto($this->image),
 
             'teacher_id' => optional($this->teacher)->id,
             'teacher_name' => optional($this->teacher)->name,
-            'teacher_image' => optional($this->teacher)->image
-                ? config('app.url') . optional($this->teacher)->image
-                : null,
+            'teacher_image' => getPhoto(optional($this->teacher)->image)
         ];
     }
 }

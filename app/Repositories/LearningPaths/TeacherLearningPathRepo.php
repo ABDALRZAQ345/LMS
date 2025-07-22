@@ -11,6 +11,9 @@ class TeacherLearningPathRepo
         $userId = auth()->id();
         return LearningPath::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
+            ->withCount('courses')
+            ->withSum('courses', 'price')
+            ->withSum('courses', 'rate')
             ->paginate($items);
     }
 
@@ -37,7 +40,10 @@ class TeacherLearningPathRepo
 
         $learningPath->courses()->attach($coursesWithOrder);
 
-        return $learningPath->load('courses.teacher');
+        return $learningPath->load('courses.teacher')
+            ->loadCount('courses')
+            ->loadSum('courses','rate')
+            ->loadSum('courses','price');
     }
 
     public function updateLearningPath(LearningPath $learningPath, array $validated): LearningPath
@@ -54,6 +60,9 @@ class TeacherLearningPathRepo
             $learningPath->courses()->sync($coursesWithOrder);
         }
 
-        return $learningPath->load('courses.teacher');
+        return $learningPath->load('courses.teacher')
+            ->loadCount('courses')
+            ->loadSum('courses','rate')
+            ->loadSum('courses','price');
     }
 }

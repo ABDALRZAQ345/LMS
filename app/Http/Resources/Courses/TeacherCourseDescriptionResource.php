@@ -17,14 +17,13 @@ class TeacherCourseDescriptionResource extends JsonResource
         $participants = $this->students()->count();
         $countOfVideos = $this->videos->count();
         $duration = $this->videos->sum('duration');
-        $imageUrl = config('app.url').$this->image;
         return [
             'id'=>$this->id,
             'title'=> $this->title,
             'description' => $this->description,
             'level' => $this->level,
             'request_status' => $this->request_status,
-            'image'=> $imageUrl,
+            'image'=> getPhoto($this->image),
             'rate' => $this->rate,
             'price' => $this->price,
             'participants' => $participants,

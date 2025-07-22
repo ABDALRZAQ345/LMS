@@ -26,6 +26,9 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
             Route::get('/students/perMonth', [StatisticsController::class, 'StudentsPerMonth']);
             Route::get('/students/lastWeek', [StatisticsController::class, 'StudentsLastWeek']);
             Route::get('/projects', [StatisticsController::class, 'overviewProjects']);
+
+
+            Route::get('/budget',[StatisticsController::class,'overviewBudget']);
         });
 
     });

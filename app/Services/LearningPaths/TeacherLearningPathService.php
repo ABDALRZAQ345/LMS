@@ -24,7 +24,10 @@ class TeacherLearningPathService
     }
 
     public function show($learningPath){
-        $learningPath->load('courses.teacher');
+        $learningPath->load('courses.teacher')
+        ->loadCount('courses')
+        ->loadSum('courses','rate')
+        ->loadSum('courses','price');
         $data = TeacherLearningPathResource::make($learningPath);
         return ResponseHelper::jsonResponse($data,'Show Learning Path Details Successfully');
     }

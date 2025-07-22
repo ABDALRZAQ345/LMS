@@ -8,6 +8,7 @@ use App\Models\Course;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -123,9 +124,35 @@ class StaticsService
                'projectsByType' => $tags
             ]);
 
-
-
         });
 
+    }
+
+    public function overviewBudget(){
+        return Cache::remember('admin.overviewBudget', 60 * 60 * 24, function () {
+            // جلب المدفوعات مجمعة حسب الشهر
+            $payments = DB::table('course_user')
+                ->selectRaw("MONTH(created_at) as month_num, SUM(paid) as revenue")
+                ->where('paid', '>', 0)
+                ->groupBy(DB::raw("MONTH(created_at)"))
+                ->orderBy('month_num')
+                ->get();
+
+
+            $revenues = [];
+            $expenses = [];
+
+            for ($i = 1; $i <= 12; $i++) {
+                $monthName = Carbon::create()->month($i)->format('F');
+                $revenue = (float) $payments->get($i, 0);
+                $revenues[$monthName] = $revenue;
+                $expenses[$monthName] = round($revenue * 0.6, 2);
+            }
+
+            return  [
+                'revenues' => $revenues,
+                'expenses' => $expenses,
+            ];
+        });
     }
 }

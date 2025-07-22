@@ -5,6 +5,7 @@ namespace App\Services\Videos;
 use App\Helpers\ResponseHelper;
 use App\Models\Video;
 use App\Repositories\Videos\TeacherVideoRepository;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class TeacherVideoService
 {
@@ -41,4 +42,20 @@ class TeacherVideoService
         return ResponseHelper::jsonResponse($video,'Updated Video Successfully');
     }
 
+    public function uploadVideo($validate){
+        $video = $this->teacherVideoRepository->uploadVideo($validate);
+
+        return ResponseHelper::jsonResponse($video,'Upload video to course successfully.');
+    }
+
+    public function updateUploadVideo($video , $validate){
+        $updated = $this->teacherVideoRepository->updateUploadVideo($video, $validate);
+        return ResponseHelper::jsonResponse($updated, 'Video updated successfully');
+    }
+
+    public function deleteUploadVideo($video){
+        $this->teacherVideoRepository->deleteUploadVideo($video);
+
+        return ResponseHelper::jsonResponse([], 'Video deleted successfully');
+    }
 }

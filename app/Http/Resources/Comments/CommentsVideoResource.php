@@ -19,13 +19,14 @@ class CommentsVideoResource extends JsonResource
             'id' => $this->id,
             'text' => $this->text,
             'likes' => $this->likes,
-            'liked_by_user' => $this->relationLoaded('like') && $this->like instanceof \Illuminate\Support\Collection
+            'liked_by_me' => $this->relationLoaded('like') && $this->like instanceof \Illuminate\Support\Collection
                 ? $this->like->contains('user_id', auth()->id())
                 : false,
-            'student_id' => optional($this->user)->id,
-            'student_name' => optional($this->user)->name,
-            'student_image' => optional($this->user)->image,
-            'created_at_human' => Carbon::parse($this->created_at)->diffForHumans(),
+            'user_id' => optional($this->user)->id,
+            'user_name' => optional($this->user)->name,
+            'user_image' => getPhoto(optional($this->user)->image),
+            'user_role' => optional($this->user)->role,
+            'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
             'replies_count' => $this->replies->count(),
             'replies' => CommentsVideoResource::collection($this->whenLoaded('replies')),
         ];

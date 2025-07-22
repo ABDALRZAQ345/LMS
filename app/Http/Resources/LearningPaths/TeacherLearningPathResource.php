@@ -22,6 +22,9 @@ class TeacherLearningPathResource extends JsonResource
             'description' => $this->description,
             'image' =>  config('app.url').$this->image,
             'request_status' => $this->request_status,
+            'rate' => $this->courses_count > 0 ? ($this->courses_sum_rate / $this->courses_count) : 0,
+            'courses_count' => $this->courses_count,
+            'total_courses_price' => $this->courses_sum_price,
             'teacher' => $this->relationLoaded('teacher')
                 ? UserResource::make($this->teacher)
                 : 'mine',

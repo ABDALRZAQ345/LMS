@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Courses;
 
-use App\Http\Resources\Courses\CourseWithContentResource;
 use App\Models\Course;
 use App\Models\LearningPath;
 use App\Models\User;

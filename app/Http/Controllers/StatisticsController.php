@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
 use App\Services\User\StaticsService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
@@ -32,5 +33,11 @@ class StatisticsController extends Controller
     public function StudentsLastWeek()
     {
         return $this->staticsService->StudentsLastWeek();
+    }
+
+    public function overviewBudget(){
+        $data = $this->staticsService->overviewBudget();
+
+        return $data;
     }
 }

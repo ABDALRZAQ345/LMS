@@ -15,14 +15,14 @@ class TeacherCourseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $imageUrl = config('app.url').$this->image;
+
         return [
             'id'=>$this->id,
             'title'=> $this->title,
             'description' => $this->description,
             'level' => $this->level,
             'request_status' => $this->request_status,
-            'image'=> $imageUrl,
+            'image'=> getPhoto($this->image),
             'rate' => $this->rate,
             'price' => $this->price,
         ];
