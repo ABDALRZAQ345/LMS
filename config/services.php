@@ -50,5 +50,8 @@ return [
         'key'=>env('STRIPE_KEY'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
+    'gemini' =>[
+        'key' => env('GEMINI_KEY'),
+    ]
 
 ];

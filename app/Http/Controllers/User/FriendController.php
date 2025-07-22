@@ -29,6 +29,7 @@ class FriendController extends Controller
 
         return response()->json([
             'status' => true,
+            'total' => $friends->count(),
             'friends' => UserResource::collection($friends),
             'meta' => getMeta($friends)
         ]);
