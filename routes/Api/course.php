@@ -47,7 +47,5 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
         Route::get('courses', [AdminCourseController::class, 'index']);
         Route::post('requests/courses/{course}',[AdminCourseController::class, 'accept']);
         Route::delete('requests/courses/{course}',[AdminCourseController::class, 'reject']);
-
-
     });
 
