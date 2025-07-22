@@ -14,7 +14,10 @@ class GeminiAgent extends Controller
         $this->geminiService = $geminieService;
     }
 
-    public function message(Request $request): string
+    /**
+     * @throws \Exception
+     */
+    public function message(Request $request): \Illuminate\Http\JsonResponse
     {
         $message = $request->get("message");
         $result = $this->geminiService->generateText($message);
