@@ -19,6 +19,9 @@ class GeminiAgent extends Controller
      */
     public function message(Request $request): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'message' => ['required','string','max:600'],
+        ]);
         $message = $request->get("message");
         $result = $this->geminiService->generateText($message);
 

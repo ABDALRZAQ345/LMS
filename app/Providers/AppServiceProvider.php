@@ -93,7 +93,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('refresh_token', function (Request $request) {
             return Limit::perDay(3)->by($request->user()?->id ?: $request->ip());
         });
-
+        RateLimiter::for('AiChat', function (Request $request) {
+            return Limit::perDay(15)->by($request->user()?->id ?: $request->ip());
+        });
 
     }
 
