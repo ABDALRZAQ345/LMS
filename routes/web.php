@@ -25,6 +25,6 @@ Route::get('/testCookie', function () {
 });
 
 Route::get('/lang/{lang}', function ($lang) {
-    return redirect('/')
+    return redirect('/testCookie')
         ->withCookie(cookie('lang', $lang, 60 * 24 * 30)); // تخزين الكوكي لمدة شهر
 });

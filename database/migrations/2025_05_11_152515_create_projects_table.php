@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('links')->nullable();
             $table->integer('likes')->default(0);
             $table->enum('status', ['pending', 'accepted', 'refused'])->default('pending');
+            $table->longText('image')->nullable();
             $table->foreignIdFor(Tag::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

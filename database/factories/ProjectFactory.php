@@ -20,6 +20,7 @@ class ProjectFactory extends Factory
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'status' => $this->faker->randomElement(['pending', 'accepted', 'refused']),
+            'image' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnmLs4t7zqejredfdRV6Magj8ZxaUGlhW_AQ&s"
         ];
     }
 }

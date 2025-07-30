@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProjectService
@@ -14,17 +15,17 @@ class ProjectService
     public function GetAllProjects($data)
     {
 
-        if ($data['tag'] == 'all') {
-            $projects = Project::query();
+        if (!empty($data['search'])) {
+
+            return $this->getAlldataMethod($data);
         } else {
-            $projects = Project::whereHas('tag', function ($query) use ($data) {
-                $query->where('name', 'like', '%'.$data['tag'].'%');
+
+            return Cache::remember('projects' . $data['tag']??"" . $data['page']??"" . $data['items']??"", 60 * 30, function () use ($data) {
+               return $this->getAlldataMethod($data);
             });
         }
 
-        return $projects->where('title', 'like', '%'.$data['search'].'%')->with(['user', 'tag'])->where('status', 'accepted')
-            ->orderByDesc('likes')
-            ->paginate($data['items']);
+
 
     }
 
@@ -81,5 +82,26 @@ class ProjectService
     public function checkCanAddProject(User $user): bool
     {
         return $user->projects()->where('created_at', '>=', now()->startOfMonth())->count() >= 3;
+    }
+
+    /**
+     * @param $data
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getAlldataMethod($data): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        if ($data['tag'] == 'all') {
+            $projects = Project::query();
+        } else {
+            $projects = Project::whereHas('tag', function ($query) use ($data) {
+                $query->where('name', 'like', '%' . $data['tag'] . '%');
+            });
+        }
+
+        return $projects->where('title', 'like', '%' . $data['search'] . '%')
+            ->with(['user', 'tag'])
+            ->where('status', 'accepted')
+            ->orderByDesc('likes')
+            ->paginate($data['items']);
     }
 }

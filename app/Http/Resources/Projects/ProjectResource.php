@@ -16,6 +16,7 @@ class ProjectResource extends JsonResource
     {
         $data = parent::toArray($request);
         $data['user_name'] = $data['user']['name'];
+        $data['user_image']= $data['user']['image'];
         $data['tag_name'] = $data['tag']['name'];
         unset($data['tag']);
         unset($data['user']);
