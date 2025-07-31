@@ -34,7 +34,11 @@ class createQuizRequest extends FormRequest
             'questions' => ['required', 'array', 'min:1'],
             'questions.*.question' => ['required', 'string'],
             'questions.*.options' => ['required', 'array', 'min:2'],
-            'questions.*.options.*' => ['required', 'string'],
+            'questions.*.options.*' => ['required', 'array'],
+            'questions.*.options.*.is_true' => ['required', 'in:0,1'],
+            'questions.*.options.*.option' => ['required', 'string'],
+
+
         ];
     }
 

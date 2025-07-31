@@ -11,13 +11,13 @@ class QuestionService
             $question = $object->questions()->create([
                 'text' => $questionData['question'],
             ]);
-            $correct = true;
+
             foreach ($questionData['options'] as $option) {
                 $question->options()->create([
-                    'answer' => $option,
-                    'is_correct' => $correct,
+                    'answer' => $option['option'],
+                    'is_correct' => $option['is_true'],
                 ]);
-                $correct = false;
+
             }
         }
     }
