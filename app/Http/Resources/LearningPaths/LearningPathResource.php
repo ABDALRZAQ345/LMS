@@ -14,26 +14,33 @@ class LearningPathResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $imageUrl = $this->image
-            ? (str_starts_with($this->image, 'https://via.placeholder.com')
-                ? $this->image
-                : config('app.url').'/storage/'.$this->image)
-            : null;
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'image' => $imageUrl,
+            'image' => getPhoto($this->image),
             'rate' => $this->courses_sum_rate / $this->courses_count,
             'courses_count' => $this->courses_count,
             'total_courses_price' => $this->courses_sum_price,
+            'total_duration' => $this->formatDuration(
+                $this->courses->flatMap->videos->sum('duration')
+            ),
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image'=>$this->teacher->image,
+            'teacher_bio' => $this->teacher->bio,
+            'teacher_courses_count' => $this->teacher?->verifiedCourses->count() ?? 0,
             'status'=> $this->pivot->status
                 ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status
                     ?? null,
         ];
+    }
+    private function formatDuration($minutes)
+    {
+        $hours = floor($minutes / 60);
+        $remainingMinutes = $minutes % 60;
+
+        return "{$hours}h {$remainingMinutes}min";
     }
 }
