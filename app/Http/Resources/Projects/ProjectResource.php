@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Projects;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +21,9 @@ class ProjectResource extends JsonResource
         $data['tag_name'] = $data['tag']['name'];
         unset($data['tag']);
         unset($data['user']);
-
+        $data['requested_at']=Carbon::parse($data['updated_at'])->toDateTimeString();
+        unset($data['created_at']);
+        unset($data['updated_at']);
         return $data;
     }
 }

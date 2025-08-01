@@ -16,7 +16,7 @@ class Contest extends Model
         'id',
     ];
     protected $hidden=[
-        'created_at','updated_at'
+        'created_at',
     ];
 
     public function teacher(): BelongsTo
