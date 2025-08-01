@@ -34,4 +34,8 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
         Route::post('learningPaths/{learningPath}',[AdminLearningPathController::class,'accept']);
         Route::delete('learningPaths/{learningPath}',[AdminLearningPathController::class,'reject']);
 
+        Route::post('learningPaths',[TeacherLearningPathController::class,'create']);
+        Route::post('learningPaths/{learningPath}',[TeacherLearningPathController::class,'update']);
+        Route::delete('learningPaths/{learningPath}',[TeacherLearningPathController::class,'delete']);
+
     });

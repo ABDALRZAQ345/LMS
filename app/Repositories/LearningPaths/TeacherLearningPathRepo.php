@@ -46,8 +46,12 @@ class TeacherLearningPathRepo
             ->loadSum('courses','price');
     }
 
-    public function updateLearningPath(LearningPath $learningPath, array $validated): LearningPath
+    public function updateLearningPath($learningPath, array $validated): LearningPath
     {
+        if ($learningPath->request_status === 'rejected') {
+            $learningPath->request_status = 'pending';
+        }
+
         $learningPath->update(collect($validated)->except('courses')->toArray());
 
         if (isset($validated['courses'])) {

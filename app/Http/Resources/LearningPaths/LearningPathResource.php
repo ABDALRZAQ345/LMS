@@ -23,14 +23,18 @@ class LearningPathResource extends JsonResource
             'rate' => $this->courses_sum_rate / $this->courses_count,
             'courses_count' => $this->courses_count,
             'total_courses_price' => $this->courses_sum_price,
-            'total_duration' => $this->formatDuration(
-                $this->courses->flatMap->videos->sum('duration')
+            'total_duration' => $this->when(
+                $this->relationLoaded('courses'),
+                fn () => $this->formatDuration($this->courses->flatMap->videos->sum('duration'))
             ),
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
             'teacher_image'=>$this->teacher->image,
             'teacher_bio' => $this->teacher->bio,
-            'teacher_courses_count' => $this->teacher?->verifiedCourses->count() ?? 0,
+            'teacher_courses_count' => $this->when(
+                $this->relationLoaded('teacher') && $this->teacher?->relationLoaded('verifiedCourses'),
+                fn () => $this->teacher->verifiedCourses->count()
+            ),
             'status'=> $this->pivot->status
                 ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->status
                     ?? null,
