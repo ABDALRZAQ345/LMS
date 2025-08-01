@@ -35,13 +35,17 @@ class LearningPathRepository
     public function showLearningPath($id)
     {
         $userId = auth('api')->id();
-        return LearningPath::where('id',$id)
-            ->with('teacher')
+        $learningPath = LearningPath::with([
+            'teacher.verifiedCourses',
+            'courses.videos',
+            'students' => fn($q) => $q->where('user_id', $userId),
+        ])
             ->withCount('courses')
-            ->with(['students' => fn($q) => $q->where('user_id', $userId)])
             ->withSum('courses', 'price')
             ->withSum('courses', 'rate')
-            ->first();
+            ->findOrFail($id);
+
+        return $learningPath;
     }
 
     public function updateStatusLearningPath($validated, $learningPathId)

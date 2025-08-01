@@ -46,6 +46,13 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'tmp' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tmp'), // Ensure this directory exists
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
 
         's3' => [
             'driver' => 's3',

@@ -12,10 +12,7 @@ class UpdatedUpliadVideoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $courseId = $this->input('course_id');
-        $course = Course::find($courseId);
-
-        return \Gate::allows('editCourse', $course);
+        return \Gate::allows('update', $this->route('video'));
     }
 
     public function rules(): array

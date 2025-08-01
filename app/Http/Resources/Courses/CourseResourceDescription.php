@@ -34,7 +34,7 @@ class CourseResourceDescription extends JsonResource
                 ?? optional($this->students->firstWhere('id', auth('api')->id()))?->pivot?->paid
                     ?? null,
             'number_of_videos' => $countOfVideos,
-            'duration' => $duration,
+            'duration' => $this->formatDuration($duration),
             'number_of_participants' => $countOfParticipant,
             'teacher_id' => $this->teacher->id,
             'teacher_name' => $this->teacher->name,
@@ -47,7 +47,15 @@ class CourseResourceDescription extends JsonResource
                     'title' => $path->title,
                     'image' => getPhoto($path->image)
                 ];
-            }) ];
+            })
+        ];
 
+    }
+    private function formatDuration($minutes)
+    {
+        $hours = floor($minutes / 60);
+        $remainingMinutes = $minutes % 60;
+
+        return sprintf('%d:%02d h', $hours, $remainingMinutes);
     }
 }
