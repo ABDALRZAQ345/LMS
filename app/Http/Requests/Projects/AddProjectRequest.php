@@ -28,6 +28,7 @@ class AddProjectRequest extends FormRequest
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
             'technologies' => ['nullable', 'array'],
+            'image' => ['nullable', 'image', 'max:4096'],
             'tag_id' => ['required', 'exists:tags,id'],
             'links' => ['required'],
         ];

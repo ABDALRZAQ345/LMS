@@ -62,6 +62,9 @@ class ProjectService
                 'message' => 'you can`t send more than 3 projects requests a month ',
             ]);
         }
+        if (isset($data['image']) && $data['image'] != null)
+            $data['image']= NewPublicPhoto($data['image']);
+
         $user->projects()->create($data);
 
         return response()->json([
