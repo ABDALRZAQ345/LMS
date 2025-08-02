@@ -40,12 +40,12 @@ class TeacherCourseContrller extends Controller
     }
 
     public function showCourseDescription(Course $course){
-        $this->authorize('view', $course);
+
         return $this->teacherCoursesService->showCourseDescription($course);
     }
 
     public function showCourseContent(Course $course){
-        $this->authorize('view', $course);
+
         return $this->teacherCoursesService->showCourseContent($course);
     }
 

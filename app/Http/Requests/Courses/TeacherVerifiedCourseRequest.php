@@ -25,14 +25,12 @@ class TeacherVerifiedCourseRequest extends FormRequest
     {
         return [
             'items' => ['nullable', 'integer', 'min:10', 'max:20'],
-            'filter' => ['nullable' , 'string', 'in:public,own']
         ];
     }
 
     public function prepareForValidation(): void{
         $this->merge([
             'items' => $this->input('items', 20),
-            'filter' =>$this->input('filter','public'),
         ]);
     }
 

@@ -13,13 +13,10 @@ class TeacherCoursesRepository
     }
 
     public function getAllVerifiedCourses($validated){
-        $userId = auth()->id();
+
         $query = Course::select('id', 'title', 'description', 'image', 'user_id')
             ->where('verified', 1)
             ->with('teacher:id,name,image');
-        if($validated['filter'] == 'own') {
-            $query->where('user_id',$userId);
-        }
 
        return $query->paginate($validated['items']);
     }

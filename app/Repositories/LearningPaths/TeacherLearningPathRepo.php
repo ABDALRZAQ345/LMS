@@ -29,7 +29,8 @@ class TeacherLearningPathRepo
             'description' => $validated['description'],
             'image' => $validated['image'] ?? null,
             'user_id' => $validated['user_id'],
-            'request_status' => $user->role == 'admin' ? 'accepted' : 'pending'
+            'request_status' => $user->role == 'admin' ? 'accepted' : 'pending',
+            'verified' => $user->role == 'admin' ? 1 :0
         ]);
 
 
