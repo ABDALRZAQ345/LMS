@@ -43,7 +43,7 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
     ->prefix('/admin')->group(function () {
-        Route::get('courses', [AdminCourseController::class, 'index']);
+        Route::get('requests/courses', [AdminCourseController::class, 'index']);
         Route::post('requests/courses/{course}',[AdminCourseController::class, 'accept']);
         Route::delete('requests/courses/{course}',[AdminCourseController::class, 'reject']);
 
