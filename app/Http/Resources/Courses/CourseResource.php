@@ -35,7 +35,7 @@ class CourseResource extends JsonResource
             'image_of_course' => getPhoto($this->image),
             'course_duration' => $this->formatDuration($this->videos_sum_duration),
             'number_of_video' => $countOfVideos,
-            'video_progress' => $videoProgressPercentage,
+            'video_progress' => $videoProgressPercentage .'%',
             'number_of_test' => $countOfTest,
             'final_test_passed' => $finalTestPassed,
             'level'=> $this->level,

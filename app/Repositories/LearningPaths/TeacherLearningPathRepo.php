@@ -21,15 +21,15 @@ class TeacherLearningPathRepo
         if (isset($validated['image']) && !empty($validated['image'])) {
             $validated['image'] = NewPublicPhoto($validated['image'], 'LearningPaths');
         }
-
-        $validated['user_id'] = auth()->id();
+        $user = auth()->user();
+        $validated['user_id'] = $user->id;
 
         $learningPath = LearningPath::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             'image' => $validated['image'] ?? null,
             'user_id' => $validated['user_id'],
-            'request_status' => 'pending'
+            'request_status' => $user->role == 'admin' ? 'accepted' : 'pending'
         ]);
 
 

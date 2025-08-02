@@ -16,12 +16,12 @@ class LearningPathPolicy
 
     public function create(User $user): bool
     {
-        return $user->role === 'teacher' ;
+        return $user->role === 'teacher' || $user->role == 'admin';
     }
 
     public function update(User $user, LearningPath $learningPath): bool
     {
-        return $user->id === $learningPath->user_id;
+        return $user->id === $learningPath->user_id || $user->role == 'admin';
     }
 
     public function delete(User $user, LearningPath $learningPath): bool
