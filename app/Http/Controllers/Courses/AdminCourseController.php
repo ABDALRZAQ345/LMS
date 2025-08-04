@@ -33,7 +33,10 @@ class AdminCourseController extends Controller
 
     }
 
-    public function reject(Course $course){
+    public function reject(Course $course , Request $request){
+        $request->validate([
+           'reason' => 'required|string|max:100'
+        ]);
         if($course->request_status !== 'pending'){
             if($course->students()->exists()){
                 return ResponseHelper::jsonResponse([],'You cannot reject this course. It was accepted and has
