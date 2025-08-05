@@ -39,6 +39,11 @@ class FirebaseNotificationService
             'title' => $title,
             'message' => $message,
         ]);
+
+        NotificationModel::where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->skip(15)
+            ->delete();
     }
 
 }

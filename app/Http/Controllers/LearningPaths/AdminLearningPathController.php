@@ -5,6 +5,7 @@ namespace App\Http\Controllers\LearningPaths;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LearningPath\AdminGetAllLearningPathsRequest;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\LearningPath;
 use App\Models\User;
 use App\Services\FirebaseNotificationService;
@@ -14,12 +15,10 @@ use Illuminate\Http\Request;
 class AdminLearningPathController extends Controller
 {
     protected $adminLearningPathService;
-    protected $firebaseNotificationService;
 
-    public function __construct(AdminLearningPathService $adminLearningPathService, FirebaseNotificationService $firebaseNotificationSer)
+    public function __construct(AdminLearningPathService $adminLearningPathService)
     {
         $this->adminLearningPathService = $adminLearningPathService;
-        $this->firebaseNotificationService = $firebaseNotificationSer;
     }
 
     public function index(AdminGetAllLearningPathsRequest $request){
@@ -38,7 +37,8 @@ class AdminLearningPathController extends Controller
         $title = 'Your learning path has been accepted';
         $body ="Congratulations! Your learning path titled \"{$learningPath->title}\" has been accepted.";
 
-        $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
+        SendFirebaseNotification::dispatch($teacher, $title, $body);
+
         return ResponseHelper::jsonResponse([],'Learning Path accepted successfully');
     }
 
@@ -57,10 +57,10 @@ class AdminLearningPathController extends Controller
 
         $teacher = User::findOrFail($learningPath->user_id);
 
-        $title = 'Your learning path has been rejected';
-        $body = "Unfortunately, your learning path titled \"{$learningPath->title}\" has been rejected. Reason: " . $request['reason'];
+        $title = 'Rejected Learning Path';
+        $body = "Unfortunately, your learning path \"{$learningPath->title}\" rejected. Reason: ". $request['reason'];
 
-        $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
+        SendFirebaseNotification::dispatch($teacher, $title, $body);
 
         return ResponseHelper::jsonResponse([],'Learning Path rejected successfully');
     }

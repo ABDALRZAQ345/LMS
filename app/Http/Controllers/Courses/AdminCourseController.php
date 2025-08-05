@@ -50,17 +50,15 @@ class AdminCourseController extends Controller
         ]);
         if($course->request_status !== 'pending'){
             if($course->students()->exists()){
-                return ResponseHelper::jsonResponse([],'You cannot reject this course. It was accepted and has
-                 active students',
+                return ResponseHelper::jsonResponse([],'You cannot reject this course. It was accepted and has active students',
                     403,false);
             }
         }
         $this->adminCourseService->UpdateCourseRequestStatus($course,'rejected');
-        //todo send notification to teacher
         $teacher = User::findOrFail($course->user_id);
 
-        $title = 'Your Course has been rejected';
-        $body = "Unfortunately, your Course titled \"{$course->title}\" has been rejected. Reason: " . $request['reason'];
+        $title = 'Rejected Course';
+        $body = "Unfortunately, your Course \"{$course->title}\" rejected. Reason: ". $request['reason'];
 
         $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
         return ResponseHelper::jsonResponse([],'Course rejected successfully ');
