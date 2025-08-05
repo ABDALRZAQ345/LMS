@@ -32,7 +32,7 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
     ->prefix('/admin')->group(function () {
         Route::get('learningPaths',[AdminLearningPathController::class,'index']);
         Route::post('learningPaths/{learningPath}/accept',[AdminLearningPathController::class,'accept']);
-        Route::delete('learningPaths/{learningPath}/reject',[AdminLearningPathController::class,'reject']);
+        Route::post('learningPaths/{learningPath}/reject',[AdminLearningPathController::class,'reject']);
 
         Route::post('learningPaths',[TeacherLearningPathController::class,'create']);
         Route::post('learningPaths/{learningPath}',[TeacherLearningPathController::class,'update']);

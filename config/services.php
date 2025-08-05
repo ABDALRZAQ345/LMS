@@ -60,5 +60,11 @@ return [
         'api_secret' => env('CLOUDINARY_API_SECRET'),
         'url' => env('CLOUDINARY_URL'),
     ],
+    'bunny' => [
+        'library_id' => env('BUNNY_STREAM_LIBRARY_ID'),
+        'api_key' => env('BUNNY_STREAM_API_KEY'),
+        'api_url' => env('BUNNY_STREAM_API_URL', 'https://video.bunnycdn.com'),
+    ],
+
 
 ];

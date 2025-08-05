@@ -7,14 +7,18 @@ use App\Models\Video;
 use App\Repositories\Videos\TeacherVideoRepository;
 use Illuminate\Http\UploadedFile;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Services\Videos\BunnyStreamService;
+use Illuminate\Support\Str;
 
 class TeacherVideoService
 {
     protected $teacherVideoRepository;
+    protected $bunnyStreamService;
 
-    public function __construct(TeacherVideoRepository $teacherVideoRepository)
+    public function __construct(TeacherVideoRepository $teacherVideoRepository,BunnyStreamService $bunnyStreamService)
     {
         $this->teacherVideoRepository = $teacherVideoRepository;
+        $this->bunnyStreamService = $bunnyStreamService;
     }
 
     public function getAllVideoInCourse($course){
@@ -41,6 +45,10 @@ class TeacherVideoService
         $video->update($validate);
 
         return ResponseHelper::jsonResponse($video,'Updated Video Successfully');
+    }
+
+    public function uploadVideo($video){
+
     }
 
 }

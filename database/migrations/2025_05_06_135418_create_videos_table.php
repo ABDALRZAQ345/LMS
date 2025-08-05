@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->unsignedInteger('order');
-            $table->string('cloudinary_public_id')->nullable();
+            $table->string('bunny_video_id')->nullable();
             $table->string('url');
             $table->boolean('free')->default(true);
             $table->integer('duration')->default(0);

@@ -20,19 +20,23 @@ class StripePaymentController extends Controller
     {
         $user = auth()->user();
         if (!$course->verified) {
-            return ResponseHelper::jsonResponse([], 'This course is not verified yet.');
+            return ResponseHelper::jsonResponse([], 'This course is not verified yet.',404,false);
         }
 
-        if ($user->studentCourses()->where('course_id', $course->id)->exists()) {
+        if (
+            $user->studentCourses()
+            ->where('course_id', $course->id)
+            ->wherePivotIn('status', ['enrolled', 'finished'])
+            ->exists()
+        ) {
             return ResponseHelper::jsonResponse([], 'You are already enrolled in this course.');
         }
 
-        if ($course->price == 0) {
+        if ($course->price == 0 || $user->id == $course->user_id) {
             $user->studentCourses()->syncWithoutDetaching([
                 $course->id => [
                     'paid' => 0,
                     'status' => 'enrolled',
-                    'verified' => true,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]
