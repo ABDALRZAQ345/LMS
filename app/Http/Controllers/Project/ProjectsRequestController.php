@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Projects\ProjectResource;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\Project;
+use App\Models\User;
 use App\Services\AchievementsService;
 use App\Services\Project\ProjectService;
 use Illuminate\Http\JsonResponse;
@@ -40,7 +42,8 @@ class ProjectsRequestController extends Controller
             ],400);
         }
         $project->update(['status' => 'accepted']);
-        // todo send notification to student
+        $student=$project->user;
+        SendFirebaseNotification::dispatch($student," project accepted ",  "your project ".$project->title . "has been accepted");
 
         $this->achievementsService->ProjectAccepted($project);
         return response()->json([
@@ -58,7 +61,9 @@ class ProjectsRequestController extends Controller
             ],400);
         }
         $project->update(['status' => 'refused']);
-        // todo send notification to student
+        $student=$project->user;
+        SendFirebaseNotification::dispatch($student," project rejected ",  "your project ".$project->title . "has been rejected");
+
         return response()->json([
             'status' => true,
             'message' => 'project Rejected successfully',

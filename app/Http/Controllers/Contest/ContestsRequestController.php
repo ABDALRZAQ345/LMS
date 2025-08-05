@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Contest;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ContestResource;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\Contest;
 use App\Services\ContestService;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +32,9 @@ class ContestsRequestController extends Controller
     public function accept(Contest $contest): JsonResponse
     {
         $this->contestService->UpdateContestRequestStatus($contest, 'accepted');
-        //todo send notification to teacher
+        $teacher=$contest->teacher;
+        SendFirebaseNotification::dispatch($teacher, "contest accepted", " your contest ". $contest->name . " has been accepted");
+
         return response()->json([
             'status' => true,
             'message' => 'Contest accepted successfully',
@@ -42,7 +45,9 @@ class ContestsRequestController extends Controller
     {
 
         $this->contestService->UpdateContestRequestStatus($contest, 'rejected');
-        //todo send notification to teacher
+        $teacher=$contest->teacher;
+        SendFirebaseNotification::dispatch($teacher, "contest rejected", " your contest ". $contest->name . " has been rejected");
+
         return response()->json([
             'status' => true,
             'message' => 'Contest rejected successfully',
