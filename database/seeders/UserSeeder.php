@@ -40,8 +40,7 @@ class UserSeeder extends Seeder
             'role' => 'teacher',
         ]);
 
-
-        //todo push and send account to users
+\
         User::factory()->count(20)->create([
             'role' => 'student',
             'email_verified' => true,

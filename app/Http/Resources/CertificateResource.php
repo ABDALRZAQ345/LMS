@@ -15,12 +15,12 @@ class CertificateResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //todo fix it
+
         $data = parent::toArray($request);
         $data['obtain_date'] = Carbon::parse($data['created_at'])->format('Y-m-d');
         unset($data['created_at']);
         $data['title']=$this->course->title;
-        unset($data['course']);
+        //unset($data['course']);
         return $data;
     }
 }

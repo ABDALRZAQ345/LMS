@@ -41,6 +41,7 @@ class ProjectsRequestController extends Controller
         }
         $project->update(['status' => 'accepted']);
         // todo send notification to student
+
         $this->achievementsService->ProjectAccepted($project);
         return response()->json([
             'status' => true,
