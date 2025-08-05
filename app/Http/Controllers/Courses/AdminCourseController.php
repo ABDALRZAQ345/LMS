@@ -6,15 +6,19 @@ use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\AdminGetAllCoursesRequest;
 use App\Models\Course;
+use App\Models\User;
 use App\Services\Courses\AdminCourseService;
+use App\Services\FirebaseNotificationService;
 use Illuminate\Http\Request;
 
 class AdminCourseController extends Controller
 {
     protected $adminCourseService;
-    public function __construct(AdminCourseService $adminCourseService)
+    protected $firebaseNotificationService;
+    public function __construct(AdminCourseService $adminCourseService,FirebaseNotificationService $firebaseNotificationService)
     {
         $this->adminCourseService = $adminCourseService;
+        $this->firebaseNotificationService = $firebaseNotificationService;
     }
 
     public function index(AdminGetAllCoursesRequest $request){
@@ -29,6 +33,13 @@ class AdminCourseController extends Controller
     public function accept(Course $course){
         $this->adminCourseService->UpdateCourseRequestStatus($course,'accepted');
         //todo send notification to teacher
+        $this->adminCourseService->UpdateCourseRequestStatus($course,'rejected');
+        $teacher = User::findOrFail($course->user_id);
+
+        $title = 'Your Course has been accepted';
+        $body ="Congratulations! Your Course titled \"{$course->title}\" has been accepted.";
+
+        $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
         return ResponseHelper::jsonResponse([],'Course accepted successfully ');
 
     }
@@ -46,6 +57,12 @@ class AdminCourseController extends Controller
         }
         $this->adminCourseService->UpdateCourseRequestStatus($course,'rejected');
         //todo send notification to teacher
+        $teacher = User::findOrFail($course->user_id);
+
+        $title = 'Your Course has been rejected';
+        $body = "Unfortunately, your Course titled \"{$course->title}\" has been rejected. Reason: " . $request['reason'];
+
+        $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
         return ResponseHelper::jsonResponse([],'Course rejected successfully ');
     }
 

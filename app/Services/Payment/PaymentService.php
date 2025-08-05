@@ -18,14 +18,11 @@ class PaymentService
         try {
             $intent = $this->paymentRepository->enrollCourse($paymentMethod, $course);
 
-            if ($intent->status === 'requires_action') {
-                return ResponseHelper::jsonResponse([
-                    'requires_action' => true,
-                    'payment_intent_client_secret' => $intent->client_secret,
-                ], 'Payment requires additional authentication.');
-            }
+            return ResponseHelper::jsonResponse([
+                'client_secret' => $intent->client_secret,
+                'requires_action' => $intent->status === 'requires_action',
+            ], 'Payment intent created successfully.');
 
-            return ResponseHelper::jsonResponse([], 'Payment initiated successfully.');
         } catch (\Exception $e) {
             return ResponseHelper::jsonResponse([], $e->getMessage(), 422, false);
         }

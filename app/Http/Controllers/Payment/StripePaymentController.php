@@ -32,12 +32,11 @@ class StripePaymentController extends Controller
             return ResponseHelper::jsonResponse([], 'You are already enrolled in this course.');
         }
 
-        if ($course->price == 0) {
+        if ($course->price == 0 || $user->id == $course->user_id) {
             $user->studentCourses()->syncWithoutDetaching([
                 $course->id => [
                     'paid' => 0,
                     'status' => 'enrolled',
-                    'verified' => true,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]
