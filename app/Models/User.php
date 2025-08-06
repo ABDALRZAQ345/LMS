@@ -290,5 +290,14 @@ class User extends Authenticatable implements JWTSubject
             ->withTimestamps();
     }
 
-
+    public function chat()
+    {
+        return $this->hasOne(Chat::class);
+    }
+    protected static function booted(): void
+    {
+        static::created(function ($user) {
+            $user->chat()->create();
+        });
+    }
 }
