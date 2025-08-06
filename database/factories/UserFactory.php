@@ -22,7 +22,6 @@ class UserFactory extends Factory
             'github_token' => $this->faker->uuid(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => \Hash::make($this->faker->password()),
-            'fcm_token' => $this->faker->uuid(),
             'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkoyUQaux4PEUmEPGc7PodeN8XbgC4aOBsug&s',
             'gitHub_account' => $this->faker->url(),
             'bio' => $this->faker->text(),
