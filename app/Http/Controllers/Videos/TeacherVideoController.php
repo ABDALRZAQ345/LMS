@@ -52,5 +52,10 @@ class TeacherVideoController extends Controller
         return $this->teacherVideoService->uploadVideo($validate);
     }
 
+    public function deleteUploadVideo(Video $video){
+        $this->authorize('update', $video);
+        return $this->teacherVideoService->deleteUploadVideo($video);
+    }
+
 
 }
