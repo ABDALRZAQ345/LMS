@@ -65,6 +65,10 @@ return [
         'api_key' => env('BUNNY_STREAM_API_KEY'),
         'api_url' => env('BUNNY_STREAM_API_URL', 'https://video.bunnycdn.com'),
     ],
+    'AiAgent' => [
+        'dev_token' => env('AI_AGENT_DEV_TOKEN'),
+        'webhook_url' => env('AI_AGENT_WEBHOOK_URL'),
+    ],
 
 
 ];

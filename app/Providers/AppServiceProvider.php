@@ -115,7 +115,7 @@ class AppServiceProvider extends ServiceProvider
             'test.php',
             'video.php',
             'comment.php',
-
+            'chat.php'
         ];
         if(config('app.env')!='production') {
             $apiRouteFiles[]=   'autoTest.php';
