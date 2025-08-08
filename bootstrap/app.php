@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ActiveUserMiddleware;
 use App\Http\Middleware\EnsureUserIsStudent;
 use App\Http\Middleware\EnsureUserIsTeacher;
 use App\Http\Middleware\LocaleMiddleware;
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'student.user' => EnsureUserIsStudent::class,
             'teacher.user' => EnsureUserIsTeacher::class,
             'contest' => \App\Http\Middleware\ContestTypeMiddleware::class,
+            'activeUser' => ActiveUserMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

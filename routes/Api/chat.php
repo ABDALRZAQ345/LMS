@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
 
-    Route::post('/agent/send',[AiAgent::class,'SendToAgent'])->middleware('throttle:AiChat');
+    Route::post('/agent/send',[AiAgent::class,'SendToAgent'])->middleware(['throttle:AiChat']);
     //Route::post('/message/receive',[AiAgent::class,'receive'])->middleware('throttle:AiChat');
 
 

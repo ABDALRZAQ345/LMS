@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api'])->group(function () {
 
-    Route::post('/message/send',[AiAgent::class,'message'])->middleware('throttle:AiChat');
+    Route::post('/message/send',[AiAgent::class,'message'])->middleware(['throttle:AiChat']);
     //Route::post('/message/receive',[AiAgent::class,'receive'])->middleware('throttle:AiChat');
     Route::get('/homepage', HomepageController::class);
 });

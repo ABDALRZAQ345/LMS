@@ -11,7 +11,7 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
     ->prefix('/admin')->group(function () {
 
 
-
+        Route::post('/users/{user}/toggle-block', [AdminController::class, 'blockToggle']);
         Route::group(['prefix' => '/requests/contests'], function () {
             Route::get('/', [ContestsRequestController::class, 'requests']);
             Route::post('/{contest}', [ContestsRequestController::class, 'accept']);
