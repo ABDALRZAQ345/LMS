@@ -25,7 +25,7 @@ class GetUsersRequest extends FormRequest
     {
         return [
             'friends' => ['in:0,1'],
-            'role' => ['in:student,teacher'],
+            'role' => ['in:student,teacher,all'],
             'search' => ['string'],
             'orderBy' => ['string', 'in:points,name'],
             'direction' => ['string', 'in:asc,desc'],

@@ -73,7 +73,10 @@ class UserService
             $users = User::query();
         }
 
-        return $users->where('role', $role)->orderBy($orderBy, $direction)
+        if($role != 'all')
+         $users->where('role', $role);
+
+       return $users->orderBy($orderBy, $direction)
         ->where('name', 'like', '%'.$search.'%')
         ->paginate($items);
 

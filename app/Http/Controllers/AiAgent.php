@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 class AiAgent extends Controller
 {
+    //todo complete your work
     protected  $geminiService;
     public function __construct(GeminieService $geminieService)
     {
