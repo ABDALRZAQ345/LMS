@@ -44,6 +44,7 @@ class FirebaseNotificationService
             ->orderByDesc('created_at')
             ->skip(15)
             ->delete();
+
     }
 
 }

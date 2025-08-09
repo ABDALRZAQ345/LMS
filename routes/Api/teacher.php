@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
     ->prefix('teacher')->group(function () {
-
+        //todo make it in frontend side
         Route::get('/cloudinary-signature', [CloudinaryController::class, 'getSignature']);
 
         Route::group(['prefix' => '/requests/projects'], function () {
