@@ -33,7 +33,6 @@ class AdminCourseController extends Controller
     public function accept(Course $course){
         $this->adminCourseService->UpdateCourseRequestStatus($course,'accepted');
         //todo send notification to teacher
-        $this->adminCourseService->UpdateCourseRequestStatus($course,'rejected');
         $teacher = User::findOrFail($course->user_id);
 
         $title = 'Your Course has been accepted';
