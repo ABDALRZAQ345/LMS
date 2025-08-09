@@ -27,7 +27,8 @@ class UserResource extends JsonResource
             'last_online' => $this->last_online,
             'role' => $this->role,
             'joined'=> $this->created_at->format('Y-m-d'),
-            'age' => $this->age
+            'age' => $this->age,
+
         ];
 
 
@@ -35,6 +36,7 @@ class UserResource extends JsonResource
             $data['points'] = $this->points;
             $data['role']=$this->role;
             $data['level']=$this->level;
+            $data['blocked']= !$this->active;
             $data['current_streak']=  $this->CurrentStreak();
             $data['completed_courses'] = $this->finishedCourses()->count();
             $data['completed_learning_paths'] = $this->finishedLearningPaths()->count();
