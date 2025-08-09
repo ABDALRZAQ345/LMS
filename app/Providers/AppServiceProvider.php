@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use OpenApi\Annotations as OA;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -51,10 +52,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Contest::class, ContestPolicy::class);
         Gate::policy(Project::class, ProjectPolicy::class);
-        Gate::policy(User::class,UserPolicy::class);
-        Gate::policy(Course::class,CoursePolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Course::class, CoursePolicy::class);
         Gate::policy(Video::class, VideoPolicy::class);
-        Gate::policy(LearningPath::class,LearningPathPolicy::class);
+        Gate::policy(LearningPath::class, LearningPathPolicy::class);
 
     }
 
@@ -68,7 +69,10 @@ class AppServiceProvider extends ServiceProvider
     private function rateLimiters(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
+            return [
+                Limit::perMinute(30)->by($request->user()?->id ?: $request->ip()),
+                Limit::perDay(350)->by($request->user()?->id ?: $request->ip())
+            ];
         });
         RateLimiter::for('send_confirmation_code', function (Request $request) {
             return [
@@ -94,7 +98,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perDay(3)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('AiChat', function (Request $request) {
-            return Limit::perDay(15)->by($request->user()?->id ?: $request->ip());
+            return Limit::perDay(20)->by($request->user()?->id ?: $request->ip());
         });
 
     }
@@ -117,8 +121,8 @@ class AppServiceProvider extends ServiceProvider
             'comment.php',
             'chat.php'
         ];
-        if(config('app.env')!='production') {
-            $apiRouteFiles[]=   'autoTest.php';
+        if (config('app.env') != 'production') {
+            $apiRouteFiles[] = 'autoTest.php';
         }
         foreach ($apiRouteFiles as $routeFile) {
             Route::prefix('api')
@@ -129,8 +133,8 @@ class AppServiceProvider extends ServiceProvider
 
     private function productionConfigurations(): void
     {
-        Model::shouldBeStrict(! app()->environment('production'));
-        Model::preventLazyLoading(! app()->environment('production'));
+        Model::shouldBeStrict(!app()->environment('production'));
+        Model::preventLazyLoading(!app()->environment('production'));
 
     }
 

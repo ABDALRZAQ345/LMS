@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Services\GeminieService;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class AiAgent extends Controller
 {
-    //todo complete your work
-    protected  $geminiService;
+
+    protected $geminiService;
+
     public function __construct(GeminieService $geminieService)
     {
         $this->geminiService = $geminieService;
@@ -22,7 +24,7 @@ class AiAgent extends Controller
     public function message(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'message' => ['required','string','max:600'],
+            'message' => ['required', 'string', 'max:600'],
         ]);
         $message = $request->get("message");
         $result = $this->geminiService->generateText($message);
@@ -35,28 +37,38 @@ class AiAgent extends Controller
     public function SendToAgent(Request $request)
     {
         $request->validate([
-            'message' => ['required','string','max:650'],
+            'message' => ['required', 'string', 'max:650'],
         ]);
 
         $message = $request->get("message");
         $response = Http::timeout(120)
-        ->withHeaders([
-            'Content-Type' => 'application/json',
-        ])
-        ->post(config('services.AiAgent.webhook_url'), [
-            'message' => $message,
-            'user_id' => auth('api')->id(),
-            'dev-token' => config('services.AiAgent.dev_token'),
-        ]);
-        \Log::channel('verification_code')->info($response->json());
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])
+            ->post(config('services.AiAgent.webhook_url'), [
+                'message' => $message,
+                'user_id' => Auth::id(),
+                'dev-token' => config('services.AiAgent.dev_token'),
+            ]);
+    \Log::channel('verification_code')->info(Auth::id());
         if ($response->successful()) {
             $data = $response->json();
-            $output=$data['output'];
+            $output = $data['output'];
+        } else {
+            $output = "something went wrong";
         }
-        else {
-            $output="something went wrong";
-        }
-        //todo store in chat history
+
+        $user = Auth::user();
+        $chat = $user->chat;
+        $chat->messages()->create([
+            'message' => $message,
+        ]);
+        $chat->messages()->create([
+            'message' => $output,
+            'fromBot' => true,
+            'created_at' => now()->addSeconds(3)
+        ]);
+
         return response()->json([
             'status' => $response->successful(),
             'output' => $output,
@@ -65,6 +77,43 @@ class AiAgent extends Controller
 
     }
 
+    public function getChatHistory()
+    {
+        //todo add real time here
+        $user = auth('api')->user();
+        $chat = $user->chat;
+        $messages = $chat->messages()->select(['message','fromBot'])->orderBy('created_at', 'desc')->limit(10)->get()
+        ;
+        return response()->json([
+            'status' => true,
+            'messages' => array_reverse($messages->toArray()),
+        ]);
+
+    }
+
+    public function clearChatHistory()
+    {
+        $user = Auth::user();
+        $chat=$user->chat;
+        if($chat->messages()->count()>0){
+            Http::timeout(120)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                ])
+                ->post(config('services.AiAgent.webhook_url'), [
+                    'message' => 'forget every thing we talk about before',
+                    'user_id' => auth('api')->id(),
+                    'dev-token' => config('services.AiAgent.dev_token'),
+                ]);
+
+        }
+
+        $chat->messages()->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'chat history deleted successfully'
+        ]);
+    }
 
 
 }

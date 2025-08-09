@@ -14,7 +14,7 @@ return new class extends Migration
 
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
+            $table->text('message');
             $table->boolean('fromBot')->default(false);
             $table->foreignIdFor(\App\Models\Chat::class)->constrained();
             $table->timestamps();
