@@ -20,10 +20,13 @@ class BunnyStreamService
 
     public function uploadVideo(UploadedFile $file, string $title): string
     {
+        \Log::debug('Current Bunny API key:', [config('services.bunny.api_key')]);
         // إنشاء فيديو
         $create = Http::withToken($this->apiKey)->post("{$this->baseUrl}/library/{$this->libraryId}/videos", [
             'title' => $title,
         ]);
+        \Log::debug('Bunny response status:', [$create->status()]);
+        \Log::debug('Bunny full response body:', [$create->body()]);
 
         if (!$create->successful()) {
             throw new \Exception('Failed to create video');
@@ -48,12 +51,14 @@ class BunnyStreamService
      */
     public function deleteVideo(string $videoId): void
     {
-        $response = Http::withToken($this->apiKey)->delete("{$this->baseUrl}/library/{$this->libraryId}/videos/{$videoId}");
+        $response = Http::withToken($this->apiKey)
+            ->delete("{$this->baseUrl}/library/{$this->libraryId}/videos/{$videoId}");
 
         if (!$response->successful()) {
-            throw new \Exception('Failed to delete video');
+            throw new \Exception('Failed to delete video from Bunny Stream');
         }
     }
+
 
     /**
      * تعديل عنوان فيديو
@@ -74,13 +79,15 @@ class BunnyStreamService
      */
     public function getVideoInfo(string $videoId): array
     {
-        $response = Http::withToken($this->apiKey)->get("{$this->baseUrl}/library/{$this->libraryId}/videos/{$videoId}");
+        $response = Http::withToken($this->apiKey)
+            ->get("{$this->baseUrl}/library/{$this->libraryId}/videos/{$videoId}");
 
         if (!$response->successful()) {
-            throw new \Exception('Failed to fetch video info');
+            throw new \Exception("Failed to fetch Bunny video info");
         }
 
         return $response->json();
     }
+
 }
 
