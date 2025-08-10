@@ -54,7 +54,7 @@ class ProcessSubmission implements ShouldQueue
             'cpu_time_limit' => $problem->time_limit,
             'memory_limit' => $problem->memory_limit * 1024,
         ]);
-        Log::channel('verification_code')->info($response);
+
 
         $result = $response->json();
 
@@ -68,7 +68,7 @@ class ProcessSubmission implements ShouldQueue
 
         $statusId =isset($result['status']) ? $result['status']['id'] : null;
 
-        Log::channel('verification_code')->info($result);
+
         if ($statusId === 5) {
             $status = 'time_limit_exceeded';
         }

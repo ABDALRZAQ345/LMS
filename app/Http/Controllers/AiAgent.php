@@ -50,7 +50,7 @@ class AiAgent extends Controller
                 'user_id' => Auth::id(),
                 'dev-token' => config('services.AiAgent.dev_token'),
             ]);
-    \Log::channel('verification_code')->info(Auth::id());
+
         if ($response->successful()) {
             $data = $response->json();
             $output = $data['output'];

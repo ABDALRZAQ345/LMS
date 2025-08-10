@@ -6,7 +6,7 @@ use App\Http\Controllers\Contest\SubmissionController;
 use App\Http\Controllers\QuizController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale', 'auth:api'])->group(function () {
+Route::middleware(['throttle:api', 'auth:api'])->group(function () {
 
     Route::get('/courses/{course}/tests/{test}', [QuizController::class, 'showTest']);
 

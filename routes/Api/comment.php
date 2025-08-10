@@ -4,7 +4,7 @@ use App\Http\Controllers\Comments\CommentController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:api','throttle:api'])->group(function () {
     Route::get('video/{video}/comments',[CommentController::class,'commentsOfVideo']);
     Route::post('video/{video}/comments',[CommentController::class,'create'])->middleware(['activeUser']);
     Route::put('comments/{comment}',[CommentController::class,'update'])->middleware(['activeUser']);

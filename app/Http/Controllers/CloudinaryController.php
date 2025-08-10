@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 
 class CloudinaryController extends Controller
 {
@@ -18,14 +17,14 @@ class CloudinaryController extends Controller
 
         ksort($params);
 
-        $signatureString = urldecode(http_build_query($params)) . env('CLOUDINARY_API_SECRET');
+        $signatureString = urldecode(http_build_query($params)) . config('services.cloudinary.api_secret');
         $signature = sha1($signatureString);
 
         return response()->json([
             'signature' => $signature,
             'timestamp' => $timestamp,
-            'api_key' => env('CLOUDINARY_API_KEY'),
-            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+            'api_key' => config('services.cloudinary.api_key'),
+            'cloud_name' => config('services.cloudinary.cloud_name'),
             'folder' => 'videos',
         ]);
     }

@@ -18,7 +18,7 @@ class StreakSeeder extends Seeder
         $endOfYear = now()->endOfYear();
 
         foreach ($users as $user) {
-            \Log::channel('verification_code')->info('Starting Streak: ' . $user->id);
+
             $date = $startOfYear->copy();
             $streaks = [];
 

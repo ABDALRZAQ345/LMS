@@ -3,7 +3,7 @@
 use App\Http\Controllers\User\FriendController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
+Route::middleware(['throttle:api'])->group(function () {
 
     Route::get('/users/{user}/friends', [FriendController::class, 'index'])->middleware('student.user')->name('user.friends');
     Route::middleware(['auth:api'])->group(function () {

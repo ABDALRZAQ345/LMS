@@ -12,7 +12,7 @@ class HomePageController extends Controller
      */
     public function __invoke(HomePageRequest $request): \Illuminate\Http\JsonResponse
     {
-
+        //todo
         return response()->json([
             'success' => true,
             'message' => 'Home page requested',

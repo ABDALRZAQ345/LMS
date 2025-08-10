@@ -11,6 +11,7 @@ use App\Http\Requests\Auth\SignupRequest;
 use App\Responses\LogedInResponse;
 use App\Responses\LogedOutResponse;
 use App\Services\Auth\AuthService;
+use Doctrine\DBAL\Exception;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
@@ -79,7 +80,7 @@ class AuthController extends BaseController
 
             return LogedInResponse::response($user, $token);
         }
-        catch (TokenExpiredException $exception) {
+        catch (TokenExpiredException|Exception $exception) {
             throw new BadRequestException($exception->getMessage());
         }
 

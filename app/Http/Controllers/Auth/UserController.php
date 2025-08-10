@@ -41,13 +41,13 @@ class UserController extends BaseController
 
         $users =$this->userService->GetUsers($validated['friends'], $validated['role'], $validated['search'], $validated['orderBy'], $validated['direction'],$validated['items']);
 
-
         return response()->json([
             'status' => true,
             'message' => 'users retrieved successfully',
             'users' => UserResource::collection($users),
             'meta' => getMeta($users)
         ]);
+
     }
 
     /**

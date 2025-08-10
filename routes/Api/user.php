@@ -5,7 +5,7 @@ use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\TeacherController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale', 'xss'])->group(function () {
+Route::middleware(['throttle:api', 'locale'])->group(function () {
 
     Route::middleware('auth:api')->group(function () {
         Route::get('/me', [UserController::class, 'getCurrentUser']);

@@ -18,15 +18,15 @@ class XssProtection
     public function handle($request, Closure $next)
     {
 
-        $userInput = $request->all();
-        $config = HTMLPurifier_Config::createDefault();
-        $purifier = new HTMLPurifier($config);
-
-        array_walk_recursive($userInput, function (&$value) use ($purifier) {
-            $value = $purifier->purify($value);
-        });
-
-        $request->merge($userInput);
+//        $userInput = $request->all();
+//        $config = HTMLPurifier_Config::createDefault();
+//        $purifier = new HTMLPurifier($config);
+//
+//        array_walk_recursive($userInput, function (&$value) use ($purifier) {
+//            $value = $purifier->purify($value);
+//        });
+//
+//        $request->merge($userInput);
 
         return $next($request);
     }

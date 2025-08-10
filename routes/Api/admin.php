@@ -7,7 +7,7 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\User\AdminController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
+Route::middleware(['throttle:api', 'auth:api', 'role:admin'])
     ->prefix('/admin')->group(function () {
 
 

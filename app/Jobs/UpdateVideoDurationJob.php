@@ -39,7 +39,7 @@ class UpdateVideoDurationJob implements ShouldQueue
             $video->update([
                 'duration' => $durationInMinutes,
             ]);
-
+            //todo delete logs in production
             \Log::info("Updated video duration to {$durationInMinutes} minutes for ID: {$this->videoId}");
         } else {
             \Log::warning("No duration found in Bunny response for video {$this->videoId}");

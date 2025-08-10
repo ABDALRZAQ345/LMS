@@ -7,7 +7,7 @@ use App\Http\Controllers\Payment\StripePaymentController;
 use App\Http\Controllers\Payment\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->middleware(['throttle:api']);
 
 Route::middleware(['throttle:api', 'locale'])->group(function () {
 

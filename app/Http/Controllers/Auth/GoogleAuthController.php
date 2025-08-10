@@ -22,25 +22,33 @@ class GoogleAuthController extends BaseController
     public function handleGoogleUser($idToken): JsonResponse
     {
 
+
         DB::beginTransaction();
-        $googleUser = Http::get("https://oauth2.googleapis.com/tokeninfo?id_token={$idToken}")->json();
+        try {
 
-        if (! isset($googleUser['email'])) {
-            return response()->json(['error' => 'Invalid Google ID token'], 401);
+            $googleUser = Http::get("https://oauth2.googleapis.com/tokeninfo?id_token={$idToken}")->json();
+
+            if (!isset($googleUser['email'])) {
+                return response()->json(['error' => 'Invalid Google ID token'], 401);
+            }
+
+            $user = User::firstOrCreate([
+                'email' => $googleUser['email'],
+            ], [
+                'name' => $googleUser['name'],
+                'google_id' => $googleUser['sub'],
+                'password' => Hash::make(str()->random(24)),
+            ]);
+
+            DB::commit();
+
+            return LogedInResponse::response($user);
         }
-
-        $user = User::firstOrCreate([
-            'email' => $googleUser['email'],
-        ], [
-            'name' => $googleUser['name'],
-            'google_id' => $googleUser['sub'],
-            'password' => Hash::make(str()->random(24)),
-        ]);
-
-        DB::commit();
-
-        return LogedInResponse::response($user);
-
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+            throw new ServerErrorException($exception->getMessage());
+        }
     }
 
     /**

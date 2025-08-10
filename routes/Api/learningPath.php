@@ -28,7 +28,7 @@ Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:teacher'])
 
     });
 
-Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
+Route::middleware(['throttle:api', 'locale', 'auth:api', 'role:admin'])
     ->prefix('/admin')->group(function () {
         Route::get('learningPaths',[AdminLearningPathController::class,'index']);
         Route::post('learningPaths/{learningPath}/accept',[AdminLearningPathController::class,'accept']);

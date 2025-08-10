@@ -5,7 +5,7 @@ use App\Http\Controllers\Contest\ProblemContainer;
 use App\Http\Controllers\Contest\SubmissionController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:api', 'locale'])->group(function () {
+Route::middleware(['throttle:api'])->group(function () {
 
 
     Route::middleware(['auth:api'])->group(function () {
