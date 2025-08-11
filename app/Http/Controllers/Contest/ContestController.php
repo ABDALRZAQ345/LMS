@@ -91,8 +91,8 @@ class ContestController extends Controller
         $validated = $request->validated();
         $students = $this->contestService->GetContestResults($contest, $validated['justFriends'],$validated['items']);
         $currentUser = $students->where('id', \Auth::id())->first();
-
-        return ContestStandingResponse::response($students,$currentUser);
+        $count=$contest->questions()->count();
+        return ContestStandingResponse::response($students,$currentUser,$count);
 
     }
 

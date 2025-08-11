@@ -44,7 +44,7 @@ class UserService
 
         $user->update([
             'name' => $data['name'],
-            'image' => $data['image'] ?? null,
+            'image' => $data['image'] ?? $user->image,
             'bio' => $data['bio'] ?? null,
             'gitHub_account' => $data['gitHub_account'] ?? null,
             'age' => $data['age'] ?? null

@@ -8,13 +8,14 @@ use App\Models\User;
 
 class ContestStandingResponse
 {
-    public static function response($students,$currentUser): \Illuminate\Http\JsonResponse
+    public static function response($students,$currentUser,$questionCount): \Illuminate\Http\JsonResponse
     {
 
         return response()->json([
             'status' => true,
             'message' => "results might not be calculated yet  ",
             'your_order' => $currentUser ? $currentUser->pivot->rank : null,
+            'question_count' => $questionCount,
             'students' => StudentStandingResource::collection($students),
             'meta' => getMeta($students)
         ]);

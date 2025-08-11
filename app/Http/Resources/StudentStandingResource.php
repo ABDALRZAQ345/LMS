@@ -23,6 +23,7 @@ class StudentStandingResource extends JsonResource
             'correct_answers' => $this->pivot->correct_answers,
             'gained_points' => $this->pivot->gained_points ?? "not calculated yet",
             'rank' => $this->pivot ?  $this->pivot->rank :  ++self::$index ,
+            'image' => $this->image
         ];
     }
 }
