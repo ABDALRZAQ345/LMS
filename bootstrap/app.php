@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureUserIsTeacher;
 use App\Http\Middleware\LocaleMiddleware;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\XssProtection;
+use Carbon\CarbonInterval;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -81,6 +82,20 @@ return Application::configure(basePath: dirname(__DIR__))
                     'status' => false,
                     'message' => 'Unauthenticated',
                 ], 401);
+            }
+        });
+        $exceptions->render(function (ThrottleRequestsException $e, Request $request) {
+            if ($request->is('api/*')) {
+
+                $retryAfter = $e->getHeaders()['Retry-After'] ?? null;
+
+                return response()->json([
+                    'status' => false,
+                    'message' => $retryAfter
+                        ? 'You have exceeded the allowed limit. Please try again in '
+                        . CarbonInterval::seconds($retryAfter)->forHumans()
+                        : $e->getMessage(),
+                ], 429);
             }
         });
 //        if (app()->environment() == 'production') {

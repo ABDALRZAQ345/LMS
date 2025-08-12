@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-
+use Google\Client as GoogleClient;
 class GoogleAuthController extends BaseController
 {
 
@@ -26,17 +26,19 @@ class GoogleAuthController extends BaseController
         DB::beginTransaction();
         try {
 
-            $googleUser = Http::get("https://oauth2.googleapis.com/tokeninfo?id_token={$idToken}")->json();
+            $client = new GoogleClient(['client_id' => config('services.google.client_id')]);
 
-            if (!isset($googleUser['email'])) {
+            $payload = $client->verifyIdToken($idToken);
+            if (!$payload) {
+
                 return response()->json(['error' => 'Invalid Google ID token'], 401);
             }
 
             $user = User::firstOrCreate([
-                'email' => $googleUser['email'],
+                'email' =>$payload['email'],
             ], [
-                'name' => $googleUser['name'],
-                'google_id' => $googleUser['sub'],
+                'name' => $payload['name'],
+                'google_id' => $payload['sub'],
                 'password' => Hash::make(str()->random(24)),
             ]);
 
