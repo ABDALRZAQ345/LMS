@@ -29,9 +29,5 @@ class VideoController extends Controller
         return $this->videoService->updateProgress($course,$video,$validate);
     }
 
-    public function finishedVideo(Course $course , Video $video){
-        return $this->videoService->finishedVideo($course,$video);
-    }
-
 
 }

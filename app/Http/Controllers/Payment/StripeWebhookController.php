@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -50,6 +51,10 @@ class StripeWebhookController extends Controller
 
         }
 
+        $title = 'Enroll Course Successfully';
+        $body ="Have a nice trip.";
+
+        SendFirebaseNotification::dispatch($user, $title, $body);
         return response()->json(['message' => 'Webhook received.'], 200);
     }
 

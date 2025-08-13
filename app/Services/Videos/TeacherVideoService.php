@@ -3,10 +3,12 @@
 namespace App\Services\Videos;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Resources\Videos\TeacherVideoResource;
 use App\Jobs\UpdateVideoDurationJob;
 use App\Models\Course;
 use App\Models\Video;
 use App\Repositories\Videos\TeacherVideoRepository;
+use Dotenv\Loader\Resolver;
 use Illuminate\Http\UploadedFile;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Services\Videos\BunnyStreamService;
@@ -34,7 +36,7 @@ class TeacherVideoService
     public function showOneVideoInCourse($course, $video){
        $theVideo = $this-> teacherVideoRepository->showOneVideoInCourse($course, $video);
 
-       return ResponseHelper::jsonResponse($theVideo , 'Get Video In Course');
+       return ResponseHelper::jsonResponse(TeacherVideoResource::make( $theVideo ) , 'Get Video In Course');
     }
     public function createUrl($validate){
 
@@ -95,6 +97,18 @@ class TeacherVideoService
 
             return ResponseHelper::jsonResponse([], 'Failed to delete video', 500);
         }
+    }
+
+    public function storageVideo($data){
+        $video = $this->teacherVideoRepository->storageVideo($data);
+
+        return ResponseHelper::jsonResponse(TeacherVideoResource::make($video),'Add video to course successfully.');
+    }
+
+    public function updateStorageVideo($video , $validate){
+        $updateVideo = $this->teacherVideoRepository->updateStorageVideo($video , $validate);
+
+        return ResponseHelper::jsonResponse(TeacherVideoResource::make( $updateVideo ),'Updated Video Successfully');
     }
 
 }

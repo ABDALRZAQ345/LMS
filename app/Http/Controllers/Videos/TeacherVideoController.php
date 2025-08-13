@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Videos;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Videos\CreateUrlVedioRequest;
+use App\Http\Requests\Videos\UpdatedUpliadVideoRequest;
 use App\Http\Requests\Videos\UpdateUrlVideoRequest;
 use App\Http\Requests\Videos\UploadVideoRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -57,5 +58,28 @@ class TeacherVideoController extends Controller
         return $this->teacherVideoService->deleteUploadVideo($video);
     }
 
+    public function storageVideo(UploadVideoRequest $request)
+    {
+        $validated = $request->validated();
 
+        $validated['uploaded_file'] = $request->file('url'); // UploadedFile
+
+        return $this->teacherVideoService->storageVideo($validated);
+    }
+
+    public function updateStorageVideo(UpdatedUpliadVideoRequest $request , Video $video){
+        $validated = $request->validated();
+        if($request->hasFile('url')){
+            $validated['uploaded_file'] = $request->file('url');
+            unset($validated['url']);
+        }
+        return $this->teacherVideoService->updateStorageVideo($video, $validated);
+    }
+
+    public function deleteStorageVideo(Video $video){
+        $this->authorize('update', $video);
+        $video->delete();
+
+        return  ResponseHelper::jsonResponse([],'Deleted video successfully');
+    }
 }

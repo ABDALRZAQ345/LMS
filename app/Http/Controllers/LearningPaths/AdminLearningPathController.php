@@ -31,7 +31,6 @@ class AdminLearningPathController extends Controller
 
     public function accept(LearningPath $learningPath){
         $this->adminLearningPathService->updateLearningPathRequestStatus($learningPath,'accepted');
-        // todo send notification to teacher
         $teacher = User::findOrFail($learningPath->user_id);
 
         $title = 'Your learning path has been accepted';
@@ -52,7 +51,6 @@ class AdminLearningPathController extends Controller
                     403,false);
             }
         }
-        //todo send notification to teacher
         $this->adminLearningPathService->updateLearningPathRequestStatus($learningPath,'rejected');
 
         $teacher = User::findOrFail($learningPath->user_id);

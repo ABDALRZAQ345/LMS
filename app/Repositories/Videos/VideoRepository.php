@@ -17,31 +17,44 @@ class VideoRepository
             ->first();
     }
 
-    public function updateProgress($course,$video,$validate){
+    public function updateProgress($course, $video, int $progress): bool
+    {
+        $userId = auth()->id();
+        $now    = now();
+
+        $isCompleted = $progress >= 100 ? 1 : 0;
+
         $exists = \DB::table('user_video_progress')
-            ->where('user_id',auth()->id())
-            ->where('course_id',$course->id)
-            ->where('video_id',$video->id)
+            ->where('user_id',  $userId)
+            ->where('course_id', $course->id)
+            ->where('video_id',  $video->id)
             ->exists();
-        if($exists) {
+
+        if ($exists) {
             $updated = \DB::table('user_video_progress')
-                ->where('user_id', auth()->id())
+                ->where('user_id',  $userId)
                 ->where('course_id', $course->id)
-                ->where('video_id', $video->id)
-                ->update(['progress' => $validate['progress']]);
-            return $updated > 0;
-        }
-        else{
-            $created = \DB::table('user_video_progress')
-                ->insert([
-                    'user_id' => auth()->id(),
-                    'course_id' => $course->id,
-                    'video_id' => $video->id,
-                    'progress' => $validate['progress'],
-                    'last_watched_at' =>now(),
+                ->where('video_id',  $video->id)
+                ->update([
+                    'progress'         => $progress,
+                    'is_completed'     => $isCompleted,
+                    'last_watched_at'  => $now,
+                    'updated_at'       => $now,
                 ]);
-            return $created;
+
+            return $updated >= 0;
         }
+
+        return \DB::table('user_video_progress')->insert([
+            'user_id'          => $userId,
+            'course_id'        => $course->id,
+            'video_id'         => $video->id,
+            'progress'         => $progress,
+            'is_completed'     => $isCompleted,
+            'last_watched_at'  => $now,
+            'created_at'       => $now,
+            'updated_at'       => $now,
+        ]);
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Courses;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\AdminGetAllCoursesRequest;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\Course;
 use App\Models\User;
 use App\Services\Courses\AdminCourseService;
@@ -38,7 +39,7 @@ class AdminCourseController extends Controller
         $title = 'Your Course has been accepted';
         $body ="Congratulations! Your Course titled \"{$course->title}\" has been accepted.";
 
-        $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
+        SendFirebaseNotification::dispatch($teacher, $title, $body);
         return ResponseHelper::jsonResponse([],'Course accepted successfully ');
 
     }
@@ -59,7 +60,7 @@ class AdminCourseController extends Controller
         $title = 'Rejected Course';
         $body = "Unfortunately, your Course \"{$course->title}\" rejected. Reason: ". $request['reason'];
 
-        $this->firebaseNotificationService->sendAndStore($teacher, $title, $body);
+        SendFirebaseNotification::dispatch($teacher, $title, $body);
         return ResponseHelper::jsonResponse([],'Course rejected successfully ');
     }
 

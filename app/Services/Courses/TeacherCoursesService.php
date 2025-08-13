@@ -8,7 +8,9 @@ use App\Http\Resources\Courses\TeacherCourseContentResource;
 use App\Http\Resources\Courses\TeacherCourseDescriptionResource;
 use App\Http\Resources\Courses\TeacherCourseResource;
 use App\Http\Resources\Courses\TeachersAllCoursesResource;
+use App\Jobs\SendFirebaseNotification;
 use App\Models\Course;
+use App\Models\User;
 use App\Repositories\Courses\TeacherCoursesRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -62,7 +64,11 @@ class TeacherCoursesService
     }
     public function createCourse($validated){
         $course = $this->teacherCoursesRepository->createCourse($validated);
-        //todo send notification to admin
+        $admin = User::where('role','admin')->first();
+        $title = 'New Course';
+        $body ="A new Course has been requested.";
+
+        SendFirebaseNotification::dispatch($admin, $title, $body);
         return ResponseHelper::jsonResponse(TeacherCourseResource::make($course), 'Created Course Successfully');
     }
 

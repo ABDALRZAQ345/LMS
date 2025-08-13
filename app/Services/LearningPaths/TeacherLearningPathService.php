@@ -4,6 +4,8 @@ namespace App\Services\LearningPaths;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\LearningPaths\TeacherLearningPathResource;
+use App\Jobs\SendFirebaseNotification;
+use App\Models\User;
 use App\Repositories\LearningPaths\TeacherLearningPathRepo;
 use Illuminate\Support\Facades\Storage;
 class TeacherLearningPathService
@@ -35,6 +37,11 @@ class TeacherLearningPathService
     public function createLearningPath($validated){
         $learningPath = $this->teacherLearningPathRepo->createLearningPath($validated);
 
+        $admin = User::where('role','admin')->first();
+        $title = 'New Learning Path';
+        $body ="A new learning path has been requested.";
+
+        SendFirebaseNotification::dispatch($admin, $title, $body);
         return ResponseHelper::jsonResponse(TeacherLearningPathResource::make($learningPath)
             ,'Created Learning Path Successfully');
     }

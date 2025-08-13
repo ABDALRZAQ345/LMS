@@ -4,6 +4,7 @@ namespace App\Services\Reviews;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\Reviews\ReviewResource;
+use App\Jobs\SendFirebaseNotification;
 use App\Repositories\Reviews\ReviewsRepository;
 
 class ReviewService
@@ -30,8 +31,13 @@ class ReviewService
     public function addNewReviewInCourse($course, $validated)
     {
         $review = $this->reviewRepository->addNewReviewInCourse($course->id, $validated);
-
+        $student = auth()->user();
         if ($review['is_new']) {
+            $teacher = $course->teacher()->first();
+            $title = 'New Review on '. $course->title;
+            $body  = $student->name .'has added a new review '.$review->comment;
+
+            SendFirebaseNotification::dispatch($teacher, $title, $body);
             return ResponseHelper::jsonResponse(ReviewResource::make($review['review']), 'Review Added Successfully');
         } else {
             return ResponseHelper::jsonResponse(ReviewResource::make($review['review']),

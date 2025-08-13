@@ -25,7 +25,7 @@ class UploadVideoRequest extends FormRequest
             'title' => 'required|string|max:100',
             'description' => 'required|string',
             'free' => 'required|boolean',
-            'course_id' => 'required|integer',
+            'course_id' => 'required|integer|exists:courses,id',
         ];
     }
 }
