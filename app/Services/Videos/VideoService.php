@@ -37,29 +37,18 @@ class VideoService
     public function updateProgress($course, $video, $validatedData)
     {
         if ($video->course_id !== $course->id) {
-            return ResponseHelper::jsonResponse([], 'This video does not belong to the selected course.',
-                404, false);
-        }
-        $isUpdated = $this->videoRepository->updateProgress($course, $video, $validatedData);
-
-        if ($isUpdated) {
-            return ResponseHelper::jsonResponse([], 'Progress updated successfully.');
+            return ResponseHelper::jsonResponse([], 'This video does not belong to the selected course.', 404, false);
         }
 
-        return ResponseHelper::jsonResponse([], 'Failed to update progress. Please try again.');
-    }
+        $progress = (int) $validatedData['progress'];
 
-    public function finishedVideo($course,$video){
-        if ($video->course_id !== $course->id) {
-            return ResponseHelper::jsonResponse([], 'This video does not belong to the selected course.',
-                404, false);
+        $ok = $this->videoRepository->updateProgress($course, $video, $progress);
+
+        if (! $ok) {
+            return ResponseHelper::jsonResponse([], 'Failed to update progress. Please try again.', 500, false);
         }
-        \DB::table('user_video_progress')
-            ->where('user_id',auth()->id())
-            ->where('video_id',$video->id)
-            ->update(['is_completed' => 1,
-                'progress'=>100]);
-        return ResponseHelper::jsonResponse([], 'Video Completed successfully.');
+
+        return ResponseHelper::jsonResponse([], 'Progress updated successfully.');
     }
 
     public function isEnroll($userId,$courseId){

@@ -40,6 +40,23 @@ if (! function_exists('getPercentage')) {
     }
 
 }
+if (! function_exists('NewPublicVideo')) {
+    function NewPublicVideo($video, $folder = 'videos'): string
+    {
+        $videoPath = $video->store($folder, 'public');
+        $videoPath ='/storage/'.$videoPath;
+
+        return $videoPath;
+    }
+}
+function  getVideo($video)
+{
+    return $video
+        ? (str_starts_with($video, 'https://')
+            ? $video
+            : config('app.url') . $video)
+        : null;
+}
 
     function getMeta($data): array
     {

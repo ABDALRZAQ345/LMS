@@ -4,6 +4,8 @@ namespace App\Services\Comments;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\Comments\CommentsVideoResource;
+use App\Jobs\SendFirebaseNotification;
+use App\Models\Comment;
 use App\Repositories\Comments\CommentRepository;
 use http\Env\Request;
 
@@ -30,7 +32,24 @@ protected $commentRepository;
 
     public function addComment($video,$comment){
         $newComment = $this->commentRepository->addComment($video,$comment);
+        $user = auth()->user();
+        $video->load('course.teacher');
+        if(!$newComment->comment_id){
+        $teacher = $video->course?->teacher;
+        $title = 'New comment on your course '.$video->course->title;
+        $body  = $user->name.' Add comment on video '.$video->title;
 
+        if ($teacher) {
+            SendFirebaseNotification::dispatch($teacher, $title, $body);
+            }
+        }else{
+            $parentComment = Comment::where('id',$newComment->comment_id)->with('user')->first();
+            $parentCommentOwner = $parentComment->user;
+            $title = 'Replay on your comment';
+            $body  = $user->name.' replayed on your comment in video '.$video->title;
+
+            SendFirebaseNotification::dispatch($parentCommentOwner, $title, $body);
+        }
         return ResponseHelper::jsonResponse(CommentsVideoResource::make($newComment),'Add comment successfully');
     }
 
@@ -59,17 +78,26 @@ protected $commentRepository;
         return ResponseHelper::jsonResponse([],'Comment deleted successfully');
     }
 
-    public function like($comment){
+    public function like(Comment $comment)
+    {
         $userId = auth()->id();
-        $existingLike = $comment->like()->where('user_id',$userId)->first();
-        if($existingLike){
+
+        $existingLike = $comment->like()->where('user_id', $userId)->first();
+        if ($existingLike) {
             $existingLike->delete();
-            return ResponseHelper::jsonResponse([], 'Like removal successfully');
+            return ResponseHelper::jsonResponse([], 'Like removed successfully');
         }
-        $comment->like()->create([
-            'user_id' => $userId,
-        ]);
-        return ResponseHelper::jsonResponse([], 'Liked Comment successfully');
+
+        $comment->like()->create(['user_id' => $userId]);
+
+        $owner = $comment->user;
+        if ($owner ) {
+            $title = auth()->user()->name . ' liked your comment';
+            $body  = $comment->text;
+            SendFirebaseNotification::dispatch($owner, $title, $body);
+        }
+        return ResponseHelper::jsonResponse([], 'Liked comment successfully');
     }
+
 
 }

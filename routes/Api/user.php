@@ -11,6 +11,7 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         Route::get('/me', [UserController::class, 'getCurrentUser']);
         Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');
 
+        Route::get('notifications', [UserController::class, 'notifications']);
     });
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

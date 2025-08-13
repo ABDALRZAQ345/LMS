@@ -7,6 +7,7 @@ use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use App\Models\NotificationModel;
+use Illuminate\Support\Facades\DB;
 
 class FirebaseNotificationService
 {
@@ -39,12 +40,19 @@ class FirebaseNotificationService
             'title' => $title,
             'message' => $message,
         ]);
-
-        NotificationModel::where('user_id', $user->id)
-            ->orderByDesc('created_at')
-            ->skip(15)
-            ->delete();
-
+//        $limit = 15;
+//
+//        $keepIds = NotificationModel::where('user_id', $user->id)
+//            ->orderByDesc('created_at') // أو orderByDesc('id')
+//            ->limit($limit)
+//            ->pluck('id')
+//            ->toArray();
+//
+//        if (!empty($keepIds)) {
+//            NotificationModel::where('user_id', $user->id)
+//                ->whereNotIn('id', $keepIds)
+//                ->delete();
+//        }
     }
 
 }

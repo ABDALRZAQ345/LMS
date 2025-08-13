@@ -18,7 +18,7 @@ class UpdatedUpliadVideoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'url' => 'nullable|mimes:mp4,avi,mov|max:51200',
+            'url' => 'sometimes|file|mimes:mp4,avi,mov|max:51200',
             'title' => 'sometimes|string|max:100',
             'description' => 'sometimes|string',
             'free' => 'sometimes|boolean',

@@ -2,7 +2,9 @@
 
 namespace App\Services\User;
 
+use App\Helpers\ResponseHelper;
 use App\Http\Resources\Users\UserResource;
+use App\Models\NotificationModel;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -111,5 +113,14 @@ class UserService
                 'fcm_token' => $token
             ]);
         }
+    }
+
+    public function notifications(){
+        $notification = NotificationModel::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->limit(15)
+            ->get();
+
+        return ResponseHelper::jsonResponse($notification,'Get Notification Successfully');
     }
 }

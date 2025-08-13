@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('likes')->default(0);
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Video::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Comment::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Comment::class)->nullable()->unique()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

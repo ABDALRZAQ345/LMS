@@ -84,5 +84,9 @@ class UserController extends BaseController
         return UserProfileResponse::response($user);
     }
 
+    public function notifications(){
+        return $this->userService->notifications();
+    }
+
 
 }
