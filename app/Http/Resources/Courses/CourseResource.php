@@ -9,7 +9,7 @@ class CourseResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // todo add course duration
+
 
         $countOfVideos = $this->videos_count ?? $this->videos->count();
         $countOfTest = $this->tests_count ?? $this->tests->count();

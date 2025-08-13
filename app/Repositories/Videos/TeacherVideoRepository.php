@@ -3,6 +3,7 @@
 namespace App\Repositories\Videos;
 
 use App\Models\Course;
+use App\Models\Test;
 use App\Models\Video;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -21,6 +22,13 @@ class TeacherVideoRepository
     public function createUrl($validate){
         $course = Course::findOrFail($validate['course_id']);
         $validate['order']= $course->content()->count() + 1;
+        $finalTest=Test::where('course_id',$course->id)->where('is_final',1)->first();
+
+        if($finalTest){
+            $validate['order']--;
+            $finalTest->increment('order');
+        }
+
         $video = Video::create($validate);
         return $video;
     }
@@ -38,7 +46,12 @@ class TeacherVideoRepository
         $minutes = (int) round($seconds / 60);
 
         $order = $course->content()->count() + 1;
+        $finalTest=Test::where('course_id',$course->id)->where('is_final',1)->first();
 
+        if($finalTest){
+            $order--;
+            $finalTest->increment('order');
+        }
         $payload = [
             'title'       => $data['title'],
             'description' => $data['description'],
@@ -48,6 +61,7 @@ class TeacherVideoRepository
             'order'       => $order,
             'course_id'   => $course->id,
         ];
+
 
         return Video::create($payload);
     }

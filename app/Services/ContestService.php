@@ -72,12 +72,15 @@ class ContestService
         $questions = $contest->questions()
             ->with('options')
             ->get();
+        $currentUser = $contest->students()->wherePivot('user_id', auth('api')->id())->orderByPivot('correct_answers','desc')
+            ->first();
 
         return response()->json([
             'status' => true,
             'contest_type' => $contest->type,
             'alreadyParticipate' => $alreadyParticipate,
             'questions_count' => $questions->count(),
+            'your_result' =>$currentUser ?getPercentage($currentUser->pivot->correct_answers,$questions->count()) : "0%",
             'questions' => $questions,
 
         ]);

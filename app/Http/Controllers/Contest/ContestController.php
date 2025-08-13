@@ -42,6 +42,7 @@ class ContestController extends Controller
 
     public function show(Contest $contest, ShowContestRequest $request): JsonResponse
     {
+
         return response()->json([
             'status' => true,
             'contest' => ContestResource::make($contest),
