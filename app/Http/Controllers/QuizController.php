@@ -34,7 +34,9 @@ class QuizController extends Controller
             'status' => true,
             'message' => 'test  received successfully',
             'already_taken' => $currentUser!=null,
-            'best_result' => $currentUser ?getPercentage($currentUser->pivot->correct_answers,$test->questions_count) : "0%",
+            'question_count' => $test->questions_count,
+            'correct_answers' => $currentUser ? $currentUser->pivot->correct_answers : 0,
+            'best_result' => $currentUser ? getPercentage($currentUser->pivot->correct_answers,$test->questions_count,true) : 0,
             'test' => TestResource::make($test)
         ]);
     }

@@ -80,7 +80,8 @@ class ContestService
             'contest_type' => $contest->type,
             'alreadyParticipate' => $alreadyParticipate,
             'questions_count' => $questions->count(),
-            'your_result' =>$currentUser ?getPercentage($currentUser->pivot->correct_answers,$questions->count()) : "0%",
+            'correct_answers' =>$currentUser ? $currentUser->pivot->correct_answers :0,
+            'your_result' =>$currentUser ?getPercentage($currentUser->pivot->correct_answers,$questions->count(),true) : 0,
             'questions' => $questions,
 
         ]);
