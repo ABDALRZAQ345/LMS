@@ -33,6 +33,7 @@ return new class extends Migration
             $table->integer('age')->nullable()->default(null);
             $table->date('birth_date')->nullable()->default(null);
             $table->boolean('active')->default(true);
+            $table->float('balance')->default(0);
             $table->rememberToken();
 
 

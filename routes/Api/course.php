@@ -3,25 +3,20 @@
 use App\Http\Controllers\Courses\AdminCourseController;
 use App\Http\Controllers\Courses\CourseController;
 use App\Http\Controllers\Courses\TeacherCourseContrller;
-use App\Http\Controllers\Payment\StripePaymentController;
-use App\Http\Controllers\Payment\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
-
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->middleware(['throttle:api']);
 
 Route::middleware(['throttle:api', 'locale'])->group(function () {
 
 
     Route::middleware(['auth:api'])->group(function () {
-        Route::post('courses/{course}/enroll', [StripePaymentController::class, 'enrollCourse']);
         Route::post('courses/{course}/watch_later',[CourseController::class, 'addToWatchLater']);
         Route::delete('courses/{course}/watch_later',[CourseController::class, 'removeFromWatchLater']);
+        Route::post('courses/{course}/enroll',[CourseController::class, 'enroll']);
     });
     Route::get('/courses', [CourseController::class, 'index']);
-    Route::get('/courses/{course}/description', [CourseController::class, 'showCourseDescription'])->name('courses.show');;
+    Route::get('/courses/{course}/description', [CourseController::class, 'showCourseDescription']);;
     Route::get('courses/{course}/content', [CourseController::class, 'showCourseContent']);
     Route::get('/learningPath/{learningPath}/courses', [CourseController::class, 'getAllCoursesInLearningPath']);
-//    Route::get('/learningPath/{learningPath}/courses/{course}', [CourseController::class, 'showCourseInLearningPath']);
 });
 
 

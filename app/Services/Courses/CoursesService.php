@@ -8,7 +8,11 @@ use App\Http\Resources\Courses\CourseResource;
 use App\Http\Resources\Courses\CourseResourceContent;
 use App\Http\Resources\Courses\CourseResourceDescription;
 use App\Http\Resources\Courses\TeacherCourseResource;
+use App\Jobs\SendFirebaseNotification;
+use App\Models\Course;
+use App\Models\User;
 use App\Repositories\Courses\CoursesRepository;
+use Stripe\Tax\Transaction;
 
 class CoursesService
 {
@@ -92,15 +96,67 @@ class CoursesService
         }
     }
 
-//    public function showCourseInLearningPath($learningPathName, $courseId)
-//    {
-//        $course = $this->coursesRepository->showCourseInLearningPath($courseId);
-//
-//        return ResponseHelper::jsonResponse($course, 'Get Course In Learning Path '
-//            .$learningPathName.' Successfully');
-//    }
+    public function enroll($course){
+        $user = auth()->user();
+        if (!$course->verified) {
+            return ResponseHelper::jsonResponse([], 'This course is not verified yet.',404,false);
+        }
 
+        if (
+            $user->studentCourses()
+                ->where('course_id', $course->id)
+                ->wherePivotIn('status', ['enrolled', 'finished'])
+                ->exists()
+        ) {
+            return ResponseHelper::jsonResponse([], 'You are already enrolled in this course.');
+        }
 
+        if ($course->price == 0 || $user->id == $course->user_id || $user->role == 'admin') {
+            $user->studentCourses()->syncWithoutDetaching([
+                $course->id => [
+                    'paid' => 0,
+                    'status' => 'enrolled',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            ]);
 
+            $title = 'Enroll Course '.$course->title;
+            $body ="Have a nice trip.";
+
+            SendFirebaseNotification::dispatch($user, $title, $body);
+            return ResponseHelper::jsonResponse([], 'You have been enrolled for free.');
+        }
+
+        if($user->balance >= $course->price){
+            $user->studentCourses()->syncWithoutDetaching([
+                $course->id => [
+                    'paid' => $course->price,
+                    'status' => 'enrolled',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            ]);
+            $this->updateBalance($user,$course);
+            $title = 'Enroll Course '.$course->title;
+            $body ="Have a nice trip.";
+
+            SendFirebaseNotification::dispatch($user, $title, $body);
+            return ResponseHelper::jsonResponse([], 'You have been enrolled in course.');
+
+        }else{
+            return ResponseHelper::jsonResponse([],'You Don\'t have enough balance to enroll this course.'
+            ,404,false);
+        }
+
+    }
+
+    private function updateBalance($user, $course){
+        $teacher = User::findOrFail($course->user_id);
+        $admin = User::where('role','admin')->first();
+        $user->decrement('balance', $course->price);
+        $teacher->increment('balance', $course->price * 0.6);
+        $admin->increment('balance', $course->price * 0.4);
+    }
 
 }

@@ -78,6 +78,9 @@ class TeacherCoursesService
 
             $validated['image'] = NewPublicPhoto($validated['image'], 'Courses');
         }
+        if($course->request_status == 'rejected') {
+            $validated['request_status'] = 'pending';
+        }
         $course->update($validated);
         $course = $course->fresh();
         return ResponseHelper::jsonResponse(TeacherCourseResource::make($course), 'Updated Course Successfully');
