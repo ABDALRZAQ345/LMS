@@ -84,6 +84,7 @@ class ContestService
             'correct_answers' =>$currentUser ? $currentUser->pivot->correct_answers :0,
             'your_result' =>$currentUser ?getPercentage($currentUser->pivot->correct_answers,$questions->count(),true) : 0,
             'end_date' => Carbon::parse($contest->start_at)->addMinutes($contest->time)->toDateTimeString(),
+            'minutes_left' => -1*Carbon::parse($contest->start_at)->addMinutes($contest->time)->diffInMinutes() ,
             'questions' => $questions,
 
         ]);
