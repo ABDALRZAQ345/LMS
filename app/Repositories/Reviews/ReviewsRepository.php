@@ -2,7 +2,9 @@
 
 namespace App\Repositories\Reviews;
 
+use App\Models\Achievement;
 use App\Models\Review;
+use App\Models\User;
 
 class ReviewsRepository
 {
@@ -51,6 +53,7 @@ class ReviewsRepository
             'comment' => $validated['comment'] ?? null,
         ]);
 
+        $this->handleHaterAchivement(auth('api')->user());
         return [
             'review' => $newReview->load('student:id,name,image'),
             'is_new' => true,
@@ -70,7 +73,7 @@ class ReviewsRepository
         }
 
         $review->update($validated);
-
+        $this->handleHaterAchivement(auth('api')->user());
         return $review->load('student:id,name,image');
 
     }
@@ -83,5 +86,14 @@ class ReviewsRepository
             ->where('user_id', $userId)
             ->delete();
 
+    }
+
+    private function handleHaterAchivement(User $user)
+    {
+        $reviews=$user->reviews()->where('rate','=',1)->count();
+        if($reviews >= 10){
+            $achievement=Achievement::where('name','Hater')->firstOrFail();
+            $user->achievements()->syncWithoutDetaching($achievement->id);
+        }
     }
 }

@@ -29,7 +29,7 @@ class VerificationCodeService
         VerificationCode::create([
             'email' => $email,
             'code' => Hash::make($code),
-            'expires_at' => now()->addMinutes(30),
+            'expires_at' => now()->addMinutes(200),
             'registration' => $registration,
         ]);
         Log::channel('verification_code')->info('the code for '.$email.' is '.$code);

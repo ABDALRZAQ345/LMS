@@ -28,7 +28,7 @@ class UserResource extends JsonResource
             'role' => $this->role,
             'joined'=> $this->created_at->format('Y-m-d'),
             'age' => $this->age,
-
+            'balance' => $this->id==auth('api')?->id() ? $this->balance : null
         ];
 
 

@@ -14,6 +14,7 @@ use App\Models\Test;
 use App\Models\Video;
 use App\Services\Courses\TeacherCoursesService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TeacherCourseContrller extends Controller
 {
@@ -75,27 +76,45 @@ class TeacherCourseContrller extends Controller
     public function reorderContent(ReorderCourseContentRequest $request ,Course $course){
         $orderItems = $request->input('order');
 
-        foreach ($orderItems as $index => $item) {
-            [$type, $id] = explode('_', $item);
+        try {
+         db::beginTransaction();
 
-            $newOrder = $index + 1;
 
-            if ($type === 'video') {
-                $video = Video::where('id', $id)->where('course_id', $course->id)->first();
-                if ($video) {
-                    $video->order = $newOrder;
-                    $video->save();
+
+            foreach ($orderItems as $index => $item) {
+                [$type, $id] = explode('_', $item);
+
+                $newOrder = $index + 1;
+
+                if ($type === 'video') {
+                    $video = Video::where('id', $id)->where('course_id', $course->id)->first();
+                    if ($video) {
+                        $video->order = $newOrder;
+                        $video->save();
+                    }
+                } elseif ($type === 'test') {
+                    $test = Test::where('id', $id)->where('course_id', $course->id)->first();
+                    if ($test) {
+                        $test->order = $newOrder;
+                        $test->save();
+                    }
                 }
-            } elseif ($type === 'test') {
-                $test = Test::where('id', $id)->where('course_id', $course->id)->first();
-                if ($test) {
-                    $test->order = $newOrder;
-                    $test->save();
-                }
+
             }
+
+            $finalTest=Test::where('course_id',$course->id)->where('is_final',1)->first();
+
+            if($finalTest){
+                $finalTest->order=$newOrder;
+            }
+           db::commit();
+            return ResponseHelper::jsonResponse([], 'Course content reordered successfully');
+        }
+        catch (\Exception $exception){
+            db::rollBack();
+            return ResponseHelper::jsonResponse(['error' => $exception->getMessage()],$exception->getMessage());
         }
 
-        return ResponseHelper::jsonResponse([], 'Course content reordered successfully');
     }
 
 

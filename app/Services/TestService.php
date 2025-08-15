@@ -36,7 +36,7 @@ class TestService
             $finalTest=Test::where('course_id',$course->id)->where('is_final',1)->first();
 
             if($finalTest){
-                //todo do the same on adding video
+
                 $order--;
                 $finalTest->increment('order');
             }
