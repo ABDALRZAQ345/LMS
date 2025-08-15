@@ -13,10 +13,10 @@ class PaymentService
         $this->paymentRepository = $paymentRepository;
     }
 
-    public function enrollCourse($paymentMethod, Course $course)
+    public function charge($paymentMethod)
     {
         try {
-            $intent = $this->paymentRepository->enrollCourse($paymentMethod, $course);
+            $intent = $this->paymentRepository->charge($paymentMethod);
 
             return ResponseHelper::jsonResponse([
                 'client_secret' => $intent->client_secret,

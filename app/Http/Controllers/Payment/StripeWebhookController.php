@@ -33,28 +33,24 @@ class StripeWebhookController extends Controller
         if ($event->type === 'payment_intent.succeeded') {
             $intent = $event->data->object;
 
-            $userId = $intent->metadata->user_id;
-            $courseId = $intent->metadata->course_id;
-            $amount = $intent->amount / 100;
+            $userId = data_get($intent, 'metadata.user_id');
+            $amount = (int)data_get($intent, 'amount', 0) / 100;
 
-            $user = User::find($userId);
-            $course = Course::find($courseId);
+            if ($userId) {
+                $user = User::find($userId);
 
-            if ($user && $course) {
-                $user->studentCourses()->syncWithoutDetaching([
-                    $courseId => [
-                        'paid' => $amount,
-                        'status' => 'enrolled',
-                    ]
-                ]);
+                if ($user) {
+                    $user->increment('balance', $amount);
+                    $title = 'Charge Balance';
+                    $body = "You charge balance {$amount} USD.";
+                    SendFirebaseNotification::dispatch($user, $title, $body);
+                } else {
+                    \Log::warning("Webhook: user not found for ID {$userId}");
+                }
+            } else {
+                \Log::warning('Webhook: user_id not found in metadata');
             }
-
         }
-
-        $title = 'Enroll Course Successfully';
-        $body ="Have a nice trip.";
-
-        SendFirebaseNotification::dispatch($user, $title, $body);
         return response()->json(['message' => 'Webhook received.'], 200);
     }
 

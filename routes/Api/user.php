@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\Payment\StripePaymentController;
+use App\Http\Controllers\Payment\StripeWebhookController;
 use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\TeacherController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->middleware(['throttle:api']);
 
 Route::middleware(['throttle:api', 'locale'])->group(function () {
 
@@ -12,6 +16,7 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         Route::post('/me/update', [UserController::class, 'update'])->name('profile.update');
 
         Route::get('notifications', [UserController::class, 'notifications']);
+        Route::post('charge', [StripePaymentController::class, 'charge']);
     });
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

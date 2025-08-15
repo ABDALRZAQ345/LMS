@@ -46,16 +46,8 @@ class CourseController extends Controller
         return $this->courseService->removeFromWatchLater($course);
     }
 
-//    public function showCourseInLearningPath(LearningPath $learningPath, Course $course){
-//        if (!$learningPath->courses()->where('courses.id', $course->id)->exists()) {
-//            return ResponseHelper::jsonResponse([], 'Course not found in this learning path',404,false);
-//        }
-//        if($course->verified == 0)
-//            return ResponseHelper::jsonResponse([], 'Course not verified',404,false);
-//        return $this->courseService->showCourseInLearningPath($learningPath->title,$course->id);
-//    }
-
-
-
+    public function enroll(Course $course){
+        return $this->courseService->enroll($course);
+    }
 
 }
