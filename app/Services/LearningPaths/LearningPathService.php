@@ -4,6 +4,8 @@ namespace App\Services\LearningPaths;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Resources\LearningPaths\LearningPathResource;
+use App\Models\Achievement;
+use App\Models\User;
 use App\Repositories\LearningPaths\LearningPathRepository;
 
 class LearningPathService
@@ -46,6 +48,9 @@ class LearningPathService
             ->first()
             ->pivot
             ->status;
+        if($status=='enroll'){
+            $this->handleEnrolledInLearningPath(auth()->user());
+        }
 
         return ResponseHelper::jsonResponse(LearningPathResource::make($learningPath), 'Learning path Added to '.$status.' successfully');
     }
@@ -59,6 +64,19 @@ class LearningPathService
             return ResponseHelper::jsonResponse([], 'Learning path has been removed');
         }
 
+    }
+
+    private function handleEnrolledInLearningPath(User $user)
+    {
+        $achievement=Achievement::where('name','Track Starter')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+        $pathsCount=\DB::table('learning_path_user')
+            ->where('user_id',$user->id)
+            ->where('status','=','enroll')->count();
+        if($pathsCount>=3){
+            $achievement=Achievement::where('name','Explorer')->firstOrFail();
+            $user->achievements()->syncWithoutDetaching($achievement->id);
+        }
     }
 
 }

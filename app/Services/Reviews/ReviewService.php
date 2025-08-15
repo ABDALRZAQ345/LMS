@@ -35,7 +35,7 @@ class ReviewService
         if ($review['is_new']) {
             $teacher = $course->teacher()->first();
             $title = 'New Review on '. $course->title;
-            $body  = $student->name .'has added a new review '.$review->comment;
+            $body  = $student->name .'has added a new review '.$review['review'];
 
             SendFirebaseNotification::dispatch($teacher, $title, $body);
             return ResponseHelper::jsonResponse(ReviewResource::make($review['review']), 'Review Added Successfully');

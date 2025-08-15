@@ -47,7 +47,7 @@
 </head>
 <body>
 <div class="container">
-    <h2>LMS Verification Code</h2>
+    <h2>{{config('app.name')}} Verification Code</h2>
     <p>Please use the following verification code to proceed:</p>
     <div class="code">{{$body}}</div>
     <p>If you did not request this code, please ignore this message.</p>

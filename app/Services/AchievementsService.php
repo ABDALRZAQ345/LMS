@@ -49,6 +49,17 @@ class AchievementsService {
         $user->achievements()->syncWithoutDetaching($achievement->id);
     }
 
+    public function CompleteFirstCourse(User $user): void
+    {
+        $achievement=Achievement::where('name','First Course')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+    }
+
+    public function PerfectInFinalQuiz(User $user)
+    {
+        $achievement=Achievement::where('name','Quiz Beast')->firstOrFail();
+        $user->achievements()->syncWithoutDetaching($achievement->id);
+    }
 
 
 }

@@ -10,6 +10,7 @@ use App\Models\Contest;
 use App\Models\Problem;
 use App\Models\Submission;
 use App\Models\User;
+use App\Repositories\Contest\ContestsRepository;
 use Carbon\Carbon;
 use Doctrine\DBAL\Exception;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,12 @@ use Log;
 
 class SubmissionService
 {
+    public  AchievementsService $achievementsService;
+
+    public function __construct(AchievementsService  $achievementsService)
+    {
+        $this->achievementsService = $achievementsService;
+    }
     // Add your service methods here
     public function CheckUserSolvedProblem(User $user, Problem $problem): bool
     {
@@ -102,7 +109,6 @@ class SubmissionService
         db::beginTransaction();
         try {
             $this->UpdateUserTestStatus($data['start_time'], $test, $correct);
-
             $percentage = getPercentage($correct, $questionsCount, true);
             $this->HandelCertificate($test, $percentage);
             db::commit();
@@ -135,7 +141,12 @@ class SubmissionService
                 'course_id' => $test->course_id,
                 'user_id' => auth('api')->id()
             ]);
+            $this->achievementsService->CompleteFirstCourse(auth('api')->user());
+            if($percentage==100){
+                $this->achievementsService->PerfectInFinalQuiz(auth('api')->user());
+            }
         }
+
     }
 
     /**
