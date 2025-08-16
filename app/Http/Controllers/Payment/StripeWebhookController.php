@@ -45,10 +45,10 @@ class StripeWebhookController extends Controller
                     $body = "You charge balance {$amount} USD.";
                     SendFirebaseNotification::dispatch($user, $title, $body);
                 } else {
-                    \Log::warning("Webhook: user not found for ID {$userId}");
+
                 }
             } else {
-                \Log::warning('Webhook: user_id not found in metadata');
+
             }
         }
         return response()->json(['message' => 'Webhook received.'], 200);

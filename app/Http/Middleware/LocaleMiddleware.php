@@ -27,6 +27,7 @@ class LocaleMiddleware
             }
             $user->last_online = now()->toDateTimeString();
             $user->save();
+            if($user->role=='student')
             $this->streakService->LoginStreak($user);
 
         }

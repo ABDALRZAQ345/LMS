@@ -79,7 +79,6 @@ class AiAgent extends Controller
 
     public function getChatHistory()
     {
-        //todo add real time here
         $user = auth('api')->user();
         $chat = $user->chat;
         $messages = $chat->messages()->select(['message','fromBot'])->orderBy('created_at', 'desc')->limit(10)->get()

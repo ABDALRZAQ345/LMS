@@ -12,7 +12,7 @@ class SubmitTestRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //todo authorize the user paid or the course is free
+
         return true;
     }
 

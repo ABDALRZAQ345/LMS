@@ -71,21 +71,21 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return [
                 Limit::perMinute(30)->by($request->user()?->id ?: $request->ip()),
-                Limit::perDay(350)->by($request->user()?->id ?: $request->ip())
+                Limit::perDay(600)->by($request->user()?->id ?: $request->ip())
             ];
         });
         RateLimiter::for('send_confirmation_code', function (Request $request) {
             return [
-                Limit::perDay(30)->by($request->user()?->id ?: $request->ip()),
+                Limit::perDay(25)->by($request->user()?->id ?: $request->ip()),
             ];
         });
         RateLimiter::for('check_verification_code', function (Request $request) {
-            return Limit::perDay(30)->by($request->user()?->id ?: $request->ip());
+            return Limit::perDay(25)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('register', function (Request $request) {
             return [
-                Limit::perMinutes(30, 20)->by($request->user()?->id ?: $request->ip()),
-                Limit::perDay(40)->by($request->user()?->id ?: $request->ip()),
+                Limit::perMinutes(30, 15)->by($request->user()?->id ?: $request->ip()),
+                Limit::perDay(30)->by($request->user()?->id ?: $request->ip()),
             ];
         });
         RateLimiter::for('change_password', function (Request $request) {
@@ -95,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('refresh_token', function (Request $request) {
-            return Limit::perDay(3)->by($request->user()?->id ?: $request->ip());
+            return Limit::perDay(100)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('AiChat', function (Request $request) {
             return Limit::perDay(30)->by($request->user()?->id ?: $request->ip());
