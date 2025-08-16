@@ -3,9 +3,11 @@
 namespace App\Services\Payment;
 
 use App\Helpers\ResponseHelper;
-use App\Models\Course;
+use App\Jobs\SendFirebaseNotification;
+use App\Models\User;
 use App\Repositories\Payment\PaymentRepository;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 class PaymentService
 {
     public $paymentRepository;
@@ -28,7 +30,34 @@ class PaymentService
         }
     }
 
+    public function payment(array $validated)
+    {
+        $teacher = User::findOrFail($validated['teacher_id']);
+        $amount  = (float) $validated['amount'];
 
+        DB::transaction(function () use ($teacher, $amount) {
+            if ($amount >= 0) {
+                $teacher->increment('balance', $amount);
+            } else {
+                $abs = abs($amount);
+                if ($teacher->balance < $abs) {
+                    throw ValidationException::withMessages([
+                        'amount' => 'Insufficient balance to perform this debit.',
+                    ]);
+                }
+                $teacher->decrement('balance', $abs);
+            }
+        });
+
+        $title = 'New Payment';
+        $body  = $amount >= 0
+            ? 'Admin added ' . $amount . ' to your account'
+            : 'Admin deducted ' . abs($amount) . ' from your account';
+
+        SendFirebaseNotification::dispatch($teacher, $title, $body)->afterCommit();
+
+        return ResponseHelper::jsonResponse([], 'Payment Done Successfully.');
+    }
 
 
 

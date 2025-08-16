@@ -4,7 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddTeacherRequest;
+use App\Http\Requests\Payment\PaymentRequest;
 use App\Models\User;
+use App\Services\Payment\PaymentService;
 use App\Services\User\StaticsService;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
@@ -12,11 +14,13 @@ use Illuminate\Http\JsonResponse;
 class AdminController extends Controller
 {
     protected UserService $userService;
+    protected $paymentService;
 
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, PaymentService $paymentService)
     {
         $this->userService = $userService;
+        $this->paymentService = $paymentService;
 
     }
 
@@ -46,6 +50,11 @@ class AdminController extends Controller
             'message'=>'User has been '. ($user->active? 'unblocked':'blocked'),
         ]);
 
+    }
+
+    public function payment(PaymentRequest $request){
+        $validated = $request->validated();
+        return $this->paymentService->payment($validated);
     }
 
 
