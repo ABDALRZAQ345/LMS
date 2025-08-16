@@ -15,7 +15,9 @@ class FirebaseNotificationService
 
     public function __construct()
     {
-        $factory = (new Factory)->withServiceAccount(config('firebase.credentials'));
+        $firebaseConfig = json_decode(base64_decode(config('firebase.credentials')), true);
+
+        $factory = (new Factory)->withServiceAccount($firebaseConfig);
         $this->messaging = $factory->createMessaging();
     }
 
