@@ -98,7 +98,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perDay(3)->by($request->user()?->id ?: $request->ip());
         });
         RateLimiter::for('AiChat', function (Request $request) {
-            return Limit::perDay(20)->by($request->user()?->id ?: $request->ip());
+            return Limit::perDay(30)->by($request->user()?->id ?: $request->ip());
         });
 
     }
