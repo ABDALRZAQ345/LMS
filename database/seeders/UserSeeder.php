@@ -29,6 +29,7 @@ class UserSeeder extends Seeder
             'password' => \Hash::make('1234/*-+Asa'),
             'email_verified' => true,
             'role' => 'student',
+            'balance' => 200,
         ]);
         User::firstOrCreate([
             'email' => 'teacher@teacher.com',
