@@ -19,7 +19,7 @@ class VideoSeeder extends Seeder
         // For each course, create videos with specific ordering
         foreach ($courses as $course) {
             // Create first set of videos (1-3)
-            for ($i = 1; $i <= 3; $i++) {
+            for ($i = 1; $i <= 2; $i++) {
                 Video::factory()->create([
                     'course_id' => $course->id,
                     'order' => $i,
@@ -27,7 +27,7 @@ class VideoSeeder extends Seeder
             }
 
             // Create second set of videos (5-7)
-            for ($i = 5; $i <= 7; $i++) {
+            for ($i = 4; $i <= 5 ; $i++) {
                 Video::factory()->create([
                     'course_id' => $course->id,
                     'order' => $i,

@@ -21,7 +21,7 @@ class CommentSeeder extends Seeder
 
         // For each video, create 2-5 comments
         foreach ($videos as $video) {
-            $numComments = rand(2, 5);
+            $numComments = rand(2, 4);
             for ($i = 0; $i < $numComments; $i++) {
                 Comment::factory()->create([
                     'video_id' => $video->id,

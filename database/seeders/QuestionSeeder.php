@@ -19,14 +19,14 @@ class QuestionSeeder extends Seeder
 
         // For each test, create 5-10 questions
         foreach ($tests as $test) {
-            Question::factory(rand(5, 10))->create([
+            Question::factory(5)->create([
                 'questionable_type' => Test::class,
                 'questionable_id' => $test->id,
             ]);
         }
         $contests = Contest::all();
         foreach ($contests as $contest) {
-            Question::factory(rand(5, 10))->create([
+            Question::factory(5)->create([
                 'questionable_type' => Contest::class,
                 'questionable_id' => $contest->id,
             ]);

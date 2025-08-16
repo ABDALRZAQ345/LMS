@@ -15,7 +15,7 @@ class ProjectSeeder extends Seeder
     {
         $tags = Tag::all();
 
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             Project::factory()->create([
                 'tag_id' => $tags->random()->id,
                 'user_id' => rand(1, 20),

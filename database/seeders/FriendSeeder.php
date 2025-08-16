@@ -13,7 +13,7 @@ class FriendSeeder extends Seeder
     public function run(): void
     {
         // Get all students
-        $students = User::where('role', 'student')->get();
+        $students = User::where('role', 'student')->limit(5)->get();
 
         // For each student, create 2-5 random friendships
         foreach ($students as $student) {

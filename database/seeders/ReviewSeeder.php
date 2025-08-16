@@ -22,7 +22,7 @@ class ReviewSeeder extends Seeder
         // For each course, create 3-8 reviews
         $rate = 0;
         foreach ($courses as $course) {
-            $numReviews = 5;
+            $numReviews = 4;
             for ($i = 0; $i < $numReviews; $i++) {
                 $review = Review::factory()->create([
                     'course_id' => $course->id,

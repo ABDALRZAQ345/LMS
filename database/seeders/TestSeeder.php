@@ -20,7 +20,7 @@ class TestSeeder extends Seeder
         foreach ($courses as $course) {
             Test::factory()->create([
                 'course_id' => $course->id,
-                'order' => 4,
+                'order' => 3,
             ]);
         }
     }

@@ -42,11 +42,11 @@ class UserSeeder extends Seeder
         ]);
 
 
-        User::factory()->count(20)->create([
+        User::factory()->count(5)->create([
             'role' => 'student',
             'email_verified' => true,
         ]);
-        User::factory()->count(10)->create([
+        User::factory()->count(5)->create([
             'role' => 'teacher',
             'email_verified' => true,
         ]);
