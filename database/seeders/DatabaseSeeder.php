@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 //            ContestSeeder::class,
 //            QuestionSeeder::class,
 //            OptionSeeder::class,
-//            AchievementsSeeder::class,
+           AchievementsSeeder::class,
 //            FriendSeeder::class,
 //            //CourseUserSeeder::class,
 //            //TestUserSeeder::class,
