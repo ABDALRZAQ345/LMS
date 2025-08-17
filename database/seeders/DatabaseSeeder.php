@@ -24,15 +24,16 @@ class DatabaseSeeder extends Seeder
             OptionSeeder::class,
             AchievementsSeeder::class,
             FriendSeeder::class,
-            //CourseUserSeeder::class,
-            //TestUserSeeder::class,
-            //ContestUserSeeder::class,
+            CourseUserSeeder::class,
+            TestUserSeeder::class,
+            ContestUserSeeder::class,
             TagSeeder::class,
             ProjectSeeder::class,
             CertificateSeeder::class,
             //ProblemSeeder::class,
-            //LikeSeeder::class,
+            LikeSeeder::class,
             StreakSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }
