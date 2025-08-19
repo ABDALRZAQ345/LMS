@@ -31,6 +31,7 @@ class TeacherLearningPathResource extends JsonResource
             'courses' => $this->relationLoaded('courses')
                 ? TeachersAllCoursesResource::collection($this->courses)
                 : null,
+            'created_at' => $this->created_at->format('d-m-Y'),
 
         ];
     }
