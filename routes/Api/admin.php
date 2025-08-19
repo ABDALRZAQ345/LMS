@@ -31,4 +31,5 @@ Route::middleware(['throttle:api', 'auth:api', 'role:admin'])
             Route::get('/budget',[StatisticsController::class,'overviewBudget']);
         });
 
+        Route::put('payment',[AdminController::class, 'payment']);
     });

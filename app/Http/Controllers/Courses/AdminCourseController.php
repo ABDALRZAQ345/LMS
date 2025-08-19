@@ -9,17 +9,14 @@ use App\Jobs\SendFirebaseNotification;
 use App\Models\Course;
 use App\Models\User;
 use App\Services\Courses\AdminCourseService;
-use App\Services\FirebaseNotificationService;
 use Illuminate\Http\Request;
 
 class AdminCourseController extends Controller
 {
     protected $adminCourseService;
-    protected $firebaseNotificationService;
-    public function __construct(AdminCourseService $adminCourseService,FirebaseNotificationService $firebaseNotificationService)
+    public function __construct(AdminCourseService $adminCourseService)
     {
         $this->adminCourseService = $adminCourseService;
-        $this->firebaseNotificationService = $firebaseNotificationService;
     }
 
     public function index(AdminGetAllCoursesRequest $request){
@@ -63,6 +60,11 @@ class AdminCourseController extends Controller
 
         SendFirebaseNotification::dispatch($teacher, $title, $body);
         return ResponseHelper::jsonResponse([],'Course rejected successfully ');
+    }
+
+    public function delete(Course $course){
+        $this->adminCourseService->deleteCourse($course);
+        return ResponseHelper::jsonResponse([],'Course deleted successfully');
     }
 
 }
