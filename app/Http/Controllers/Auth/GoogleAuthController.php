@@ -28,7 +28,6 @@ class GoogleAuthController extends BaseController
         try {
 
             $googleUser = Socialite::driver('google')->stateless()->userFromToken($idToken);
-        //   \Log::channel('verification_code')->info($googleUser);
 
             $user = User::firstOrCreate(
                 [
