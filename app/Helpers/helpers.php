@@ -18,7 +18,7 @@ function  getPhoto($image)
      return $image
         ? (str_starts_with($image, 'https://via.placeholder.com')
         ? $image
-        : Storage::get($image) )
+        : config('app.url') . $image )
         : null;
 }
 if (! function_exists('DeletePublicPhoto')) {
