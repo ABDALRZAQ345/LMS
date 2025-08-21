@@ -10,8 +10,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Google\Client as GoogleClient;
+use Laravel\Socialite\Facades\Socialite;
+use Str;
+
 class GoogleAuthController extends BaseController
 {
 
@@ -26,21 +27,18 @@ class GoogleAuthController extends BaseController
         DB::beginTransaction();
         try {
 
-            $client = new GoogleClient(['client_id' => config('services.google.client_id')]);
+            $googleUser = Socialite::driver('google')->stateless()->userFromToken($idToken);
 
-            $payload = $client->verifyIdToken($idToken);
-            if (!$payload) {
-
-                return response()->json(['error' => 'Invalid Google ID token'], 401);
-            }
-
-            $user = User::firstOrCreate([
-                'email' =>$payload['email'],
-            ], [
-                'name' => $payload['name'],
-                'google_id' => $payload['sub'],
-                'password' => Hash::make(str()->random(24)),
-            ]);
+            $user = User::firstOrCreate(
+                [
+                    'email' => $googleUser->getEmail(),
+                ],
+                [
+                    'name'      => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                    'password'  => Hash::make(Str::random(24)),
+                ]
+            );
 
             DB::commit();
 
@@ -68,4 +66,7 @@ class GoogleAuthController extends BaseController
         return $this->handleGoogleUser($idToken);
 
     }
+
+
+
 }
