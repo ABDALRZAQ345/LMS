@@ -5,10 +5,12 @@ use Illuminate\Support\Facades\Storage;
 if (! function_exists('NewPublicPhoto')) {
     function NewPublicPhoto($photo, $folder = 'images'): string
     {
-        $photoPath = $photo->store($folder, 'public');
-        $photoPath ='/storage/'.$photoPath;
+        $path = $photo->getClientOriginalName();
 
-        return $photoPath;
+        // رفع الملف
+        Storage::put($path, file_get_contents($photo));
+
+        return $path;
     }
 }
 function  getPhoto($image)
