@@ -27,6 +27,11 @@ class ContestResource extends JsonResource
         else{
             $data['requested_at']=Carbon::parse($data['updated_at'])->toDateTimeString();
         }
+        if($user){
+            $alreadyParticipate = $user->contests()->where('contest_id', $this->id)->exists();
+            $data['alreadyParticipate'] = $alreadyParticipate;
+        }
+
         unset($data['user_id']);
         unset($data['updated_at']);
         return $data;
