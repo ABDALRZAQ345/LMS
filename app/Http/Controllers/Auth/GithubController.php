@@ -64,7 +64,7 @@ class GithubController extends Controller
                 ],
                 [
                     'name'      => $githubUser->getName() ?? $githubUser->getNickname(),
-                    'github_id' => $githubUser->getId(),
+                   // 'github_id' => $githubUser->getId(),
                     'password'  => Hash::make(Str::random(24)),
                 ]
             );
