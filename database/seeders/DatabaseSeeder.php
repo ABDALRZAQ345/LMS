@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 //            //CourseUserSeeder::class,
 //            //TestUserSeeder::class,
 //            //ContestUserSeeder::class,
-//            TagSeeder::class,
+      TagSeeder::class,
 //            ProjectSeeder::class,
 //            CertificateSeeder::class,
 //            //ProblemSeeder::class,

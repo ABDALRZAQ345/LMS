@@ -5,21 +5,18 @@ use Illuminate\Support\Facades\Storage;
 if (! function_exists('NewPublicPhoto')) {
     function NewPublicPhoto($photo, $folder = 'images'): string
     {
-        $photoPath = $photo->store($folder, 'public');
-        $photoPath ='/storage/'.$photoPath;
+        // رفع الملف على S3
+        $path = $photo->store($folder, 's3');
 
-        return $photoPath;
+        // إرجاع الرابط المباشر للملف
+        return Storage::disk('s3')->url($path);
     }
 }
 function  getPhoto($image)
 {
     if($image=='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkoyUQaux4PEUmEPGc7PodeN8XbgC4aOBsug&s')
         return $image;
-     return $image
-        ? (str_starts_with($image, 'https://via.placeholder.com')
-        ? $image
-        : config('app.url') . $image )
-        : null;
+     return $image;
 }
 if (! function_exists('DeletePublicPhoto')) {
     function DeletePublicPhoto($path): void
