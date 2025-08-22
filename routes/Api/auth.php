@@ -18,6 +18,7 @@ Route::middleware(['throttle:api', 'locale'])->group(function () {
         Route::post('/verificationCode/check', [VerificationCodeController::class, 'check'])->middleware('throttle:check_verification_code')->name('verificationCode.check');
         Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register')->name('register');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/auth/github', [GithubController::class, 'auth'])->middleware('guest')->name('auth.github');
 
         Route::post('/auth/google', [GoogleAuthController::class, 'auth'])->middleware('guest')->name('auth.google');
 
