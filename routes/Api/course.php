@@ -43,5 +43,6 @@ Route::middleware(['throttle:api', 'locale', 'xss', 'auth:api', 'role:admin'])
         Route::post('requests/courses/{course}/reject',[AdminCourseController::class, 'reject']);
 
         Route::get('courses', [TeacherCourseContrller::class, 'getAllVerifiedCourses']);
+        Route::delete('courses/{course}',[AdminCourseController::class, 'delete']);
     });
 

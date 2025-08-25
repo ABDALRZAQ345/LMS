@@ -26,6 +26,7 @@ class AdminRequestCoursesResource extends JsonResource
             'teacher_id' => $this->teacher->id,
             'teacher_name'=> $this->teacher->name,
             'teacher_image' => $this->teacher->image,
+            'created_at' => $this->created_at->format('d-m-Y'),
         ];
     }
 }

@@ -26,6 +26,7 @@ class CommentsVideoResource extends JsonResource
             'user_name' => optional($this->user)->name,
             'user_image' => getPhoto(optional($this->user)->image),
             'user_role' => optional($this->user)->role,
+            'is_mine' => optional($this->user)->id == auth()->id() ? true : false ,
             'created_at' => Carbon::parse($this->created_at)->diffForHumans(),
             'replies_count' => $this->replies->count(),
             'replies' => CommentsVideoResource::collection($this->whenLoaded('replies')),

@@ -3,26 +3,22 @@
 namespace App\Http\Requests\Payment;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class ChargeRequest extends FormRequest
+class PaymentRequest extends FormRequest
 {
-
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
-
     public function rules(): array
     {
         return [
-            'amount' => [
-                'required',
-                'numeric',
-                'min:1',
-            ],
+            'teacher_id' =>'required|exists:users,id',
+            'amount' => 'required|numeric',
         ];
     }
-
 }
