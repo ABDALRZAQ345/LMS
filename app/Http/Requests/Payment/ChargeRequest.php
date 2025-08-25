@@ -17,15 +17,6 @@ class ChargeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method_id' => [
-                'required',
-                'string',
-                Rule::in([
-                    'pm_card_visa',
-                    'pm_card_mastercard',
-                    'pm_card_amex',
-                ]),
-            ],
             'amount' => [
                 'required',
                 'numeric',

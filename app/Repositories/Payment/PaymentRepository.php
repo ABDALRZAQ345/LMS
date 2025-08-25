@@ -18,14 +18,8 @@ class PaymentRepository
         $intent = PaymentIntent::create([
             'amount' => $amount,
             'currency' => 'usd',
-            'payment_method' => $paymentMethod['payment_method_id'],
-            'confirmation_method' => 'manual',
-            'confirm' => true,
-            'return_url' => route('users.show',$user->id),
-            'use_stripe_sdk' => true,
-            'metadata' => [
-                'user_id' => $user->id,
-            ],
+            'automatic_payment_methods' => ['enabled' => true], // يخلي Stripe يقرر طريقة الدفع
+            'metadata' => ['user_id' => $user->id],
         ]);
 
         return $intent;
