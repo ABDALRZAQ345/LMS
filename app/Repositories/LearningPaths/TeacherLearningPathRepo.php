@@ -11,6 +11,7 @@ class TeacherLearningPathRepo
         $userId = auth()->id();
         return LearningPath::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
+            ->with('courses.teacher')
             ->withCount('courses')
             ->withSum('courses', 'price')
             ->withSum('courses', 'rate')
