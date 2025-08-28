@@ -22,6 +22,23 @@ class StaticsService
 
       return   \Cache::remember('admin.overview',60*60,function (){
             $total_students = User::where('role','student')->count();
+           //
+          $startOfWeek = Carbon::now()->startOfWeek()->subDays(7)->toDateTimeString();
+          $endOfWeek = Carbon::now()->endOfWeek()->subDays(7)->toDateTimeString();
+          $students_previous_week = User::where('role', 'student')
+              ->where('email_verified', true)
+              ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+              ->count();
+          $startOfWeek = Carbon::now()->startOfWeek()->toDateTimeString();
+          $endOfWeek = Carbon::now()->endOfWeek()->toDateTimeString();
+          $students_current_week = User::where('role', 'student')
+              ->where('email_verified', true)
+              ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+              ->count();
+          $percent=$students_current_week/$students_previous_week-100;
+
+
+          //
             $active_students = User::where('role','student')->where('last_online', '>=', now()->subMinutes(10))->count();
             $total_teachers=User::where('role','teacher')->count();
             $active_teachers = User::where('role','teacher')->where('last_online', '>=', now()->subMinutes(10))->count();
@@ -33,6 +50,7 @@ class StaticsService
             $total_revenue=Db::table('course_user')->sum('paid');
             return response()->json([
                 'total_students' => $total_students,
+                'perecnt_of_students_in_week' => $percent,
                 'active_students' => $active_students,
                 'total_teachers' => $total_teachers,
                 'active_teachers' => $active_teachers,
