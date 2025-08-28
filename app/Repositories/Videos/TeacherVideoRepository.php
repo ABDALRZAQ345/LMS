@@ -33,6 +33,17 @@ class TeacherVideoRepository
         return $video;
     }
 
+    public function deleteVideo($video){
+        if ($this->isLocalStorageUrl($video->url)) {
+            $relative = $this->relativeFromPublicStorageUrl($video->url);
+
+            if ($relative && Storage::disk('public')->exists($relative)) {
+                Storage::disk('public')->delete($relative);
+            }
+        }
+        $video->delete();
+    }
+
     public function storageVideo($data){
         $course = Course::findOrFail($data['course_id']);
 
@@ -131,6 +142,26 @@ class TeacherVideoRepository
         } else {
             \Log::warning("Video not found for deletion: " . $storagePath);
         }
+    }
+
+    private function isLocalStorageUrl(?string $url): bool
+    {
+        if (!$url) {
+            return false;
+        }
+
+        return Str::contains($url, '/storage/');
+    }
+
+    private function relativeFromPublicStorageUrl(string $url): ?string
+    {
+        if (!Str::contains($url, '/storage/')) {
+            return null;
+        }
+
+        $relative = ltrim(Str::after($url, '/storage/'), '/');
+
+        return $relative !== '' ? $relative : null;
     }
 
 }

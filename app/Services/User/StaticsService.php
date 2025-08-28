@@ -150,7 +150,7 @@ class StaticsService
             }
 
             return  [
-                'revenues' => $revenues,
+                'income' => $revenues,
                 'expenses' => $expenses,
             ];
         });
