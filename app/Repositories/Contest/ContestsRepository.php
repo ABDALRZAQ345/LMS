@@ -15,7 +15,8 @@ class ContestsRepository
 
     public function getAllPendingContests()
     {
-        return Contest::where('request_status', 'pending');
+        return Contest::where('request_status', 'pending')
+            ->with('questions.options');
     }
     public function friendsResults(Contest $contest,User $user)
     {
