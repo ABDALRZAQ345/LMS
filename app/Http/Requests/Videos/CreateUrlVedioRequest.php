@@ -21,11 +21,18 @@ class CreateUrlVedioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'url' => 'required|url',
+            'url'  => ['nullable', 'url', 'required_without:file'],
+            'file' => [
+                'nullable',
+                'file',
+                'mimetypes:video/mp4,video/x-msvideo,video/quicktime,video/webm,video/x-matroska',
+                'max:51200',
+                'required_without:url',
+            ],
             'title' => 'required|string|max:100',
             'description' => 'required|string',
             'free' => 'required|boolean',
-            'duration' => 'required|integer|min:1',
+            'duration' => 'nullable|integer|min:1',
             'course_id' => 'required|integer',
         ];
     }

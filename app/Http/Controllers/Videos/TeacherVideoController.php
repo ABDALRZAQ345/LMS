@@ -32,9 +32,18 @@ class TeacherVideoController extends Controller
         return $this->teacherVideoService->showOneVideoInCourse($course, $video);
     }
     public function createUrl(CreateUrlVedioRequest $request){
-        $validate = $request->validated();
+        $data = $request->validated();
 
-        return $this->teacherVideoService->createUrl($validate);
+        if ($request->hasFile('file')) {
+
+            $data['uploaded_file'] = $request->file('file');
+
+            unset($data['url']);
+
+            return $this->teacherVideoService->storageVideo($data);
+        }
+
+        return $this->teacherVideoService->createUrl($data);
     }
 
     public function updateUrl(Video $video,UpdateUrlVideoRequest $request){
@@ -44,8 +53,8 @@ class TeacherVideoController extends Controller
 
     public function deleteUrl(Video $video){
         $this->authorize('update', $video);
-        $video->delete();
-        return  ResponseHelper::jsonResponse([],'Deleted video successfully');
+
+        return $this->teacherVideoService->deleteVideo($video);
     }
 
     public function uploadVideo(UploadVideoRequest $request){
