@@ -73,56 +73,70 @@ class StaticsService
 
     public function StudentsLastWeek()
     {
-        $startOfWeek = Carbon::now()->startOfWeek()->toDateTimeString();
-        $endOfWeek = Carbon::now()->endOfWeek()->toDateTimeString();
-
+        $startOfWeek = Carbon::now()->subDays(7)->startOfDay();
+        $endOfWeek = Carbon::now()->endOfDay();
 
         $query = User::where('role', 'student')
             ->where('email_verified', true)
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-            ->selectRaw('DAYOFWEEK(created_at) as day, COUNT(*) as count')
-            ->groupByRaw('DAYOFWEEK(created_at)')
+            ->selectRaw('WEEKDAY(created_at) as day, COUNT(*) as count')
+            ->groupByRaw('WEEKDAY(created_at)')
             ->pluck('count', 'day');
 
         $studentsLastWeek = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = Carbon::now()->subDays(6 - $i);
+            $dayNumber = $day->dayOfWeekIso - 1;
+            $dayName = $day->format('l');
 
-        for ($i = 0; $i <= 6; $i++) {
-            $dayName = Carbon::now()->startOfWeek()->addDays($i )->format('l');
-            $studentsLastWeek[$dayName] = $query->get($i+2, 0);
+            $studentsLastWeek[$i] =[
+                'day' => $dayName,
+               'students' => $query->get($dayNumber, 0)
+            ];
         }
 
         return response()->json([
-           'studentsLastWeek' => $studentsLastWeek,
+            'studentsLastWeek' => $studentsLastWeek,
         ]);
     }
 
+
     public function StudentsPerMonth()
     {
-        return \Cache::remember('admin.studentsPerMonth',60*60*24,function (){
-            $currentYear = now()->year;
-            $query = User::where('role', 'student')
-                ->where('email_verified', true)
-                ->whereYear('created_at', $currentYear)
-                ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                ->groupByRaw('MONTH(created_at)')
-                ->pluck('count', 'month');
+        $currentYear = now()->year;
+        $currentMonth = now()->month;
 
-            $studentPerMonth = [];
-            for ($i = 1; $i <= 12; $i++) {
-                $monthName = Carbon::create()->month($i)->format('F');
-                $studentPerMonth[$monthName] = $query->get($i, 0);
-            }
+        $query = User::where('role', 'student')
+            ->where('email_verified', true)
+            ->whereYear('created_at', $currentYear)
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('count', 'month');
 
-            return
-                response()->json([
-                    'year' => $currentYear,
-                    'studentsPerMonth'=>$studentPerMonth
-                ]);
+        // تجهيز جميع الأشهر
+        $studentPerMonth = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthName = Carbon::create()->month($i)->format('F');
+            $studentPerMonth[$i] = [
+                'month' => $monthName,
+                'students' => $query->get($i, 0)
+            ];
+        }
 
-        });
+        $ordered = [];
+        for ($i = $currentMonth + 1; $i <= 12; $i++) {
+            $ordered[] = $studentPerMonth[$i];
+        }
+        for ($i = 1; $i <= $currentMonth; $i++) {
+            $ordered[] = $studentPerMonth[$i];
+        }
 
-
+        return response()->json([
+            'year' => $currentYear,
+            'studentsPerMonth' => $ordered
+        ]);
     }
+
 
     public function ProjectsByType()
     {
