@@ -20,7 +20,7 @@ class StaticsService
     {
 
 
-      return   \Cache::remember('admin.overview',60*60,function (){
+
             $total_students = User::where('role','student')->count();
             $active_students = User::where('role','student')->where('last_online', '>=', now()->subMinutes(10))->count();
             $total_teachers=User::where('role','teacher')->count();
@@ -43,7 +43,7 @@ class StaticsService
                 'ended_contests' => $ended_contests,
                 'total_revenue' => $total_revenue,
             ]);
-        });
+
 
     }
 
@@ -80,7 +80,7 @@ class StaticsService
 
     public function StudentsPerMonth()
     {
-        return \Cache::remember('admin.studentsPerMonth',60*60*24,function (){
+
             $currentYear = now()->year;
             $query = User::where('role', 'student')
                 ->where('email_verified', true)
@@ -101,14 +101,14 @@ class StaticsService
                     'studentsPerMonth'=>$studentPerMonth
                 ]);
 
-        });
+
 
 
     }
 
     public function ProjectsByType()
     {
-        return \Cache::remember('admin.projectsByType',60*60*24,function (){
+
 
             $tags = DB::table('tags')
                 ->selectRaw('tags.name, COUNT(projects.id) as count')
@@ -124,13 +124,13 @@ class StaticsService
                'projectsByType' => $tags
             ]);
 
-        });
+
 
     }
 
     public function overviewBudget(){
-        return Cache::remember('admin.overviewBudget', 60 * 60 * 24, function () {
-            // جلب المدفوعات مجمعة حسب الشهر
+
+
             $payments = DB::table('course_user')
                 ->selectRaw("MONTH(created_at) as month_num, SUM(paid) as revenue")
                 ->where('paid', '>', 0)
@@ -153,6 +153,6 @@ class StaticsService
                 'revenues' => $revenues,
                 'expenses' => $expenses,
             ];
-        });
+
     }
 }

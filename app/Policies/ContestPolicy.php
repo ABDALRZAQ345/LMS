@@ -27,7 +27,7 @@ class ContestPolicy
             throw new NotFoundException();
         }
 
-        if ($contest->status == 'coming') {
+        if (Carbon::parse($contest->start_at) > Carbon::now()) {
             throw new FORBIDDEN('coming contest not available , you can reach it when its active there is '.Carbon::parse($contest->start_at)->diffForHumans());
         }
 
