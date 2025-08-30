@@ -110,7 +110,8 @@ class SubmissionService
         try {
             $this->UpdateUserTestStatus($data['start_time'], $test, $correct);
             $percentage = getPercentage($correct, $questionsCount, true);
-            $this->HandelCertificate($test, $percentage);
+            $courseId=$test->course_id;
+            $this->HandelCertificate($test, $percentage,$courseId);
             db::commit();
             return $percentage;
         } catch (Exception $exception) {
@@ -133,7 +134,7 @@ class SubmissionService
 
     }
 
-    protected function HandelCertificate($test, $percentage): void
+    protected function HandelCertificate($test, $percentage,$courseId): void
     {
 
         if ($test->is_final && $percentage >= 60) {
@@ -141,6 +142,15 @@ class SubmissionService
                 'course_id' => $test->course_id,
                 'user_id' => auth('api')->id()
             ]);
+            //todo need to be tested
+            try{
+                DB::table('course_user')->where('user_id', auth('api')->id())
+                    ->where('course_id',$courseId)->update([
+                        'status' => 'finished'
+                    ]);
+            }
+            catch (Exception $exception){
+            }
             $this->achievementsService->CompleteFirstCourse(auth('api')->user());
             if($percentage==100){
                 $this->achievementsService->PerfectInFinalQuiz(auth('api')->user());
@@ -164,6 +174,7 @@ class SubmissionService
         $pivot = $test->students()->where('user_id', auth('api')->id())
             ->orderByPivot('updated_at', 'desc')
             ->first()?->pivot;
+
 
         if ($pivot && $pivot->updated_at > (now()->subDay())->toDateTimeString() ) {
             throw new BadRequestException('you can`t take the final test more than once per day back again in ' .

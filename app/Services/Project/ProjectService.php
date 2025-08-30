@@ -19,9 +19,8 @@ class ProjectService
             return $this->getAlldataMethod($data);
         } else {
 
-            return Cache::remember('projects' . $data['tag']??"" . $data['page']??"" . $data['items']??"", 60 * 30, function () use ($data) {
                return $this->getAlldataMethod($data);
-            });
+
         }
 
 
