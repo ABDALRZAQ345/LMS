@@ -144,10 +144,16 @@ class SubmissionService
             ]);
             //todo need to be tested
             try{
-                DB::table('course_user')->where('user_id', auth('api')->id())
-                    ->where('course_id',$courseId)->update([
-                        'status' => 'finished'
-                    ]);
+                DB::table('course_user')->updateOrInsert(
+                    [
+                        'user_id'   => auth('api')->id(),
+                        'course_id' => $courseId,
+                    ],
+                    [
+                        'status'    => 'finished',
+                    ]
+                );
+
             }
             catch (Exception $exception){
             }
