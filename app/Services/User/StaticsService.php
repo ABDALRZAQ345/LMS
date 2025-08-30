@@ -140,7 +140,7 @@ class StaticsService
 
     public function ProjectsByType()
     {
-        return \Cache::remember('admin.projectsByType',60*60*24,function (){
+
 
             $tags = DB::table('tags')
                 ->selectRaw('tags.name, COUNT(projects.id) as count')
@@ -149,14 +149,21 @@ class StaticsService
                         ->where('projects.status', '=', 'accepted');
                 })
                 ->groupBy('tags.name')
-                ->pluck('count', 'tags.name');
+                ->pluck('count', 'tags.name')
+                ->map(function ($count, $name) {
+                    return [
+                        'category' => $name,
+                        'value' => $count,
+                    ];
+                })
+                ->values();;
 
         return
             response()->json([
                'projectsByType' => $tags
             ]);
 
-        });
+
 
     }
 
