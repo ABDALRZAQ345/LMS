@@ -10,6 +10,7 @@ class CoursePolicy
 {
     public function editCourse(User $user, Course $course): bool
     {
+
         return $course->user_id==$user->id;
     }
 
