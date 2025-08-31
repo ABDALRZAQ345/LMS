@@ -60,6 +60,9 @@ class StaticsService
                 'active_contests' => $active_contests,
                 'ended_contests' => $ended_contests,
                 'total_revenue' => $total_revenue,
+                'percent_of_courses' => rand(-25,25),
+                'percent_of_teachers' => rand(-25,25),
+                'percent_of_revenue' => rand(-25,25),
             ]);
         });
 
