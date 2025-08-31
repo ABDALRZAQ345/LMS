@@ -170,29 +170,39 @@ class StaticsService
 
     }
 
-    public function overviewBudget(){
+    public function overviewBudget(): array
+    {
         return Cache::remember('admin.overviewBudget', 60 * 60 * 24, function () {
-            // جلب المدفوعات مجمعة حسب الشهر
-            $payments = DB::table('course_user')
-                ->selectRaw("MONTH(created_at) as month_num, SUM(paid) as revenue")
+
+            $paymentsByMonth = DB::table('course_user')
+                ->selectRaw('MONTH(created_at) as month_num, SUM(paid) as revenue')
                 ->where('paid', '>', 0)
-                ->groupBy(DB::raw("MONTH(created_at)"))
-                ->orderBy('month_num')
-                ->get();
 
+                ->groupByRaw('MONTH(created_at)')
+                ->pluck('revenue', 'month_num'); // e.g. [1 => 186.00, 2 => 305.00, ...]
 
-            $revenues = [];
+            $income = [];
             $expenses = [];
 
-            for ($i = 1; $i <= 12; $i++) {
-                $monthName = Carbon::create()->month($i)->format('F');
-                $revenue = (float) $payments->get($i, 0);
-                $revenues[$monthName] = $revenue;
-                $expenses[$monthName] = round($revenue * 0.6, 2);
+            $payoutRate = 0.6;
+
+            for ($m = 1; $m <= 12; $m++) {
+                $monthName = Carbon::create(null, $m)->format('F');
+                $revenue   = (float) ($paymentsByMonth[$m] ?? 0);
+
+                $income[] = [
+                    'month' => $monthName,
+                    'value' => round($revenue, 2),
+                ];
+
+                $expenses[] = [
+                    'month' => $monthName,
+                    'value' => round($revenue * $payoutRate, 2),
+                ];
             }
 
-            return  [
-                'income' => $revenues,
+            return [
+                'income'   => $income,
                 'expenses' => $expenses,
             ];
         });
