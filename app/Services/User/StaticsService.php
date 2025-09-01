@@ -35,7 +35,7 @@ class StaticsService
               ->where('email_verified', true)
               ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
               ->count();
-          $percent=($students_current_week/$students_previous_week)*100 - 100;
+          $percent=($students_current_week/max($students_previous_week,1))*100 - 100;
 
 
           //
