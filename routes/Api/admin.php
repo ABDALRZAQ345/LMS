@@ -19,6 +19,7 @@ Route::middleware(['throttle:api', 'auth:api', 'role:admin'])
         });
 
         Route::post('/teachers', [AdminController::class, 'addTeacher']);
+
         Route::delete('/projects/{project}', [ProjectController::class, 'delete']);
 
         Route::group(['prefix' => '/statistics'], function () {

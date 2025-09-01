@@ -103,7 +103,6 @@ class StaticsService
         ]);
     }
 
-
     public function StudentsPerMonth()
     {
         $currentYear = now()->year;
@@ -139,7 +138,6 @@ class StaticsService
             'studentsPerMonth' => $ordered
         ]);
     }
-
 
     public function ProjectsByType()
     {
