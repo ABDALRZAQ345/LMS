@@ -18,33 +18,51 @@ class StaticsService
 {
     public function overview()
     {
+        $data = Cache::remember('admin.overview', 3600, function () {
+            $total_students   = User::where('role', 'student')->count();
+            $active_students  = User::where('role', 'student')
+                ->where('last_online', '>=', now()->subMinutes(10))
+                ->count();
 
+            $total_teachers   = User::where('role', 'teacher')->count();
+            $active_teachers  = User::where('role', 'teacher')
+                ->where('last_online', '>=', now()->subMinutes(10))
+                ->count();
 
-      return   \Cache::remember('admin.overview',60*60,function (){
-            $total_students = User::where('role','student')->count();
-            $active_students = User::where('role','student')->where('last_online', '>=', now()->subMinutes(10))->count();
-            $total_teachers=User::where('role','teacher')->count();
-            $active_teachers = User::where('role','teacher')->where('last_online', '>=', now()->subMinutes(10))->count();
-            $total_courses=Course::where('verified',true)->count();
-            $total_contests=Contest::where('request_status','accepted')->count();
-            $upcoming_contests=Contest::where('request_status','accepted')->where('status','coming')->count();
-            $active_contests=Contest::where('request_status','accepted')->where('status','active')->count();
-            $ended_contests=Contest::where('request_status','accepted')->where('status','ended')->count();
-            $total_revenue=Db::table('course_user')->sum('paid');
-            return response()->json([
-                'total_students' => $total_students,
-                'active_students' => $active_students,
-                'total_teachers' => $total_teachers,
-                'active_teachers' => $active_teachers,
-                'total_courses' => $total_courses,
-                'total_contests' => $total_contests,
-                'upcoming_contests' => $upcoming_contests,
-                'active_contests' => $active_contests,
-                'ended_contests' => $ended_contests,
-                'total_revenue' => $total_revenue,
-            ]);
+            $total_courses    = Course::where('verified', true)->count();
+
+            $total_contests   = Contest::where('request_status', 'accepted')->count();
+            $upcoming_contests= Contest::where('request_status', 'accepted')->where('status', 'coming')->count();
+            $active_contests  = Contest::where('request_status', 'accepted')->where('status', 'active')->count();
+            $ended_contests   = Contest::where('request_status', 'accepted')->where('status', 'ended')->count();
+
+            $total_revenue    = (float) DB::table('course_user')->sum('paid');
+
+            $safePct = function ($part, $total) {
+                return $total > 0 ? round(($part / $total) * 100, 2) : 0.0;
+            };
+
+            return [
+                'total_students'        => $total_students,
+                'active_students'       => $active_students,
+                'active_students_pct'   => $safePct($active_students, $total_students),
+
+                'total_teachers'        => $total_teachers,
+                'active_teachers'       => $active_teachers,
+                'active_teachers_pct'   => $safePct($active_teachers, $total_teachers),
+
+                'total_courses'         => $total_courses,
+
+                'total_contests'        => $total_contests,
+                'upcoming_contests'     => $upcoming_contests,
+                'active_contests'       => $active_contests,
+                'ended_contests'        => $ended_contests,
+
+                'total_revenue'         => $total_revenue,
+            ];
         });
 
+        return response()->json($data);
     }
 
     public function StudentsStatistics()
