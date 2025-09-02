@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Helpers\ResponseHelper;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Contest;
 use App\Models\Course;
@@ -204,5 +205,59 @@ class StaticsService
                 'expenses' => $expenses,
             ];
         });
+    }
+
+    public function overviewBudgetPerMonth($validated){
+
+        $month = (int) $validated['month'];
+        $year  = isset($validated['year']) ? (int) $validated['year'] : now()->year;
+
+        $start = Carbon::create($year, $month, 1)->startOfMonth();
+        $end   = $start->copy()->endOfMonth();
+
+        $rows = DB::table('course_user')
+            ->selectRaw('DATE(created_at) as d, SUM(paid) as revenue')
+            ->where('paid', '>', 0)
+            ->whereBetween('created_at', [$start, $end])
+            ->groupBy('d')
+            ->pluck('revenue', 'd');
+
+        $chartData   = [];
+        $sumIncome   = 0.0;
+        $sumExpenses = 0.0;
+
+        $payoutRate = 0.6;
+
+        $cursor = $start->copy();
+        while ($cursor->lte($end)) {
+            $date    = $cursor->toDateString();
+            $revenue = (float) ($rows[$date] ?? 0);
+
+            $income   = round($revenue, 2);
+            $expenses = round($revenue * $payoutRate, 2);
+
+            $sumIncome   += $income;
+            $sumExpenses += $expenses;
+
+            $chartData[] = [
+                'date'     => $date,
+                'Income'   => $income,
+                'Expenses' => $expenses,
+            ];
+
+            $cursor->addDay();
+        }
+
+        $data = [
+            'chartData' => $chartData,
+            'month'     => $month,
+            'year'      => $year,
+            'totals'    => [
+                'Income'   => round($sumIncome, 2),
+                'Expenses' => round($sumExpenses, 2),
+            ],
+        ];
+
+        return ResponseHelper::jsonResponse($data, 'Get budget for month successfully.');
     }
 }
