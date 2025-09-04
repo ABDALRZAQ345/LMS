@@ -40,4 +40,12 @@ class StatisticsController extends Controller
 
         return $data;
     }
+
+    public function overviewBudgetPerMonth(Request $request){
+        $validated = $request->validate([
+            'month' => 'required|integer|min:1|max:12',
+            'year'  => 'nullable|integer|min:2000|max:' . now()->year,
+        ]);
+        return $this->staticsService->overviewBudgetPerMonth($validated);
+    }
 }

@@ -20,13 +20,12 @@ use Log;
 
 class SubmissionService
 {
-    public AchievementsService $achievementsService;
+    public  AchievementsService $achievementsService;
 
-    public function __construct(AchievementsService $achievementsService)
+    public function __construct(AchievementsService  $achievementsService)
     {
         $this->achievementsService = $achievementsService;
     }
-
     // Add your service methods here
     public function CheckUserSolvedProblem(User $user, Problem $problem): bool
     {
@@ -111,7 +110,8 @@ class SubmissionService
         try {
             $this->UpdateUserTestStatus($data['start_time'], $test, $correct);
             $percentage = getPercentage($correct, $questionsCount, true);
-            $this->HandelCertificate($test, $percentage,$test->course_id);
+            $courseId=$test->course_id;
+            $this->HandelCertificate($test, $percentage,$courseId);
             db::commit();
             return $percentage;
         } catch (Exception $exception) {
@@ -144,18 +144,21 @@ class SubmissionService
             ]);
             //todo need to be tested
             try{
-                DB::table('course_user')->where('user_id', auth('api')->id())
-                    ->wher('course_id',$courseId)->update([
-                    'status' => 'finished'
-                ]);
+                DB::table('course_user')->updateOrInsert(
+                    [
+                        'user_id'   => auth('api')->id(),
+                        'course_id' => $courseId,
+                    ],
+                    [
+                        'status'    => 'finished',
+                    ]
+                );
+
             }
             catch (Exception $exception){
-
             }
-
-
             $this->achievementsService->CompleteFirstCourse(auth('api')->user());
-            if ($percentage == 100) {
+            if($percentage==100){
                 $this->achievementsService->PerfectInFinalQuiz(auth('api')->user());
             }
         }
@@ -170,7 +173,7 @@ class SubmissionService
         if (!$test->is_final) return;
 
 
-        if ($test->getPercentageOfStudent(auth('api')->id()) >= 60) {
+        if ( $test->getPercentageOfStudent(auth('api')->id()) >=60 ) {
             throw new BadRequestException('you cant retake final test when you pass it');
         }
 
@@ -178,7 +181,8 @@ class SubmissionService
             ->orderByPivot('updated_at', 'desc')
             ->first()?->pivot;
 
-        if ($pivot && $pivot->updated_at > (now()->subDay())->toDateTimeString()) {
+
+        if ($pivot && $pivot->updated_at > (now()->subDay())->toDateTimeString() ) {
             throw new BadRequestException('you can`t take the final test more than once per day back again in ' .
                 carbon::parse($pivot->updated_at)->addDay()->diffForHumans()
             );

@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Helpers\ResponseHelper;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Contest;
 use App\Models\Course;
@@ -20,8 +21,25 @@ class StaticsService
     {
 
 
-
+        return   \Cache::remember('admin.overview',60*60,function (){
             $total_students = User::where('role','student')->count();
+            //
+            $startOfWeek = Carbon::now()->startOfWeek()->subDays(7)->toDateTimeString();
+            $endOfWeek = Carbon::now()->endOfWeek()->subDays(7)->toDateTimeString();
+            $students_previous_week = User::where('role', 'student')
+                ->where('email_verified', true)
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count();
+            $startOfWeek = Carbon::now()->startOfWeek()->toDateTimeString();
+            $endOfWeek = Carbon::now()->endOfWeek()->toDateTimeString();
+            $students_current_week = User::where('role', 'student')
+                ->where('email_verified', true)
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->count();
+            $percent=($students_current_week/max($students_previous_week,1))*100 - 100;
+
+
+            //
             $active_students = User::where('role','student')->where('last_online', '>=', now()->subMinutes(10))->count();
             $total_teachers=User::where('role','teacher')->count();
             $active_teachers = User::where('role','teacher')->where('last_online', '>=', now()->subMinutes(10))->count();
@@ -33,6 +51,7 @@ class StaticsService
             $total_revenue=Db::table('course_user')->sum('paid');
             return response()->json([
                 'total_students' => $total_students,
+                'perecnt_of_students_in_week' => $percent,
                 'active_students' => $active_students,
                 'total_teachers' => $total_teachers,
                 'active_teachers' => $active_teachers,
@@ -42,8 +61,11 @@ class StaticsService
                 'active_contests' => $active_contests,
                 'ended_contests' => $ended_contests,
                 'total_revenue' => $total_revenue,
+                'percent_of_courses' => rand(-25,25),
+                'percent_of_teachers' => rand(-25,25),
+                'percent_of_revenue' => rand(-25,25),
             ]);
-
+        });
 
     }
 
@@ -55,104 +77,187 @@ class StaticsService
 
     public function StudentsLastWeek()
     {
-        $startOfWeek = Carbon::now()->startOfWeek()->toDateTimeString();
-        $endOfWeek = Carbon::now()->endOfWeek()->toDateTimeString();
-
+        $startOfWeek = Carbon::now()->subDays(7)->startOfDay();
+        $endOfWeek = Carbon::now()->endOfDay();
 
         $query = User::where('role', 'student')
             ->where('email_verified', true)
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
-            ->selectRaw('DAYOFWEEK(created_at) as day, COUNT(*) as count')
-            ->groupByRaw('DAYOFWEEK(created_at)')
+            ->selectRaw('WEEKDAY(created_at) as day, COUNT(*) as count')
+            ->groupByRaw('WEEKDAY(created_at)')
             ->pluck('count', 'day');
 
         $studentsLastWeek = [];
+        for ($i = 0; $i < 7; $i++) {
+            $day = Carbon::now()->subDays(6 - $i);
+            $dayNumber = $day->dayOfWeekIso - 1;
+            $dayName = $day->format('l');
 
-        for ($i = 0; $i <= 6; $i++) {
-            $dayName = Carbon::now()->startOfWeek()->addDays($i )->format('l');
-            $studentsLastWeek[$dayName] = $query->get($i+2, 0);
+            $studentsLastWeek[$i] =[
+                'day' => $dayName,
+                'students' => $query->get($dayNumber, 0)
+            ];
         }
 
         return response()->json([
-           'studentsLastWeek' => $studentsLastWeek,
+            'studentsLastWeek' => $studentsLastWeek,
         ]);
     }
 
     public function StudentsPerMonth()
     {
+        $currentYear = now()->year;
+        $currentMonth = now()->month;
 
-            $currentYear = now()->year;
-            $query = User::where('role', 'student')
-                ->where('email_verified', true)
-                ->whereYear('created_at', $currentYear)
-                ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                ->groupByRaw('MONTH(created_at)')
-                ->pluck('count', 'month');
+        $query = User::where('role', 'student')
+            ->where('email_verified', true)
+            ->whereYear('created_at', $currentYear)
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('count', 'month');
 
-            $studentPerMonth = [];
-            for ($i = 1; $i <= 12; $i++) {
-                $monthName = Carbon::create()->month($i)->format('F');
-                $studentPerMonth[$monthName] = $query->get($i, 0);
-            }
+        // تجهيز جميع الأشهر
+        $studentPerMonth = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthName = Carbon::create()->month($i)->format('F');
+            $studentPerMonth[$i] = [
+                'month' => $monthName,
+                'students' => $query->get($i, 0)
+            ];
+        }
 
-            return
-                response()->json([
-                    'year' => $currentYear,
-                    'studentsPerMonth'=>$studentPerMonth
-                ]);
+        $ordered = [];
+        for ($i = $currentMonth + 1; $i <= 12; $i++) {
+            $ordered[] = $studentPerMonth[$i];
+        }
+        for ($i = 1; $i <= $currentMonth; $i++) {
+            $ordered[] = $studentPerMonth[$i];
+        }
 
-
-
-
+        return response()->json([
+            'year' => $currentYear,
+            'studentsPerMonth' => $ordered
+        ]);
     }
 
     public function ProjectsByType()
     {
 
 
-            $tags = DB::table('tags')
-                ->selectRaw('tags.name, COUNT(projects.id) as count')
-                ->leftJoin('projects', function($join) {
-                    $join->on('projects.tag_id', '=', 'tags.id')
-                        ->where('projects.status', '=', 'accepted');
-                })
-                ->groupBy('tags.name')
-                ->pluck('count', 'tags.name');
+        $tags = DB::table('tags')
+            ->selectRaw('tags.name, COUNT(projects.id) as count')
+            ->leftJoin('projects', function($join) {
+                $join->on('projects.tag_id', '=', 'tags.id')
+                    ->where('projects.status', '=', 'accepted');
+            })
+            ->groupBy('tags.name')
+            ->pluck('count', 'tags.name')
+            ->map(function ($count, $name) {
+                return [
+                    'category' => $name,
+                    'value' => $count,
+                ];
+            })
+            ->values();;
 
         return
             response()->json([
-               'projectsByType' => $tags
+                'projectsByType' => $tags
             ]);
 
 
 
     }
 
-    public function overviewBudget(){
+    public function overviewBudget(): array
+    {
+        return Cache::remember('admin.overviewBudget', 60 * 60 * 24, function () {
 
-
-            $payments = DB::table('course_user')
-                ->selectRaw("MONTH(created_at) as month_num, SUM(paid) as revenue")
+            $paymentsByMonth = DB::table('course_user')
+                ->selectRaw('MONTH(created_at) as month_num, SUM(paid) as revenue')
                 ->where('paid', '>', 0)
-                ->groupBy(DB::raw("MONTH(created_at)"))
-                ->orderBy('month_num')
-                ->get();
 
+                ->groupByRaw('MONTH(created_at)')
+                ->pluck('revenue', 'month_num'); // e.g. [1 => 186.00, 2 => 305.00, ...]
 
-            $revenues = [];
+            $income = [];
             $expenses = [];
 
-            for ($i = 1; $i <= 12; $i++) {
-                $monthName = Carbon::create()->month($i)->format('F');
-                $revenue = (float) $payments->get($i, 0);
-                $revenues[$monthName] = $revenue;
-                $expenses[$monthName] = round($revenue * 0.6, 2);
+            $payoutRate = 0.6;
+
+            for ($m = 1; $m <= 12; $m++) {
+                $monthName = Carbon::create(null, $m)->format('F');
+                $revenue   = (float) ($paymentsByMonth[$m] ?? 0);
+
+                $income[] = [
+                    'month' => $monthName,
+                    'value' => round($revenue, 2),
+                ];
+
+                $expenses[] = [
+                    'month' => $monthName,
+                    'value' => round($revenue * $payoutRate, 2),
+                ];
             }
 
-            return  [
-                'revenues' => $revenues,
+            return [
+                'income'   => $income,
                 'expenses' => $expenses,
             ];
+        });
+    }
 
+    public function overviewBudgetPerMonth($validated){
+
+        $month = (int) $validated['month'];
+        $year  = isset($validated['year']) ? (int) $validated['year'] : now()->year;
+
+        $start = Carbon::create($year, $month, 1)->startOfMonth();
+        $end   = $start->copy()->endOfMonth();
+
+        $rows = DB::table('course_user')
+            ->selectRaw('DATE(created_at) as d, SUM(paid) as revenue')
+            ->where('paid', '>', 0)
+            ->whereBetween('created_at', [$start, $end])
+            ->groupBy('d')
+            ->pluck('revenue', 'd');
+
+        $chartData   = [];
+        $sumIncome   = 0.0;
+        $sumExpenses = 0.0;
+
+        $payoutRate = 0.6;
+
+        $cursor = $start->copy();
+        while ($cursor->lte($end)) {
+            $date    = $cursor->toDateString();
+            $revenue = (float) ($rows[$date] ?? 0);
+
+            $income   = round($revenue, 2);
+            $expenses = round($revenue * $payoutRate, 2);
+
+            $sumIncome   += $income;
+            $sumExpenses += $expenses;
+
+            $chartData[] = [
+                'date'     => $date,
+                'Income'   => $income,
+                'Expenses' => $expenses,
+            ];
+
+            $cursor->addDay();
+        }
+
+        $data = [
+            'chartData' => $chartData,
+            'month'     => $month,
+            'year'      => $year,
+            'totals'    => [
+                'Income'   => round($sumIncome, 2),
+                'Expenses' => round($sumExpenses, 2),
+            ],
+        ];
+
+        return ResponseHelper::jsonResponse($data, 'Get budget for month successfully.');
     }
 }

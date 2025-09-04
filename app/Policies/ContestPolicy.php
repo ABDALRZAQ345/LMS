@@ -50,7 +50,8 @@ class ContestPolicy
             $correct = $contest->pivot['correct_answers'];
             throw new BadRequestException(' you already participated in this contest with '.$correct.' correct answer if you participate as official check your rank in standing');
         }
-        if ($contest->status == 'coming') {
+        if (Carbon::parse($contest->start_at) > Carbon::now())
+        {
             throw new FORBIDDEN('coming contest not available , you can reach it when its active there is '.Carbon::parse($contest->start_at)->diffForHumans());
         }
 

@@ -57,5 +57,13 @@ class AdminController extends Controller
         return $this->paymentService->payment($validated);
     }
 
+    public function deleteTeacher(User $user): JsonResponse
+    {
+       $user->delete();
+       return  response()->json([
+           'status'=>true,
+           'message'=>'Teacher has been deleted'
+       ]);
+}
 
 }

@@ -10,6 +10,7 @@ class AdminLearningPathRepo
     public function requestsLearningPaths($validated){
         $query =  LearningPath::orderBy($validated['orderBy'] ,$validated['direction'])
             ->with('teacher')
+            ->with('courses.teacher')
             ->withCount('courses')
             ->withSum('courses', 'price')
             ->withSum('courses', 'rate');

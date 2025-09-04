@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,7 +19,7 @@ class ContestResource extends JsonResource
     {
         $data = parent::toArray($request);
         $data['teacher_id'] = $data['user_id'];
-
+        $data['teacher_name'] = User::find($data['user_id'])->name ?? null;
         $user=auth('api')->user();
 
         if(!$user || ( ( $user->role!='admin' &&  $data['teacher_id']!=$user->id) && isset($data['request_status']))){
@@ -31,6 +32,7 @@ class ContestResource extends JsonResource
             $alreadyParticipate = $user->contests()->where('contest_id', $this->id)->exists();
             $data['alreadyParticipate'] = $alreadyParticipate;
         }
+
         unset($data['user_id']);
         unset($data['updated_at']);
         return $data;

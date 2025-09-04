@@ -51,6 +51,12 @@ class TeacherVideoService
         return ResponseHelper::jsonResponse($video,'Updated Video Successfully');
     }
 
+    public function deleteVideo($video){
+        $this->teacherVideoRepository->deleteVideo($video);
+
+        return  ResponseHelper::jsonResponse([],'Deleted video successfully');
+    }
+
     public function uploadVideo($data)
     {
         /** @var \Illuminate\Http\UploadedFile $file */
