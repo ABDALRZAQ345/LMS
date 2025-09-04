@@ -51,11 +51,11 @@ class VideoService
         return ResponseHelper::jsonResponse([], 'Progress updated successfully.');
     }
 
-    public function isEnroll($userId,$courseId){
+    public static function isEnroll($userId,$courseId){
         $query = \DB::table('course_user')
             ->where('user_id',$userId)
             ->where('course_id',$courseId)
-            ->where('status',['enrolled','finished'])
+            ->whereIn('status',['enrolled','finished'])
             ->exists();
 
         if($query){
