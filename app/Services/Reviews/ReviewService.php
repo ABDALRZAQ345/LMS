@@ -6,6 +6,7 @@ use App\Helpers\ResponseHelper;
 use App\Http\Resources\Reviews\ReviewResource;
 use App\Jobs\SendFirebaseNotification;
 use App\Repositories\Reviews\ReviewsRepository;
+use App\Services\Videos\VideoService;
 
 class ReviewService
 {
@@ -30,8 +31,12 @@ class ReviewService
 
     public function addNewReviewInCourse($course, $validated)
     {
-        $review = $this->reviewRepository->addNewReviewInCourse($course->id, $validated);
         $student = auth()->user();
+        $isEnroll = VideoService::isEnroll($student->id, $course->id);
+        if(!$isEnroll) {
+            return ResponseHelper::jsonResponse([],'If you are not Enrolled you cannot add a Review.',403,false);
+        }
+        $review = $this->reviewRepository->addNewReviewInCourse($course->id, $validated);
         if ($review['is_new']) {
             $teacher = $course->teacher()->first();
             $title = 'New Review on '. $course->title;

@@ -26,7 +26,7 @@ class LearningPathPolicy
 
     public function delete(User $user, LearningPath $learningPath): bool
     {
-        return $user->id === $learningPath->user_id;
+        return $user->id === $learningPath->user_id || $user->role == 'admin';
     }
 
 }
