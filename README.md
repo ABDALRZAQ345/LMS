@@ -12,7 +12,7 @@ more.
 
 - **Flutter Mobile Application repo :** [Mobile Repo](https://github.com/tayseergit/Flutter_LMS)
 - **Backend repo (Laravel):** [Backend Repo](https://github.com/ABDALRZAQ345/LMS)
-
+- **Linkedin post :** [LinkedIn](https://www.linkedin.com/posts/abd-alrzaq-najieb-7357b3341_%D9%8A%D8%B3%D8%B9%D8%AF%D9%86%D8%A7-%D9%86%D8%B4%D8%A7%D8%B1%D9%83%D9%83%D9%85%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D9%86%D8%A7-%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF-scripts-activity-7371841745304817664-9_gY?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAFW5t1kB7FoyQouhyT-uZvWS9cX5gyovhJ0)
 ---
 
 ## 💡  Features
