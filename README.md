@@ -1,5 +1,5 @@
 # Scripts – Programming Learning Management System
-
+![PosterImage](img.jpg)
 **Learning Management System (LMS)**
 
 Scripts is a programming learning platform that aims to gather all programming knowledge in one easy-to-access,
