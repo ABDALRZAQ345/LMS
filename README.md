@@ -167,7 +167,7 @@ more.
     - Abd Alrzaq Najib .
     - Abd Alrahim Sarhan .
 - **Mobile Front-end (Flutter):**
-    - Taysir Matar .
+    - Tayseer Matar .
     - Bara’ Al-Khatib .
 - **Web Front-end (React):**
     - Bilal Khubayeh .
